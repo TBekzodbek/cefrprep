@@ -24,7 +24,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes with Main Navigation */}
+        {/* Public Landing Routes with Main Navigation */}
         <Route path="/" element={
           <div className="app-container">
             <Navigation lang={lang} toggleLang={toggleLang} />
@@ -35,11 +35,13 @@ function App() {
         }>
           <Route index element={<Home lang={lang} />} />
           <Route path="login" element={<Login lang={lang} />} />
-          <Route path="onboarding" element={<OnboardingSurvey lang={lang} />} />
         </Route>
 
+        {/* Dedicated Onboarding (Minimal/Wizard Style) */}
+        <Route path="/onboarding" element={<OnboardingSurvey lang={lang} />} />
+
         {/* Dashboard Routes with Sidebar Layout */}
-        <Route path="/dashboard" element={<DashboardLayout lang={lang} />}>
+        <Route path="/dashboard" element={<DashboardLayout lang={lang} toggleLang={toggleLang} />}>
           <Route index element={<Dashboard lang={lang} />} />
           <Route path="reading" element={<Reading lang={lang} />} />
           <Route path="listening" element={<Listening lang={lang} />} />

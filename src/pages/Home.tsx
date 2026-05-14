@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, ShieldCheck, Zap, Headphones, BookOpen, GraduationCap, Mic, BarChart3, PieChart, Activity } from 'lucide-react';
+import { ArrowRight, Star, ShieldCheck, Zap, Headphones, BookOpen, GraduationCap, Mic, PieChart, Activity } from 'lucide-react';
 import './Home.css';
 
 // Import local assets
-import atlasWolfImg from '../assets/images/atlas-wolf.png';
 import mockTestImg from '../assets/images/atlas-mock-test.png';
 
 interface HomeProps {
@@ -36,56 +35,29 @@ const Home = ({ lang }: HomeProps) => {
         <div className="home-page">
             {/* Hero Section */}
             <section className="hero container">
-                <div className="hero-grid">
+                <div className="hero-grid" style={{ gridTemplateColumns: '1fr', textAlign: 'center' }}>
                     <motion.div
                         className="hero-text"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        style={{ margin: '0 auto', alignItems: 'center', display: 'flex', flexDirection: 'column' }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
                         <span className="badge-premium" style={{ marginBottom: '1.5rem' }}>
                             <Zap size={14} fill="currentColor" /> {t.heroBadge}
                         </span>
-                        <h1 className="hero-title">{t.heroTitle}</h1>
-                        <p className="hero-subtitle">{t.heroSubtitle}</p>
-                        <div className="hero-actions" style={{ display: 'flex', gap: '1.5rem', marginTop: '3rem' }}>
+                        <h1 className="hero-title" style={{ textAlign: 'center' }}>{t.heroTitle}</h1>
+                        <p className="hero-subtitle" style={{ textAlign: 'center' }}>{t.heroSubtitle}</p>
+                        <div className="hero-actions" style={{ display: 'flex', gap: '1.5rem', marginTop: '3rem', justifyContent: 'center' }}>
                             <Link to="/onboarding" className="btn btn-primary btn-glow" style={{ padding: '1.25rem 3rem', fontSize: '1.15rem' }}>
                                 {t.cta} <ArrowRight size={20} />
                             </Link>
-                            <div className="trust-indicator hidden-mobile">
-                                <div className="stars">
-                                    {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} fill="currentColor" />)}
-                                </div>
-                                <span>Trusted by 2.4k students</span>
-                            </div>
                         </div>
-                    </motion.div>
-                    <motion.div
-                        className="hero-image"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                    >
-                        <div className="mascot-wrapper">
-                            <img src={atlasWolfImg} alt="Atlas the Wolf" className="floating-img main-mascot" />
-                            {/* Decorative Floating Graph Card */}
-                            <motion.div
-                                className="floating-card graph-card"
-                                animate={{ y: [0, -10, 0] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <div className="graph-header">
-                                    <BarChart3 size={16} className="text-primary" />
-                                    <span>Score Growth</span>
-                                </div>
-                                <div className="mock-graph">
-                                    <div className="bar" style={{ height: '30%' }}></div>
-                                    <div className="bar" style={{ height: '50%' }}></div>
-                                    <div className="bar" style={{ height: '85%' }}></div>
-                                    <div className="bar highlight" style={{ height: '100%' }}></div>
-                                </div>
-                                <div className="graph-label">+15 pts</div>
-                            </motion.div>
+                        <div className="trust-indicator" style={{ marginTop: '2rem' }}>
+                            <div className="stars" style={{ justifyContent: 'center' }}>
+                                {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} fill="currentColor" />)}
+                            </div>
+                            <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>Trusted by 2,400+ Students in Uzbekistan</span>
                         </div>
                     </motion.div>
                 </div>

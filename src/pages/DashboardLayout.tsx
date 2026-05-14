@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, User, Crown, CreditCard, BookOpen, Headphones, GraduationCap, Mic, LogOut, CheckCircle } from 'lucide-react';
+import { LayoutDashboard, User, Crown, CreditCard, BookOpen, Headphones, GraduationCap, Mic, LogOut, CheckCircle, Globe } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import './DashboardLayout.css';
 
 interface Props {
     lang: 'en' | 'uz';
+    toggleLang: () => void;
 }
 
-const DashboardLayout = ({ lang }: Props) => {
+const DashboardLayout = ({ lang, toggleLang }: Props) => {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -44,11 +45,15 @@ const DashboardLayout = ({ lang }: Props) => {
     return (
         <div className="dashboard-layout">
             <aside className="dashboard-sidebar glass-panel">
-                <div className="sidebar-header">
+                <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Link to="/" className="brand">
                         <span className="brand-logo">CEFR</span>
                         <span className="brand-text">prep</span>
                     </Link>
+                    <button className="btn btn-ghost lang-toggle-sidebar" onClick={toggleLang}>
+                        <Globe size={18} />
+                        <span style={{ fontSize: '0.8rem' }}>{lang.toUpperCase()}</span>
+                    </button>
                 </div>
 
                 <div className="sidebar-premium-card">

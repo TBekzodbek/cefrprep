@@ -16,6 +16,22 @@
     padding: 2rem 1.5rem;
 }
 
+.lang-toggle-sidebar {
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.lang-toggle-sidebar:hover {
+    background: #f1f5f9;
+    color: var(--color-primary);
+}
+
 .brand-text {
     font-family: var(--font-heading);
     font-weight: 800;

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Mic, Headphones, GraduationCap, LayoutDashboard, Globe } from 'lucide-react';
+import { BookOpen, Mic, Headphones, GraduationCap, Globe } from 'lucide-react';
 import './Navigation.css';
 
 interface NavigationProps {
@@ -41,9 +41,8 @@ const Navigation = ({ lang, toggleLang }: NavigationProps) => {
                         <Globe size={20} />
                         <span>{lang.toUpperCase()}</span>
                     </button>
-                    <Link to="/login" className="btn btn-primary btn-sm">
-                        <LayoutDashboard size={18} />
-                        <span className="hidden-mobile">{lang === 'en' ? 'Login' : 'Kirish'}</span>
+                    <Link to="/onboarding" className="btn btn-primary btn-sm">
+                        <span className="hidden-mobile">{lang === 'en' ? 'Build Plan' : 'Reja tuzish'}</span>
                     </Link>
                 </div>
             </div>
