@@ -48,7 +48,7 @@ const DashboardLayout = ({ lang, toggleLang }: Props) => {
                 <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Link to="/" className="brand">
                         <span className="brand-logo">CEFR</span>
-                        <span className="brand-text">prep</span>
+                        <span className="brand-text">ACADEMY</span>
                     </Link>
                     <button className="btn btn-ghost lang-toggle-sidebar" onClick={toggleLang}>
                         <Globe size={18} />

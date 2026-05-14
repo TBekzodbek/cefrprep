@@ -59,7 +59,7 @@ const Login = ({ lang }: Props) => {
                     password,
                     options: {
                         // FIX: Ensure confirmation email redirects to production app, not localhost
-                        emailRedirectTo: 'https://cefrprep.vercel.app/onboarding',
+                        emailRedirectTo: 'https://cefracademy.uz/onboarding',
                     }
                 });
                 if (signUpError) throw signUpError;

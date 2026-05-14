@@ -156,7 +156,7 @@ const Dashboard = ({ lang }: Props) => {
                         <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#f0f9ff', borderRadius: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
                             <Compass className="text-primary" size={32} />
                             <p style={{ fontSize: '1rem', color: '#0369a1', margin: 0 }}>
-                                <strong>Atlas Tip:</strong> {profile?.weakness?.includes('Writing')
+                                <strong>Atlas AI Robot:</strong> {profile?.weakness?.includes('Writing')
                                     ? (lang === 'en' ? 'Focus on cohesive devices today to boost your Task 2 score.' : 'Task 2 ballini oshirish uchun bugun bog\'lovchi vositalarga e\'tibor bering.')
                                     : (lang === 'en' ? 'Read 2 articles from BBC today to improve reading speed.' : 'O\'qish tezligini oshirish uchun BBC dan 2 ta maqola o\'qing.')}
                             </p>

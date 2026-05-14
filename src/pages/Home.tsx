@@ -15,8 +15,8 @@ const Home = ({ lang }: HomeProps) => {
         heroBadge: lang === 'en' ? 'ALIGNED WITH NATIONAL 75-PT SCALE' : '75 BALLIK MILLIY TIZIMGA MOSLANGAN',
         heroTitle: lang === 'en' ? 'The fastest path to your target CEFR score.' : 'Ko\'zlangan CEFR natijangizga eng tezkor yo\'l.',
         heroSubtitle: lang === 'en'
-            ? 'Meet Atlas, your AI wolf coach. We help you bridge the gap between B1 and C1 using real national exam standards.'
-            : 'Atlas bilan tanishing - sizning AI bo\'ri ustozingiz. B1 dan C1 gacha bo\'lgan masofani milliy imtihon standartlari asosida bosib o\'ting.',
+            ? 'Meet Atlas, your AI robot coach. We help you bridge the gap between B1 and C1 using real national exam standards.'
+            : 'Atlas bilan tanishing - sizning AI robot ustozingiz. B1 dan C1 gacha bo\'lgan masofani milliy imtihon standartlari asosida bosib o\'ting.',
         cta: lang === 'en' ? 'Get Started' : 'Boshlash',
         results: lang === 'en'
             ? [
