@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { LogIn, UserPlus, Loader2 } from 'lucide-react';
+import { LogIn, UserPlus, Loader2, ShieldCheck } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import './PageLayout.css';
+import './Login.css';
 
 interface Props {
     lang: 'en' | 'uz';
@@ -19,11 +19,11 @@ const Login = ({ lang }: Props) => {
 
     const t = {
         title: isSignUp
-            ? (lang === 'en' ? 'Create Account' : 'Akkaunt yaratish')
-            : (lang === 'en' ? 'Welcome Back' : 'Xush Kelibsiz'),
+            ? (lang === 'en' ? 'Create Account' : 'Ro\'yxatdan o\'tish')
+            : (lang === 'en' ? 'Sign In' : 'Tizimga kirish'),
         subtitle: isSignUp
-            ? (lang === 'en' ? 'Join thousands of students preparing for CEFR.' : 'CEFRga tayyorlanayotgan minglab talabalarga qo\'shiling.')
-            : (lang === 'en' ? 'Login to continue your CEFR preparation journey.' : 'CEFR tayyorgarligingizni davom ettirish uchun tizimga kiring.'),
+            ? (lang === 'en' ? 'Start your journey to CEFR success.' : 'CEFR muvaffaqiyati sari yo\'lingizni boshlang.')
+            : (lang === 'en' ? 'Welcome back to CEFRprep.' : 'CEFRprep platformasiga xush kelibsiz.'),
         emailLabel: lang === 'en' ? 'Email Address' : 'Elektron pochta',
         passwordLabel: lang === 'en' ? 'Password' : 'Parol',
         loginBtn: lang === 'en' ? 'Sign In' : 'Tizimga kirish',
@@ -32,7 +32,7 @@ const Login = ({ lang }: Props) => {
         haveAccount: lang === 'en' ? "Already have an account?" : "Akkauntingiz bormi?",
         switchLogin: lang === 'en' ? 'Sign In' : 'Tizimga kirish',
         switchSignUp: lang === 'en' ? 'Create an account' : 'Akkaunt yaratish',
-        errorGeneric: lang === 'en' ? 'An error occurred. Please try again.' : 'Xatolik yuz berdi. Qayta urinib ko\'ring.'
+        errorGeneric: lang === 'en' ? 'An error occurred.' : 'Xatolik yuz berdi.'
     };
 
     useEffect(() => {
@@ -55,10 +55,7 @@ const Login = ({ lang }: Props) => {
                     password,
                 });
                 if (signUpError) throw signUpError;
-                if (data.user) {
-                    // Redirect to onboarding after sign up
-                    navigate('/onboarding');
-                }
+                if (data.user) navigate('/onboarding');
             } else {
                 const { error: signInError } = await supabase.auth.signInWithPassword({
                     email,
@@ -75,48 +72,46 @@ const Login = ({ lang }: Props) => {
     };
 
     return (
-        <motion.div
-            className="page-container container"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}
-        >
-            <div className="glass-panel" style={{ width: '100%', maxWidth: '450px', padding: '2.5rem', borderRadius: 'var(--radius-xl)' }}>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <div className="icon-wrapper color-primary" style={{ margin: '0 auto 1.5rem', width: '60px', height: '60px' }}>
-                        {isSignUp ? <UserPlus size={30} /> : <LogIn size={30} />}
+        <div className="auth-page">
+            <motion.div
+                className="auth-card"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+            >
+                <div className="auth-header">
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem', color: 'var(--color-primary)' }}>
+                        <ShieldCheck size={40} />
                     </div>
-                    <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>{t.title}</h2>
-                    <p className="text-muted">{t.subtitle}</p>
+                    <h2>{t.title}</h2>
+                    <p>{t.subtitle}</p>
                 </div>
 
                 {error && (
-                    <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--color-error)', padding: '0.75rem', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
+                    <div style={{ backgroundColor: '#fef2f2', color: '#dc2626', padding: '1rem', borderRadius: 'var(--radius-lg)', marginBottom: '1.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
                         {error}
                     </div>
                 )}
 
-                <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>{t.emailLabel}</label>
+                <form className="auth-form" onSubmit={handleAuth}>
+                    <div className="form-group">
+                        <label>{t.emailLabel}</label>
                         <input
+                            className="form-input"
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-background)', color: 'var(--color-text-main)' }}
                             placeholder="user@example.com"
                         />
                     </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>{t.passwordLabel}</label>
+                    <div className="form-group">
+                        <label>{t.passwordLabel}</label>
                         <input
+                            className="form-input"
                             type="password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-background)', color: 'var(--color-text-main)' }}
                             placeholder="••••••••"
                         />
                     </div>
@@ -125,24 +120,19 @@ const Login = ({ lang }: Props) => {
                         type="submit"
                         disabled={loading}
                         className="btn btn-primary"
-                        style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}
+                        style={{ width: '100%', marginTop: '0.5rem', height: '3rem' }}
                     >
-                        {loading ? <Loader2 className="animate-spin" size={20} /> : (isSignUp ? t.signUpBtn : t.loginBtn)}
+                        {loading ? <Loader2 className="animate-spin" size={20} /> : (isSignUp ? <UserPlus size={20} /> : <LogIn size={20} />)}
+                        {isSignUp ? t.signUpBtn : t.loginBtn}
                     </button>
                 </form>
 
-                <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem' }}>
-                    <span className="text-muted">{isSignUp ? t.haveAccount : t.noAccount}</span>{' '}
-                    <button
-                        onClick={() => setIsSignUp(!isSignUp)}
-                        className="text-primary"
-                        style={{ fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                    >
-                        {isSignUp ? t.switchLogin : t.switchSignUp}
-                    </button>
+                <div className="auth-footer">
+                    <span>{isSignUp ? t.haveAccount : t.noAccount}</span>
+                    <button onClick={() => setIsSignUp(!isSignUp)}>{isSignUp ? t.switchLogin : t.switchSignUp}</button>
                 </div>
-            </div>
-        </motion.div>
+            </motion.div>
+        </div>
     );
 };
 

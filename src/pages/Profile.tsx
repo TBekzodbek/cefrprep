@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Award, Target, Settings, Activity, Loader2, LogOut } from 'lucide-react';
+import { User, Mail, Award, Target, Settings, Activity, Loader2, LogOut, Shield } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface Props {
@@ -26,12 +26,7 @@ const Profile = ({ lang }: Props) => {
         const fetchProfile = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
-                const { data } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
-
+                const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
                 setProfile({
                     email: user.email || '',
                     current_level: data?.current_level || 'N/A',
@@ -40,9 +35,7 @@ const Profile = ({ lang }: Props) => {
                     points: data?.points || 0,
                     plan_tier: data?.plan_tier || 'free'
                 });
-            } else {
-                navigate('/login');
-            }
+            } else navigate('/login');
             setLoading(false);
         };
         fetchProfile();
@@ -53,66 +46,56 @@ const Profile = ({ lang }: Props) => {
         navigate('/');
     };
 
-    if (loading) {
-        return (
-            <div className="page-container container flex justify-center items-center" style={{ minHeight: '60vh' }}>
-                <Loader2 className="animate-spin text-primary" size={40} />
-            </div>
-        );
-    }
+    if (loading) return <div className="page-container" style={{ textAlign: 'center', padding: '10rem' }}><Loader2 className="animate-spin text-primary" size={40} /></div>;
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="container"
-            style={{ maxWidth: '900px' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="page-container"
         >
-            <div className="glass-panel" style={{ padding: '3rem', borderRadius: 'var(--radius-xl)', display: 'flex', gap: '3rem', alignItems: 'center', marginBottom: '2rem' }}>
-                <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'var(--color-background-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '4px solid var(--color-primary)' }}>
-                    <User size={64} className="text-muted" />
+            <div className="glass-panel" style={{ padding: '3rem', display: 'flex', gap: '3rem', alignItems: 'center', marginBottom: '3rem', background: '#ffffff' }}>
+                <div style={{ width: '100px', height: '100px', borderRadius: 'var(--radius-xl)', background: 'var(--color-background-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--color-border)' }}>
+                    <User size={48} className="text-light" />
                 </div>
                 <div style={{ flexGrow: 1 }}>
-                    <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{profile?.email.split('@')[0] || 'User'}</h2>
-                    <div style={{ display: 'flex', gap: '1.5rem', color: 'var(--color-text-muted)' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={18} /> {profile?.email}</span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: profile?.plan_tier === 'premium' ? 'var(--color-warning)' : 'var(--color-text-muted)' }}>
-                            <Award size={18} /> {profile?.plan_tier === 'premium' ? (lang === 'en' ? 'Premium Member' : 'Premium A\'zo') : (lang === 'en' ? 'Free Plan' : 'Bepul Tarif')}
+                    <h2 style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>{profile?.email.split('@')[0]}</h2>
+                    <div style={{ display: 'flex', gap: '1.5rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={16} /> {profile?.email}</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: profile?.plan_tier === 'premium' ? 'var(--color-warning)' : 'var(--color-text-light)' }}>
+                            <Shield size={16} /> {profile?.plan_tier === 'premium' ? 'Premium' : 'Standard Account'}
                         </span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className="btn btn-outline" title={lang === 'en' ? 'Edit' : 'Tahrirlash'}><Settings size={18} /></button>
-                    <button className="btn btn-outline" onClick={handleLogout} style={{ borderColor: 'rgba(239, 68, 68, 0.3)', color: 'var(--color-error)' }}>
-                        <LogOut size={18} /> {lang === 'en' ? 'Logout' : 'Chiqish'}
-                    </button>
-                </div>
+                <button onClick={handleLogout} className="btn btn-outline" style={{ color: 'var(--color-error)', borderColor: 'rgba(239, 68, 68, 0.1)' }}>
+                    <LogOut size={18} /> {lang === 'en' ? 'Logout' : 'Chiqish'}
+                </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-                <div className="glass-panel" style={{ padding: '2rem' }}>
-                    <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                        <Target className="text-primary" /> {lang === 'en' ? 'Goals & Targets' : 'Maqsadlar'}
+            <div className="grid grid-cols-2">
+                <div className="glass-panel" style={{ padding: '2.5rem', background: '#ffffff' }}>
+                    <h3 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <Target className="text-primary" /> {lang === 'en' ? 'Assessment & Goals' : 'Baholash va Maqsadlar'}
                     </h3>
-                    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <li style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.5rem', borderBottom: '1px solid var(--color-border)' }}>
-                            <span>{lang === 'en' ? 'Current Level' : 'Hozirgi daraja'}</span> <strong>{profile?.current_level}</strong>
-                        </li>
-                        <li style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.5rem', borderBottom: '1px solid var(--color-border)' }}>
-                            <span>{lang === 'en' ? 'Target Score' : 'Maqsad qilgan ball'}</span> <strong>{profile?.target_level}</strong>
-                        </li>
-                        <li style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <span>{lang === 'en' ? 'Time Remaining' : 'Qolgan vaqt'}</span> <strong>{profile?.time_left}</strong>
-                        </li>
-                    </ul>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-background-alt)', paddingBottom: '1rem' }}>
+                            <span className="text-muted">{lang === 'en' ? 'Current Level' : 'Hozirgi daraja'}</span>
+                            <span style={{ fontWeight: 700 }}>{profile?.current_level}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-background-alt)', paddingBottom: '1rem' }}>
+                            <span className="text-muted">{lang === 'en' ? 'Target CEFR' : 'Maqsadli CEFR'}</span>
+                            <span style={{ fontWeight: 700 }}>{profile?.target_level}</span>
+                        </div>
+                    </div>
                 </div>
-                <div className="glass-panel" style={{ padding: '2rem' }}>
-                    <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                        <Activity className="text-success" /> {lang === 'en' ? 'Recent Activity' : 'So\'nggi Faollik'}
+
+                <div className="glass-panel" style={{ padding: '2.5rem', background: '#ffffff' }}>
+                    <h3 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <Activity className="text-primary" /> {lang === 'en' ? 'Learning Statistics' : 'O\'rganish statistikasi'}
                     </h3>
-                    <div className="content-placeholder" style={{ minHeight: '120px', padding: '0', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <p className="text-muted" style={{ fontSize: '0.9rem' }}>{lang === 'en' ? 'No test attempts yet.' : 'Hali testlar topshirilmagan.'}</p>
-                        <p style={{ fontSize: '1.5rem', fontWeight: 'bold', marginTop: '1rem' }}>{profile?.points} {lang === 'en' ? 'Points' : 'Ballar'}</p>
+                    <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                        <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--color-primary)' }}>{profile?.points}</div>
+                        <div className="text-muted" style={{ fontWeight: 600 }}>Total Experience Points</div>
                     </div>
                 </div>
             </div>

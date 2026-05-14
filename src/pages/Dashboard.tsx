@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Star, Target, Zap, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Star, Target, Zap, Loader2, ArrowUpRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import './PageLayout.css';
 
@@ -32,7 +32,6 @@ const Dashboard = ({ lang }: Props) => {
                 if (data) {
                     setProfile(data);
                 } else if (error && error.code === 'PGRST116') {
-                    // Profile doesn't exist yet, use defaults
                     setProfile({
                         current_level: 'N/A',
                         target_level: 'N/A',
@@ -48,7 +47,7 @@ const Dashboard = ({ lang }: Props) => {
 
     if (loading) {
         return (
-            <div className="page-container container flex justify-center items-center" style={{ minHeight: '60vh' }}>
+            <div className="page-container container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
                 <Loader2 className="animate-spin text-primary" size={40} />
             </div>
         );
@@ -56,56 +55,70 @@ const Dashboard = ({ lang }: Props) => {
 
     return (
         <motion.div
-            className="page-container container"
-            initial={{ opacity: 0, y: 20 }}
+            className="page-container"
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
         >
-            <header className="page-header" style={{ alignItems: 'flex-start', textAlign: 'left' }}>
-                <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <LayoutDashboard className="text-primary" size={32} />
-                    {lang === 'en' ? 'Your Dashboard' : 'Sizning kabinetingiz'}
-                </h1>
-                <p className="text-muted" style={{ margin: '0' }}>
+            <header className="page-header">
+                <h1>{lang === 'en' ? 'Dashboard Overview' : 'Boshqaruv paneli'}</h1>
+                <p>
                     {lang === 'en'
-                        ? 'Track your CEFR preparation progress and performance.'
-                        : 'CEFR tayyorgarligi bo\'yicha yutuqlaringizni va natijalaringizni kuzating.'}
+                        ? 'Welcome back. Here is a summary of your CEFR preparation progress.'
+                        : 'Xush kelibsiz. CEFR tayyorgarligingiz bo\'yicha qisqacha ma\'lumotlar.'}
                 </p>
             </header>
 
-            <div className="grid grid-cols-3 gap-6" style={{ marginBottom: '2rem' }}>
-                <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--color-primary)' }}>
-                        <Target size={24} />
-                        <h3 style={{ fontSize: '1.125rem' }}>{lang === 'en' ? 'Current Level' : 'Joriy daraja'}</h3>
+            <div className="dashboard-grid">
+                <div className="stat-card">
+                    <h3>{lang === 'en' ? 'Target Score' : 'Maqsadli ball'}</h3>
+                    <div className="value" style={{ color: 'var(--color-primary)' }}>{profile?.target_level || 'N/A'}</div>
+                    <div className="trend trend-up">
+                        <ArrowUpRight size={14} /> {lang === 'en' ? 'Aiming for progress' : 'Rivojlanish ko\'zlangan'}
                     </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{profile?.current_level || 'N/A'}</div>
                 </div>
-                <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--color-warning)' }}>
-                        <Star size={24} />
-                        <h3 style={{ fontSize: '1.125rem' }}>{lang === 'en' ? 'Total Points' : 'Umumiy ballar'}</h3>
+
+                <div className="stat-card">
+                    <h3>{lang === 'en' ? 'Total Experience' : 'Umumiy tajriba'}</h3>
+                    <div className="value">{profile?.points || 0} XP</div>
+                    <div className="trend text-muted">
+                        {lang === 'en' ? 'Start practicing to earn' : 'Mashq qilib ball yig\'ing'}
                     </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{profile?.points || 0}</div>
                 </div>
-                <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--color-success)' }}>
-                        <Zap size={24} />
-                        <h3 style={{ fontSize: '1.125rem' }}>{lang === 'en' ? 'Tests Completed' : 'Tugallangan testlar'}</h3>
+
+                <div className="stat-card">
+                    <h3>{lang === 'en' ? 'Sessions' : 'Mashg\'ulotlar'}</h3>
+                    <div className="value">{profile?.tests_completed || 0}</div>
+                    <div className="trend text-muted">
+                        {lang === 'en' ? 'Tests completed' : 'Tugallangan testlar'}
                     </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{profile?.tests_completed || 0}</div>
                 </div>
             </div>
 
-            <div className="content-placeholder glass-panel" style={{ minHeight: '300px' }}>
-                <div className="placeholder-text">
-                    <p>{lang === 'en' ? 'Detailed performance analytics will appear here as you take tests.' : 'Test topshirganingiz sari batafsil tahlillar shu yerda ko\'rinadi.'}</p>
-                    <div className="skeleton-line"></div>
-                    <div className="skeleton-line w-3/4"></div>
+            <section style={{ marginTop: '4rem' }}>
+                <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem' }}>{lang === 'en' ? 'Ready to Practice?' : 'Mashq qilishga tayyormisiz?'}</h2>
+                <div className="grid grid-cols-2">
+                    <Link to="/dashboard/reading" className="glass-panel" style={{ padding: '2rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <div className="icon-wrapper color-blue"><BookOpen size={24} /></div>
+                        <div>
+                            <h4 style={{ fontSize: '1.1rem' }}>{lang === 'en' ? 'Reading' : 'O\'qish'}</h4>
+                            <p className="text-muted" style={{ fontSize: '0.9rem' }}>{lang === 'en' ? '3 tests available' : '3 ta test mavjud'}</p>
+                        </div>
+                    </Link>
+                    <Link to="/dashboard/writing" className="glass-panel" style={{ padding: '2rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <div className="icon-wrapper color-purple"><GraduationCap size={24} /></div>
+                        <div>
+                            <h4 style={{ fontSize: '1.1rem' }}>{lang === 'en' ? 'Writing' : 'Yozish'}</h4>
+                            <p className="text-muted" style={{ fontSize: '0.9rem' }}>{lang === 'en' ? 'AI evaluation ready' : 'AI baholash tayyor'}</p>
+                        </div>
+                    </Link>
                 </div>
-            </div>
+            </section>
         </motion.div>
     );
 };
+
+// Need to import Link
+import { Link } from 'react-router-dom';
 
 export default Dashboard;
