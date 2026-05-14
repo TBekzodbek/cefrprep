@@ -22,7 +22,7 @@ const Navigation = ({ lang, toggleLang }: NavigationProps) => {
             <div className="container nav-content">
                 <Link to="/" className="brand">
                     <span className="brand-logo">CEFR</span>
-                    <span className="brand-text">prep</span>
+                    <span className="brand-text">ACADEMY.uz</span>
                 </Link>
                 <div className="nav-links">
                     {links.map((link) => (

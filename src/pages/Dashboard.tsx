@@ -67,12 +67,12 @@ const Dashboard = ({ lang }: Props) => {
                     <h1>{lang === 'en' ? 'Dashboard Overview' : 'Boshqaruv paneli'}</h1>
                     <p>
                         {lang === 'en'
-                            ? 'Welcome back. Here is a summary of your CEFR preparation progress.'
-                            : 'Xush kelibsiz. CEFR tayyorgarligingiz bo\'yicha qisqacha ma\'lumotlar.'}
+                            ? `Welcome back. Atlas is ready for your next session.`
+                            : `Xush kelibsiz. Atlas sizning keyingi mashg'ulotingizga tayyor.`}
                     </p>
                 </div>
                 <div className="dashboard-mascot hidden-mobile" style={{ position: 'absolute', right: 0, top: '-20px' }}>
-                    <img src={aiCoachSmall} alt="AI Coach" style={{ width: '120px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} />
+                    <img src={aiCoachSmall} alt="Atlas AI Coach" style={{ width: '120px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} />
                 </div>
             </header>
 

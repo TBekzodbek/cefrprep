@@ -17,13 +17,13 @@ const Home = ({ lang }: HomeProps) => {
         heroBadge: lang === 'en' ? 'AI-POWERED PREPARATION' : 'AI ASOSLI TAYYORGARLIK',
         heroTitle: lang === 'en' ? 'The fastest path to your target CEFR score.' : 'Ko\'zlangan CEFR natijangizga eng tezkor yo\'l.',
         heroSubtitle: lang === 'en'
-            ? 'From your current level to your target, in three steps. Powered by AI, balanced for the official standards.'
-            : 'Hozirgi darajangizdan maqsadgacha uch bosqichda. AI yordamida, rasmiy standartlarga moslangan.',
+            ? 'Meet Atlas, your AI coach. Get from your current level to your target in three simple steps.'
+            : 'Atlas bilan tanishing - sizning AI ustozingiz. Hozirgi darajangizdan maqsadgacha uch bosqichda erishing.',
         cta: lang === 'en' ? 'Start for Free' : 'Bepul boshlash',
         steps: [
-            { id: 1, title: lang === 'en' ? 'Diagnose' : 'Tahlil', desc: lang === 'en' ? 'Talk to our AI to find your baseline.' : 'AI bilan suhbatlashib hozirgi darajangizni aniqlang.' },
-            { id: 2, title: lang === 'en' ? 'Draft' : 'Reja', desc: lang === 'en' ? 'Get a personalized plan in seconds.' : 'Siz uchun maxsus reja 2 soniyada tayyor bo\'ladi.' },
-            { id: 3, title: lang === 'en' ? 'Drill' : 'Mashq', desc: lang === 'en' ? 'Practice with adaptive mock exams.' : 'Dinamik o\'zgaruvchan mock imtihonlar bilan mashq qiling.' }
+            { id: 1, title: lang === 'en' ? 'Diagnose' : 'Tahlil', desc: lang === 'en' ? 'Talk to Atlas to find your current English baseline.' : 'Atlas bilan suhbatlashib hozirgi darajangizni aniqlang.' },
+            { id: 2, title: lang === 'en' ? 'Draft' : 'Reja', desc: lang === 'en' ? 'Atlas generates your personalized plan in seconds.' : 'Atlas siz uchun maxsus rejani bir necha soniyada tayyorlaydi.' },
+            { id: 3, title: lang === 'en' ? 'Drill' : 'Mashq', desc: lang === 'en' ? 'Practice with adaptive mock exams and instant feedback.' : 'Dinamik mock imtihonlar va tezkor tahlillar bilan mashq qiling.' }
         ],
         results: lang === 'en'
             ? [
@@ -64,7 +64,7 @@ const Home = ({ lang }: HomeProps) => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        <img src={aiCoachImg} alt="AI Coach" className="floating-img" style={{ width: '100%', maxWidth: '500px' }} />
+                        <img src={aiCoachImg} alt="Atlas AI Coach" className="floating-img" style={{ width: '100%', maxWidth: '500px' }} />
                     </motion.div>
                 </div>
             </section>
@@ -106,7 +106,7 @@ const Home = ({ lang }: HomeProps) => {
                     <div className="highlight-content">
                         <div className="badge">{lang === 'en' ? 'NEW FEATURE' : 'YANGI IMKONIYAT'}</div>
                         <h2>{lang === 'en' ? 'Full Cambridge Mock Tests' : 'To\'liq Cambridge Mock Testlari'}</h2>
-                        <p>{lang === 'en' ? 'Real timing, real scoring, and detailed AI feedback for every section.' : 'Haqiqiy vaqt, aniq ballar va har bir bo\'lim uchun AI tahlillari.'}</p>
+                        <p>{lang === 'en' ? 'Real timing, real scoring, and detailed AI feedback from Atlas for every section.' : 'Haqiqiy vaqt, aniq ballar va Atlas tomonidan har bir bo\'lim uchun batafsil tahlillar.'}</p>
                         <Link to="/login" className="btn btn-outline">{lang === 'en' ? 'Try Mock Test' : 'Mock testni ko\'rish'}</Link>
                     </div>
                     <div className="highlight-visual" style={{ background: 'transparent' }}>
@@ -117,8 +117,8 @@ const Home = ({ lang }: HomeProps) => {
 
             <footer className="footer container">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.6 }}>
-                    <div className="brand" style={{ fontSize: '1.25rem' }}>CEFR<span className="text-primary">prep</span></div>
-                    <p>© 2025 CEFRprep. Built for Uzbekistan.</p>
+                    <div className="brand" style={{ fontSize: '1.25rem' }}>CEFR<span className="text-primary">ACADEMY.uz</span></div>
+                    <p>© 2025 CEFRACADEMY.uz. Built for Uzbekistan.</p>
                 </div>
             </footer>
         </div>
