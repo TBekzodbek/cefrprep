@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Star, Target, Zap, Loader2, ArrowUpRight } from 'lucide-react';
+import { Loader2, ArrowUpRight, BookOpen, GraduationCap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './PageLayout.css';
 
@@ -117,8 +118,5 @@ const Dashboard = ({ lang }: Props) => {
         </motion.div>
     );
 };
-
-// Need to import Link
-import { Link } from 'react-router-dom';
 
 export default Dashboard;

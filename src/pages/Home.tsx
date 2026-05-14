@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Zap, Shield, Star, Users, BrainCircuit } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import './Home.css';
 
 interface HomeProps {
@@ -97,7 +97,7 @@ const Home = ({ lang }: HomeProps) => {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                 <div style={{ height: '8px', width: '100%', background: '#eee', borderRadius: '4px' }}></div>
                                 <div style={{ height: '8px', width: '90%', background: '#eee', borderRadius: '4px' }}></div>
-                                <div style={{ height: '8px', width: '95%', background: '#eee', borderRadius: '4px' }}></div>
+                                <div style={{ height: '8px', width: '95', background: '#eee', borderRadius: '4px' }}></div>
                             </div>
                         </div>
                     </div>

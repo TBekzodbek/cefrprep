@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Award, Target, Settings, Activity, Loader2, LogOut, Shield } from 'lucide-react';
+import { User, Mail, Target, Activity, Loader2, LogOut, Shield } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface Props {
