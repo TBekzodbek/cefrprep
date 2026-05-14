@@ -35,8 +35,8 @@ const OnboardingSurvey = ({ lang }: Props) => {
             {
                 id: 'target_level',
                 icon: <Target size={32} />,
-                q: lang === 'en' ? 'Target CEFR Score' : 'Maqsadli daraja',
-                opts: ['B1', 'B2', 'C1']
+                q: lang === 'en' ? 'Target Multi-level Score' : 'Maqsadli Multi-level ball',
+                opts: ['B1 (34-48 pts)', 'B2 (49-63 pts)', 'C1 (64-75 pts)']
             },
             {
                 id: 'time_left',
@@ -46,7 +46,7 @@ const OnboardingSurvey = ({ lang }: Props) => {
             }
         ],
         generate: lang === 'en' ? 'Atlas is Preparing Your Path' : 'Atlas o\'quv rejangizni tuzmoqda',
-        generating: lang === 'en' ? 'Our AI wolf coach is analyzing your goals to build a personalized study journey.' : 'Atlas profilingizni tahlil qilib, shaxsiy o\'quv rejasini tuzmoqda.'
+        generating: lang === 'en' ? 'Our AI wolf coach is analyzing your goals based on the national 75-point marking system.' : 'Atlas 75 ballik milliy baholash tizimi asosida profilingizni tahlil qilmoqda.'
     };
 
     const handleSelect = async (opt: string) => {
@@ -60,7 +60,8 @@ const OnboardingSurvey = ({ lang }: Props) => {
                     current_level: newSelections[0],
                     target_level: newSelections[1],
                     time_left: newSelections[2],
-                    onboarding_completed: true
+                    onboarding_completed: true,
+                    avg_score: 0
                 });
             }
             setTimeout(() => navigate('/dashboard'), 2500);
