@@ -134,7 +134,7 @@ const Dashboard = ({ lang }: Props) => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     <div className="glass-panel" style={{ padding: '2.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><Calendar size={20} /> {lang === 'en' ? 'Active Study Plan' : 'Faol o\'quv rejasi'}</h3>
+                            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><Calendar size={32} /> {lang === 'en' ? 'Active Study Plan' : 'Faol o\'quv rejasi'}</h3>
                             <div className="progress-badge">Day 1 of 30</div>
                         </div>
 
@@ -153,9 +153,9 @@ const Dashboard = ({ lang }: Props) => {
                             ))}
                         </div>
 
-                        <div style={{ marginTop: '2rem', padding: '1rem', background: '#f0f9ff', borderRadius: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                            <Compass className="text-primary" size={24} />
-                            <p style={{ fontSize: '0.9rem', color: '#0369a1', margin: 0 }}>
+                        <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#f0f9ff', borderRadius: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                            <Compass className="text-primary" size={32} />
+                            <p style={{ fontSize: '1rem', color: '#0369a1', margin: 0 }}>
                                 <strong>Atlas Tip:</strong> {profile?.weakness?.includes('Writing')
                                     ? (lang === 'en' ? 'Focus on cohesive devices today to boost your Task 2 score.' : 'Task 2 ballini oshirish uchun bugun bog\'lovchi vositalarga e\'tibor bering.')
                                     : (lang === 'en' ? 'Read 2 articles from BBC today to improve reading speed.' : 'O\'qish tezligini oshirish uchun BBC dan 2 ta maqola o\'qing.')}
@@ -164,7 +164,7 @@ const Dashboard = ({ lang }: Props) => {
                     </div>
 
                     <div className="glass-panel" style={{ padding: '2.5rem' }}>
-                        <h3 style={{ marginBottom: '2rem' }}><BarChart size={20} /> {lang === 'en' ? 'Performance' : 'Natijalar'}</h3>
+                        <h3 style={{ marginBottom: '2rem' }}><BarChart size={32} /> {lang === 'en' ? 'Performance' : 'Natijalar'}</h3>
                         <div className="score-viz-container" style={{ display: 'flex', alignItems: 'flex-end', height: '100px', gap: '1rem' }}>
                             {[0.2, 0.4, 0.35, 0.5, 0.6, 0.55, 0.72].map((v, i) => (
                                 <div key={i} style={{ flex: 1, background: i === 6 ? 'var(--color-primary)' : '#e2e8f0', height: `${v * 100}%`, borderRadius: '4px' }} />
@@ -213,7 +213,7 @@ const Dashboard = ({ lang }: Props) => {
                                 <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Training Day</p>
                                 <h4 style={{ fontSize: '1.5rem', margin: '0', color: '#0f172a' }}>1st Day</h4>
                             </div>
-                            <Award className="text-secondary" />
+                            <Award className="text-secondary" size={32} />
                         </div>
                     </div>
                 </div>
@@ -222,15 +222,15 @@ const Dashboard = ({ lang }: Props) => {
             <section style={{ marginTop: '4rem' }}>
                 <h2 style={{ marginBottom: '2rem', fontSize: '1.5rem' }}>{lang === 'en' ? 'Full Mock Exams' : 'To\'liq Mock imtihonlari'}</h2>
                 <div className="grid grid-cols-2">
-                    <Link to="/dashboard/reading" className="training-card-modern">
-                        <div className="training-icon-circle" style={{ background: '#eff6ff', color: '#3b82f6' }}><BookOpen /></div>
+                    <Link to="/dashboard/reading" className="training-card-modern" style={{ padding: '1.5rem' }}>
+                        <div className="training-icon-circle" style={{ background: '#eff6ff', color: '#3b82f6', width: '3.5rem', height: '3.5rem' }}><BookOpen size={28} /></div>
                         <div className="training-info"><h5>Reading</h5><p>National Exam Prep</p></div>
-                        <ArrowRight size={18} className="arrow-fade" />
+                        <ArrowRight size={20} className="arrow-fade" />
                     </Link>
-                    <Link to="/dashboard/writing" className="training-card-modern">
-                        <div className="training-icon-circle" style={{ background: '#f5f3ff', color: '#8b5cf6' }}><GraduationCap /></div>
+                    <Link to="/dashboard/writing" className="training-card-modern" style={{ padding: '1.5rem' }}>
+                        <div className="training-icon-circle" style={{ background: '#f5f3ff', color: '#8b5cf6', width: '3.5rem', height: '3.5rem' }}><GraduationCap size={28} /></div>
                         <div className="training-info"><h5>Writing</h5><p>AI Evaluated Tasks</p></div>
-                        <ArrowRight size={18} className="arrow-fade" />
+                        <ArrowRight size={20} className="arrow-fade" />
                     </Link>
                 </div>
             </section>
