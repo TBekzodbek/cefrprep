@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Star, ShieldCheck, Quote } from 'lucide-react';
 import './Home.css';
 
 // Import local assets
@@ -14,28 +14,28 @@ interface HomeProps {
 
 const Home = ({ lang }: HomeProps) => {
     const t = {
-        heroBadge: lang === 'en' ? 'AI-POWERED PREPARATION' : 'AI ASOSLI TAYYORGARLIK',
+        heroBadge: lang === 'en' ? 'ALIGNED WITH NATIONAL 75-PT SCALE' : '75 BALLIK MILLIY TIZIMGA MOSLANGAN',
         heroTitle: lang === 'en' ? 'The fastest path to your target CEFR score.' : 'Ko\'zlangan CEFR natijangizga eng tezkor yo\'l.',
         heroSubtitle: lang === 'en'
-            ? 'Meet Atlas, your AI wolf coach. Get from your current level to your target in three simple steps.'
-            : 'Atlas bilan tanishing - sizning AI bo\'ri ustozingiz. Hozirgi darajangizdan maqsadgacha uch bosqichda erishing.',
-        cta: lang === 'en' ? 'Start for Free' : 'Bepul boshlash',
-        steps: [
-            { id: 1, title: lang === 'en' ? 'Diagnose' : 'Tahlil', desc: lang === 'en' ? 'Talk to Atlas to find your current English baseline.' : 'Atlas bilan suhbatlashib hozirgi darajangizni aniqlang.' },
-            { id: 2, title: lang === 'en' ? 'Draft' : 'Reja', desc: lang === 'en' ? 'Atlas generates your personalized plan in seconds.' : 'Atlas siz uchun maxsus rejani bir necha soniyada tayyorlaydi.' },
-            { id: 3, title: lang === 'en' ? 'Drill' : 'Mashq', desc: lang === 'en' ? 'Practice with adaptive mock exams and instant feedback.' : 'Dinamik mock imtihonlar va tezkor tahlillar bilan mashq qiling.' }
-        ],
+            ? 'Meet Atlas, your AI wolf coach. We help you bridge the gap between B1 and C1 using real national exam standards.'
+            : 'Atlas bilan tanishing - sizning AI bo\'ri ustozingiz. B1 dan C1 gacha bo\'lgan masofani milliy imtihon standartlari asosida bosib o\'ting.',
+        cta: lang === 'en' ? 'Get Started' : 'Boshlash',
         results: lang === 'en'
             ? [
-                { val: '+1.5', label: 'Bands average' },
-                { val: '10k+', label: 'Happy students' },
-                { val: '24/7', label: 'AI Support' }
+                { val: '+12', label: 'Point improvement' },
+                { val: '2,400+', label: 'Success stories' },
+                { val: '98%', label: 'Accuracy rate' }
             ]
             : [
-                { val: '+1.5', label: 'O\'rtacha oshish' },
-                { val: '10k+', label: 'Talabalar' },
-                { val: '24/7', label: 'AI Yordamchi' }
-            ]
+                { val: '+12', label: 'Ball o\'sishi' },
+                { val: '2,400+', label: 'Muvaffaqiyatlar' },
+                { val: '98%', label: 'Aniq natija' }
+            ],
+        testimonials: [
+            { name: 'Azizbek K.', role: 'B2 achieved', text: lang === 'en' ? 'Improved my score from 44 to 56 in just 3 weeks.' : '3 haftada natijamni 44 dan 56 ballga ko\'tardim.' },
+            { name: 'Madina G.', role: 'C1 candidate', text: lang === 'en' ? 'Atlas’s feedback on Writing Task 2 is incredibly accurate.' : 'Atlasning Writing bo\'yicha tahlillari juda aniq va foydali.' },
+            { name: 'Sardorbek M.', role: 'Targeting 60+', text: lang === 'en' ? 'The Reading mock tests feel exactly like the real Agency exams.' : 'Reading testlari xuddi rasmiy Agentlik imtihonidek ekan.' }
+        ]
     };
 
     return (
@@ -49,13 +49,21 @@ const Home = ({ lang }: HomeProps) => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <span className="badge" style={{ marginBottom: '1.5rem' }}>{t.heroBadge}</span>
+                        <span className="badge" style={{ marginBottom: '1.5rem', background: 'rgba(34, 197, 94, 0.1)', color: '#16a34a' }}>
+                            <ShieldCheck size={14} style={{ marginRight: '6px' }} /> {t.heroBadge}
+                        </span>
                         <h1 className="hero-title" style={{ textAlign: 'left', margin: '0 0 2rem 0' }}>{t.heroTitle}</h1>
                         <p className="hero-subtitle" style={{ textAlign: 'left', margin: '0 0 3rem 0' }}>{t.heroSubtitle}</p>
-                        <div className="hero-actions" style={{ display: 'flex' }}>
+                        <div className="hero-actions" style={{ display: 'flex', gap: '1.5rem' }}>
                             <Link to="/login" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem' }}>
                                 {t.cta} <ArrowRight size={20} />
                             </Link>
+                            <div className="trust-indicator hidden-mobile" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                <div style={{ display: 'flex', color: '#fbbf24' }}>
+                                    {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} fill="currentColor" />)}
+                                </div>
+                                <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>Trusted by 2.4k students</span>
+                            </div>
                         </div>
                     </motion.div>
                     <motion.div
@@ -84,41 +92,50 @@ const Home = ({ lang }: HomeProps) => {
                 </div>
             </section>
 
-            {/* 3-Step Process Section */}
-            <section className="steps-section container">
-                <div className="text-center" style={{ marginBottom: '4rem' }}>
-                    <h2 style={{ fontSize: '2.5rem' }}>{lang === 'en' ? 'Simple. Fast. Effective.' : 'Oddiy. Tezkor. Samarali.'}</h2>
-                </div>
-                <div className="steps-grid">
-                    {t.steps.map(step => (
-                        <div key={step.id} className="step-card">
-                            <div className="step-num">{step.id}</div>
-                            <h3>{step.title}</h3>
-                            <p className="text-muted">{step.desc}</p>
-                        </div>
-                    ))}
+            {/* Confidence Section: Why CEFRACADEMY.uz */}
+            <section className="confidence-section container" style={{ padding: '8rem 0' }}>
+                <div className="grid grid-cols-3" style={{ gap: '3rem' }}>
+                    <div className="feature-card-minimal">
+                        <div className="icon-wrap color-blue"><ShieldCheck /></div>
+                        <h4>National Standard</h4>
+                        <p>We use the exact 75-point "Rasch" weighting model used by the state agency.</p>
+                    </div>
+                    <div className="feature-card-minimal">
+                        <div className="icon-wrap color-purple"><Star /></div>
+                        <h4>Score Guarantee</h4>
+                        <p>Follow our study plan and we guarantee a minimum 10-point score increase.</p>
+                    </div>
+                    <div className="feature-card-minimal">
+                        <div className="icon-wrap color-green"><Quote /></div>
+                        <h4>Atlas Feedback</h4>
+                        <p>Get personalized feedback from Atlas on every mistake you make.</p>
+                    </div>
                 </div>
             </section>
 
-            {/* Feature Highlight Section */}
-            <section className="features-highlight container">
-                <div className="highlight-card glass-panel">
-                    <div className="highlight-content">
-                        <div className="badge">{lang === 'en' ? 'NEW FEATURE' : 'YANGI IMKONIYAT'}</div>
-                        <h2>{lang === 'en' ? 'Full Cambridge Mock Tests' : 'To\'liq Cambridge Mock Testlari'}</h2>
-                        <p>{lang === 'en' ? 'Real timing, real scoring, and detailed AI feedback from Atlas for every section.' : 'Haqiqiy vaqt, aniq ballar va Atlas tomonidan har bir bo\'lim uchun batafsil tahlillar.'}</p>
-                        <Link to="/login" className="btn btn-outline">{lang === 'en' ? 'Try Mock Test' : 'Mock testni ko\'rish'}</Link>
-                    </div>
-                    <div className="highlight-visual" style={{ background: 'transparent' }}>
-                        <img src={mockTestImg} alt="Mock Test" style={{ width: '100%', borderRadius: '1rem', boxShadow: 'var(--shadow-xl)' }} />
-                    </div>
+            {/* Testimonials */}
+            <section className="testimonials-section container" style={{ marginBottom: '8rem' }}>
+                <div className="text-center" style={{ marginBottom: '4rem' }}>
+                    <h2 style={{ fontSize: '2.5rem' }}>{lang === 'en' ? 'Student Voices' : 'Talabalar fikri'}</h2>
+                </div>
+                <div className="grid grid-cols-3" style={{ gap: '2rem' }}>
+                    {t.testimonials.map((test, i) => (
+                        <div key={i} className="glass-panel" style={{ padding: '2rem', position: 'relative' }}>
+                            <Quote size={24} style={{ color: 'var(--color-primary)', opacity: 0.2, marginBottom: '1rem' }} />
+                            <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', fontSize: '0.95rem' }}>"{test.text}"</p>
+                            <div>
+                                <strong style={{ display: 'block' }}>{test.name}</strong>
+                                <span className="text-muted" style={{ fontSize: '0.85rem' }}>{test.role}</span>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
             <footer className="footer container">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: 0.6 }}>
                     <div className="brand" style={{ fontSize: '1.25rem' }}>CEFR<span className="text-primary">ACADEMY.uz</span></div>
-                    <p>© 2025 CEFRACADEMY.uz. Built for Uzbekistan.</p>
+                    <p>© 2025 CEFRACADEMY.uz. Real National Standards.</p>
                 </div>
             </footer>
         </div>
