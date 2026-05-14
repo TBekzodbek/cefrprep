@@ -15,7 +15,7 @@ import Pricing from './pages/Pricing';
 import { useState } from 'react';
 
 function App() {
-  const [lang, setLang] = useState<'en' | 'uz'>('uz');
+  const [lang, setLang] = useState<'en' | 'uz'>('en');
 
   const toggleLang = () => {
     setLang((prev) => (prev === 'en' ? 'uz' : 'en'));

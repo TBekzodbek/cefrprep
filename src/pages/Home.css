@@ -1,129 +1,170 @@
 .home-page {
-    background-color: var(--color-background);
+    padding-bottom: 5rem;
 }
 
 .hero {
-    padding: 10rem 1rem 6rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 10rem 1rem 8rem;
     text-align: center;
-    background: radial-gradient(circle at 50% -20%, rgba(37, 99, 235, 0.05) 0%, transparent 50%);
 }
 
 .hero-title {
-    font-size: 4.5rem;
-    font-weight: 800;
-    max-width: 900px;
-    line-height: 1.05;
-    margin-bottom: 2rem;
-    letter-spacing: -0.03em;
+    font-size: 5rem;
+    font-weight: 850;
+    max-width: 950px;
+    margin: 0 auto 2rem;
+    line-height: 1;
 }
 
 .hero-subtitle {
     font-size: 1.25rem;
     color: var(--color-text-muted);
     max-width: 650px;
-    margin-bottom: 3rem;
+    margin: 0 auto 3rem;
 }
 
-.trust-section {
-    padding: 4rem 1rem;
+/* Results Strip ala ieltsnation */
+.results-strip {
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
+    padding: 2.5rem 0;
     background: var(--color-background-alt);
 }
 
-.trust-grid {
+.results-flex {
     display: flex;
-    justify-content: center;
-    gap: 4rem;
-    opacity: 0.6;
-    filter: grayscale(1);
-    flex-wrap: wrap;
-}
-
-.trust-item {
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--color-text-light);
-}
-
-.showcase-container {
-    padding: 8rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8rem;
-}
-
-.section-showcase {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    justify-content: space-around;
     align-items: center;
-    gap: 6rem;
+    flex-wrap: wrap;
+    gap: 2rem;
 }
 
-.section-showcase:nth-child(even) {
-    direction: rtl;
+.result-item {
+    text-align: center;
 }
 
-.section-showcase:nth-child(even) .showcase-content {
-    direction: ltr;
+.result-val {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    margin-bottom: 0.25rem;
 }
 
-.showcase-visual {
-    height: 450px;
-    background: var(--color-background-alt);
+.result-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Steps Grid */
+.steps-section {
+    padding: 8rem 0;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+}
+
+.step-card {
+    padding: 3rem;
+    background: #ffffff;
     border-radius: var(--radius-2xl);
     border: 1px solid var(--color-border);
     position: relative;
-    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-primary);
     box-shadow: var(--shadow-xl);
 }
 
-.visual-mock {
+.step-num {
     position: absolute;
-    top: 10%;
-    left: 10%;
-    right: 10%;
-    bottom: 0;
-    background: var(--color-background);
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    border: 1px solid var(--color-border);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-lg);
+    top: -1.5rem;
+    left: 2rem;
+    width: 3rem;
+    height: 3rem;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
 }
 
-.showcase-content h2 {
-    font-size: 2.75rem;
+.step-card h3 {
+    font-size: 1.5rem;
     margin-bottom: 1rem;
 }
 
-.showcase-content p {
+/* Feature Highlight */
+.features-highlight {
+    padding: 4rem 0 8rem;
+}
+
+.highlight-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 4rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.highlight-content h2 {
+    font-size: 2.75rem;
+    margin: 1.5rem 0;
+    letter-spacing: -0.03em;
+}
+
+.highlight-content p {
     font-size: 1.15rem;
     color: var(--color-text-muted);
     margin-bottom: 2.5rem;
 }
 
-.benefits-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    margin-bottom: 3rem;
-}
-
-.benefits-list li {
+.highlight-visual {
+    height: 300px;
+    background: var(--color-background-alt);
+    border-radius: var(--radius-xl);
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-weight: 500;
+    justify-content: center;
+}
+
+.visual-mock {
+    width: 280px;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--color-border);
+    z-index: 1;
+}
+
+.visual-circle {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: var(--color-primary-soft);
+    border-radius: 50%;
+    filter: blur(40px);
 }
 
 .footer {
-    padding: 6rem 1rem;
+    padding: 4rem 0;
     border-top: 1px solid var(--color-border);
-    background: var(--color-background-alt);
 }
 
 @media (max-width: 968px) {
@@ -131,12 +172,18 @@
         font-size: 3rem;
     }
 
-    .section-showcase {
+    .steps-grid {
         grid-template-columns: 1fr;
         gap: 4rem;
     }
 
-    .section-showcase:nth-child(even) {
-        direction: ltr;
+    .highlight-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 3rem 1.5rem;
+    }
+
+    .highlight-visual {
+        display: none;
     }
 }
