@@ -189,7 +189,7 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                         <button className="btn btn-ghost" onClick={toggleLang} style={{ color: '#64748b' }}>
                             <Globe size={20} /> <span>{lang.toUpperCase()}</span>
                         </button>
-                        <Link to="/login" className="btn btn-primary">{lang === 'en' ? 'Sign In' : 'Kirish'}</Link>
+                        <button onClick={() => scrollToSection('builder')} className="btn btn-primary">{lang === 'en' ? 'Build Plan' : 'Reja tuzish'}</button>
                     </div>
                 </div>
             </header>
