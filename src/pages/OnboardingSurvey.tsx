@@ -1,6 +1,8 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { BookOpen, Headphones, GraduationCap, Mic, ArrowRight, Zap, Star, Layout, ShieldCheck, Activity, PieChart, Globe } from 'lucide-react';
+import { BookOpen, Headphones, GraduationCap, Mic, ArrowRight, Zap, Star, Layout, ShieldCheck, Activity, PieChart, Globe, Target, BrainCircuit, Clock, AlertCircle } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 import './OnboardingSurvey.css';
 
 // Asset imports
@@ -14,6 +16,20 @@ interface Props {
 const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
     const navigate = useNavigate();
 
+    // Survey State
+    const [step, setStep] = useState(1);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [selections, setSelections] = useState<string[]>([]);
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) setUserId(user.id);
+        };
+        fetchUser();
+    }, []);
+
     const categories = [
         {
             id: 'reading',
@@ -23,7 +39,6 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                 ? 'Master the national CEFR reading format with 3 adaptive levels.'
                 : 'Miliiy CEFR o\'qish formatini 3 ta adaptiv darajada o\'rganing.',
             color: '#3b82f6',
-            action: '/dashboard/reading',
             features: [
                 lang === 'en' ? 'Rasch text complexity' : 'Rasch bo\'yicha matn murakkabligi',
                 lang === 'en' ? '60-minute mock trials' : '60 daqiqalik mock testlar',
@@ -38,7 +53,6 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                 ? 'High-fidelity audio recorded based on official state exam standards.'
                 : 'Rasmiy davlat imtihon standartlari asosida yozilgan yuqori sifatli audiolar.',
             color: '#10b981',
-            action: '/dashboard/listening',
             features: [
                 lang === 'en' ? 'Natural accents (UZB/ENG)' : 'Tabiiy aksentlar',
                 lang === 'en' ? 'Detail-oriented questions' : 'Detallashgan savollar',
@@ -53,7 +67,6 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                 ? 'Submit Task 1 & 2 for instant AI evaluation on the 75-point scale.'
                 : 'Task 1 va 2 ni yuboring va 75 ballik tizimda AI tahlilini oling.',
             color: '#8b5cf6',
-            action: '/dashboard/writing',
             features: [
                 lang === 'en' ? 'DTM-based criteria' : 'DTM mezonlari',
                 lang === 'en' ? 'Cohesion feedback' : 'Mantiqiy bog\'liqlik tahlili',
@@ -68,12 +81,44 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                 ? 'Talk to Atlas about topical cards and receive a point prediction.'
                 : 'Atlas bilan mavzuli kartochkalar orqali gapiring va bashorat qilingan ballni oling.',
             color: '#f59e0b',
-            action: '/dashboard/speaking',
             features: [
                 lang === 'en' ? 'Real-time conversation' : 'Jonli muloqot',
                 lang === 'en' ? 'Pronunciation analysis' : 'Talaffuz tahlili',
                 lang === 'en' ? 'Topic-specific cards' : 'Maxsus mavzuli kartochkalar'
             ]
+        }
+    ];
+
+    const surveyQuestions = [
+        {
+            id: 'current_level',
+            icon: <BrainCircuit size={48} />,
+            q: lang === 'en' ? 'What is your current level?' : 'Hozirgi darajangiz qanday?',
+            opts: ['A1 Beginner', 'A2 Elementary', 'B1 Intermediate', 'B2 Upper', 'C1 Advanced']
+        },
+        {
+            id: 'target_level',
+            icon: <Target size={48} />,
+            q: lang === 'en' ? 'What is your target score?' : 'Maqsadli natijangiz?',
+            opts: ['B1 (34-48 pts)', 'B2 (49-63 pts)', 'C1 (64-75 pts)']
+        },
+        {
+            id: 'weakness',
+            icon: <AlertCircle size={48} />,
+            q: lang === 'en' ? 'Which area is your weakest?' : 'Qaysi bo\'limda qiynalasiz?',
+            opts: [lang === 'en' ? 'Speaking & Grammar' : 'Gapirish va Grammatika', lang === 'en' ? 'Academic Writing' : 'Akademik Yozish', lang === 'en' ? 'Reading Speed' : 'O\'qish tezligi', lang === 'en' ? 'Listening Detail' : 'Listening detallari']
+        },
+        {
+            id: 'frequency',
+            icon: <Star size={48} />,
+            q: lang === 'en' ? 'How often will you study?' : 'Qanchalik tez-tez shug\'ullanasiz?',
+            opts: [lang === 'en' ? 'Every day (Intensive)' : 'Har kuni (Intensiv)', lang === 'en' ? '3-4 times a week' : 'Haftada 3-4 marta', lang === 'en' ? 'Weekends only' : 'Faqat dam olish kunlari']
+        },
+        {
+            id: 'time_left',
+            icon: <Clock size={48} />,
+            q: lang === 'en' ? 'When is your exam date?' : 'Imtihoningiz qachon?',
+            opts: [lang === 'en' ? 'Within 1 month' : '1 oy ichida', lang === 'en' ? '1-3 months' : '1-3 oy', lang === 'en' ? 'Just starting' : 'Endi boshlayapman']
         }
     ];
 
@@ -84,6 +129,39 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                 top: element.offsetTop - 80,
                 behavior: 'auto'
             });
+        }
+    };
+
+    const handleSelect = async (opt: string) => {
+        const newSelections = [...selections, opt];
+        setSelections(newSelections);
+
+        if (step < surveyQuestions.length) {
+            setStep(step + 1);
+        } else {
+            setIsGenerating(true);
+            localStorage.setItem('pendingSurvey', JSON.stringify({
+                current_level: newSelections[0],
+                target_level: newSelections[1],
+                weakness: newSelections[2],
+                frequency: newSelections[3],
+                time_left: newSelections[4]
+            }));
+
+            if (userId) {
+                await supabase.from('profiles').upsert({
+                    id: userId,
+                    current_level: newSelections[0],
+                    target_level: newSelections[1],
+                    onboarding_completed: true,
+                    weakness: newSelections[2],
+                    frequency: newSelections[3],
+                    time_left: newSelections[4]
+                });
+                setTimeout(() => navigate('/dashboard'), 2500);
+            } else {
+                setTimeout(() => navigate('/login?mode=signup'), 2500);
+            }
         }
     };
 
@@ -117,7 +195,6 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
             </header>
 
             <main className="onboarding-sections">
-                {/* HERO SECTION - REPLACING THE PREVIOUS INTRO */}
                 <section className="hero-onboarding-wrapper" id="home">
                     <div className="container hero-grid">
                         <motion.div
@@ -135,8 +212,8 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                                     : 'Atlas bilan tanishing - sizning AI robot ustozingiz. B1 dan C1 gacha bo\'lgan masofani milliy standartlarda bosib o\'ting.'}
                             </p>
                             <div className="hero-cta-group">
-                                <button onClick={() => scrollToSection('reading')} className="btn btn-primary btn-xl btn-glow">
-                                    {lang === 'en' ? 'Start Free Diagnostic' : 'Diagnostikani boshlash'}
+                                <button onClick={() => scrollToSection('builder')} className="btn btn-primary btn-xl btn-glow">
+                                    {lang === 'en' ? 'Start Learning' : 'O\'rganishni boshlash'}
                                 </button>
                                 <div className="trust-badges">
                                     <ShieldCheck size={20} /> <span>Official DTM Methodology</span>
@@ -153,7 +230,6 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                     </div>
                 </section>
 
-                {/* RESULTS BAR STATS */}
                 <div className="onboarding-stats-strip">
                     <div className="container stats-flex">
                         <div className="stat-pill"><Activity size={24} /> <span>+12 Avg Point Increase</span></div>
@@ -162,7 +238,6 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                     </div>
                 </div>
 
-                {/* CATEGORY SECTIONS */}
                 {categories.map((cat, i) => (
                     <section key={cat.id} id={cat.id} className="category-section" style={{ borderLeft: `8px solid ${cat.color}` }}>
                         <div className="container section-inner">
@@ -188,8 +263,8 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                                 </ul>
 
                                 <div className="section-actions">
-                                    <button onClick={() => navigate(cat.action)} className="btn btn-primary btn-lg" style={{ background: cat.color }}>
-                                        {lang === 'en' ? 'Open' : 'Ochish'} {cat.title} <ArrowRight size={20} />
+                                    <button onClick={() => scrollToSection('builder')} className="btn btn-primary btn-lg" style={{ background: cat.color }}>
+                                        {lang === 'en' ? 'Build My Plan' : 'Reja tuzish'} <ArrowRight size={20} />
                                     </button>
                                 </div>
                             </motion.div>
@@ -212,23 +287,64 @@ const OnboardingSurvey = ({ lang, toggleLang }: Props) => {
                         </div>
                     </section>
                 ))}
+
+                {/* AI BUILDER SECTION - THE QUESTIONS */}
+                <section className="builder-section" id="builder">
+                    <div className="container">
+                        <div className="builder-header text-center">
+                            <span className="badge-premium">AI BUILDER</span>
+                            <h2>{lang === 'en' ? 'Customize Your Study Plan' : 'O\'quv rejangizni shakllantiring'}</h2>
+                            <p className="text-muted">{lang === 'en' ? 'Tell Atlas about your current standing to get a tailored roadmap.' : 'Atlasga hozirgi darajangiz haqida ayting va shaxsiy reja oling.'}</p>
+                        </div>
+
+                        <div className="builder-card-container">
+                            <AnimatePresence mode="wait">
+                                {!isGenerating ? (
+                                    <motion.div
+                                        key={`q-${step}`}
+                                        className="builder-question-card glass-panel"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                    >
+                                        <div className="q-icon-box">{surveyQuestions[step - 1].icon}</div>
+                                        <h3>{surveyQuestions[step - 1].q}</h3>
+                                        <div className="builder-options">
+                                            {surveyQuestions[step - 1].opts.map((opt, i) => (
+                                                <button key={i} className="builder-opt-btn" onClick={() => handleSelect(opt)}>
+                                                    {opt} <ArrowRight size={18} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div className="q-progress">
+                                            <span>Step {step} of 5</span>
+                                            <div className="progress-track"><div className="progress-fill" style={{ width: `${(step / 5) * 100}%` }} /></div>
+                                        </div>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="generating"
+                                        className="builder-generating-card glass-panel text-center"
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                    >
+                                        <div className="generating-visual">
+                                            <Zap size={64} className="animate-pulse text-warning" />
+                                        </div>
+                                        <h2>{lang === 'en' ? 'Generating Plan...' : 'Reja tuzilmoqda...'}</h2>
+                                        <p>{lang === 'en' ? 'Atlas is analyzing your targets to build your 30-day roadmap.' : 'Atlas maqsadlaringiz asosida 30 kunlik reja tayyorlamoqda.'}</p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
+                </section>
             </main>
 
             <footer className="onboarding-footer">
                 <div className="container">
-                    <motion.div
-                        className="final-cta-card"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                    >
-                        <Zap size={64} className="text-warning" />
-                        <h2>{lang === 'en' ? 'Your AI Roadmap is Ready' : 'AI Yo\'l xaritangiz tayyor'}</h2>
-                        <p>{lang === 'en' ? 'Analyze your weaknesses in each module to generate a custom 30-day plan.' : 'Shaxsiy 30 kunlik reja tuzish uchun har bir modulda kamchiliklaringizni tahlil qiling.'}</p>
-                        <button onClick={() => navigate('/dashboard')} className="btn btn-primary btn-xl btn-glow">
-                            {lang === 'en' ? 'Go to Command Center' : 'Boshqaruv markaziga o\'tish'}
-                        </button>
-                    </motion.div>
                     <div className="brand-footer">
+                        <div className="brand-large">CEFR<span className="text-primary">ACADEMY</span></div>
                         <p>© 2025 CEFRACADEMY.uz. Built for Uzbekistan.</p>
                     </div>
                 </div>
