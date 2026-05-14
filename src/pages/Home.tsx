@@ -113,6 +113,21 @@ const Home = ({ lang }: HomeProps) => {
                 </div>
             </section>
 
+            {/* Feature Highlight Section */}
+            <section className="features-highlight container">
+                <div className="highlight-card glass-panel">
+                    <div className="highlight-content">
+                        <div className="badge" style={{ background: 'var(--color-primary)', color: 'white' }}>{lang === 'en' ? 'MOCK EXAMS' : 'MOCK IMTIHONLAR'}</div>
+                        <h2>{lang === 'en' ? 'Real-weight Mock Tests' : 'Haqiqiy vaznli Mock Testlar'}</h2>
+                        <p>{lang === 'en' ? 'Experience the official timing and score calculation before your big day.' : 'Asosiy imtihon oldidan rasmiy vaqt va ball hisoblash tizimini sinab ko\'ring.'}</p>
+                        <Link to="/login" className="btn btn-outline">{lang === 'en' ? 'Try Mock Test' : 'Mock testni ko\'rish'}</Link>
+                    </div>
+                    <div className="highlight-visual" style={{ background: 'transparent' }}>
+                        <img src={mockTestImg} alt="Mock Test" style={{ width: '100%', borderRadius: '1rem', boxShadow: 'var(--shadow-xl)' }} />
+                    </div>
+                </div>
+            </section>
+
             {/* Testimonials */}
             <section className="testimonials-section container" style={{ marginBottom: '8rem' }}>
                 <div className="text-center" style={{ marginBottom: '4rem' }}>
