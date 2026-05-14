@@ -45,8 +45,8 @@ const OnboardingSurvey = ({ lang }: Props) => {
                 opts: [lang === 'en' ? 'Less than 1 month' : '1 oydan kam', lang === 'en' ? '1-3 months' : '1-3 oy', lang === 'en' ? 'More than 3 months' : '3 oydan ko\'p']
             }
         ],
-        generate: lang === 'en' ? 'Preparing Your Path' : 'O\'quv rejangiz tayyorlanmoqda',
-        generating: lang === 'en' ? 'Our AI is analyzing your goals to build a personalized study journey.' : 'AI tizimimiz profilingizni tahlil qilib, shaxsiy o\'quv rejasini tuzmoqda.'
+        generate: lang === 'en' ? 'Atlas is Preparing Your Path' : 'Atlas o\'quv rejangizni tuzmoqda',
+        generating: lang === 'en' ? 'Our AI wolf coach is analyzing your goals to build a personalized study journey.' : 'Atlas profilingizni tahlil qilib, shaxsiy o\'quv rejasini tuzmoqda.'
     };
 
     const handleSelect = async (opt: string) => {

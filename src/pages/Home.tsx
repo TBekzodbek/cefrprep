@@ -4,9 +4,9 @@ import { ArrowRight } from 'lucide-react';
 import './Home.css';
 
 // Import local assets
-import aiCoachImg from '../assets/images/ai-coach.png';
-import successImg from '../assets/images/success.png';
-import mockTestImg from '../assets/images/mock-test.png';
+import atlasWolfImg from '../assets/images/atlas-wolf.png';
+import successImg from '../assets/images/cefracademy-success.png';
+import mockTestImg from '../assets/images/atlas-mock-test.png';
 
 interface HomeProps {
     lang: 'en' | 'uz';
@@ -17,8 +17,8 @@ const Home = ({ lang }: HomeProps) => {
         heroBadge: lang === 'en' ? 'AI-POWERED PREPARATION' : 'AI ASOSLI TAYYORGARLIK',
         heroTitle: lang === 'en' ? 'The fastest path to your target CEFR score.' : 'Ko\'zlangan CEFR natijangizga eng tezkor yo\'l.',
         heroSubtitle: lang === 'en'
-            ? 'Meet Atlas, your AI coach. Get from your current level to your target in three simple steps.'
-            : 'Atlas bilan tanishing - sizning AI ustozingiz. Hozirgi darajangizdan maqsadgacha uch bosqichda erishing.',
+            ? 'Meet Atlas, your AI wolf coach. Get from your current level to your target in three simple steps.'
+            : 'Atlas bilan tanishing - sizning AI bo\'ri ustozingiz. Hozirgi darajangizdan maqsadgacha uch bosqichda erishing.',
         cta: lang === 'en' ? 'Start for Free' : 'Bepul boshlash',
         steps: [
             { id: 1, title: lang === 'en' ? 'Diagnose' : 'Tahlil', desc: lang === 'en' ? 'Talk to Atlas to find your current English baseline.' : 'Atlas bilan suhbatlashib hozirgi darajangizni aniqlang.' },
@@ -64,7 +64,7 @@ const Home = ({ lang }: HomeProps) => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        <img src={aiCoachImg} alt="Atlas AI Coach" className="floating-img" style={{ width: '100%', maxWidth: '500px' }} />
+                        <img src={atlasWolfImg} alt="Atlas the Wolf" className="floating-img" style={{ width: '100%', maxWidth: '500px' }} />
                     </motion.div>
                 </div>
             </section>
@@ -73,7 +73,7 @@ const Home = ({ lang }: HomeProps) => {
             <section className="results-strip">
                 <div className="container results-flex">
                     <div className="success-visual hidden-mobile">
-                        <img src={successImg} alt="Students" style={{ height: '60px', opacity: 0.8 }} />
+                        <img src={successImg} alt="Success" style={{ height: '60px', opacity: 0.8 }} />
                     </div>
                     {t.results.map((res, i) => (
                         <div key={i} className="result-item">

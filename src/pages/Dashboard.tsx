@@ -4,7 +4,7 @@ import { Loader2, ArrowUpRight, BookOpen, GraduationCap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import './PageLayout.css';
-import aiCoachSmall from '../assets/images/ai-coach.png';
+import atlasWolfSmall from '../assets/images/atlas-wolf.png';
 
 interface Props {
     lang: 'en' | 'uz';
@@ -71,8 +71,8 @@ const Dashboard = ({ lang }: Props) => {
                             : `Xush kelibsiz. Atlas sizning keyingi mashg'ulotingizga tayyor.`}
                     </p>
                 </div>
-                <div className="dashboard-mascot hidden-mobile" style={{ position: 'absolute', right: 0, top: '-20px' }}>
-                    <img src={aiCoachSmall} alt="Atlas AI Coach" style={{ width: '120px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} />
+                <div className="dashboard-mascot hidden-mobile" style={{ position: 'absolute', right: 10, top: '-30px' }}>
+                    <img src={atlasWolfSmall} alt="Atlas the Wolf" style={{ width: '140px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} />
                 </div>
             </header>
 
