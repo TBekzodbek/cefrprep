@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Target, Clock, BrainCircuit, ArrowRight, AlertCircle, Heart } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { BookOpen, Headphones, GraduationCap, Mic, ArrowRight, Zap, Star, BrainCircuit } from 'lucide-react';
 import './OnboardingSurvey.css';
 
 interface Props {
@@ -11,142 +9,146 @@ interface Props {
 
 const OnboardingSurvey = ({ lang }: Props) => {
     const navigate = useNavigate();
-    const [step, setStep] = useState(1);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [selections, setSelections] = useState<string[]>([]);
-    const [userId, setUserId] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) setUserId(user.id);
-        };
-        fetchUser();
-    }, []);
-
-    const t = {
-        steps: [
-            {
-                id: 'current_level',
-                icon: <BrainCircuit size={48} />,
-                q: lang === 'en' ? 'What is your current level?' : 'Hozirgi darajangiz qanday?',
-                opts: ['A1 Beginner', 'A2 Elementary', 'B1 Intermediate', 'B2 Upper', 'C1 Advanced']
-            },
-            {
-                id: 'target_level',
-                icon: <Target size={48} />,
-                q: lang === 'en' ? 'What is your target score?' : 'Maqsadli natijangiz?',
-                opts: ['B1 (34-48 pts)', 'B2 (49-63 pts)', 'C1 (64-75 pts)']
-            },
-            {
-                id: 'weakness',
-                icon: <AlertCircle size={48} />,
-                q: lang === 'en' ? 'Which area is your weakest?' : 'Qaysi bo\'limda qiynalasiz?',
-                opts: [lang === 'en' ? 'Speaking & Grammar' : 'Gapirish va Grammatika', lang === 'en' ? 'Academic Writing' : 'Akademik Yozish', lang === 'en' ? 'Reading Speed' : 'O\'qish tezligi', lang === 'en' ? 'Listening Detail' : 'Listening detallari']
-            },
-            {
-                id: 'frequency',
-                icon: <Heart size={48} />,
-                q: lang === 'en' ? 'How often will you study?' : 'Qanchalik tez-tez shug\'ullanasiz?',
-                opts: [lang === 'en' ? 'Every day (Intensive)' : 'Har kuni (Intensiv)', lang === 'en' ? '3-4 times a week' : 'Haftada 3-4 marta', lang === 'en' ? 'Weekends only' : 'Faqat dam olish kunlari']
-            },
-            {
-                id: 'time_left',
-                icon: <Clock size={48} />,
-                q: lang === 'en' ? 'When is your exam date?' : 'Imtihoningiz qachon?',
-                opts: [lang === 'en' ? 'Within 1 month' : '1 oy ichida', lang === 'en' ? '1-3 months' : '1-3 oy', lang === 'en' ? 'Just starting' : 'Endi boshlayapman']
-            }
-        ],
-        generate: lang === 'en' ? 'Atlas is Developing Your Plan' : 'Atlas shaxsiy rejangizni tuzmoqda',
-        generating: lang === 'en' ? 'Analyzing your weaknesses and targets to build a custom 30-day roadmap...' : 'Kamchiliklaringiz va maqsadlaringiz asosida 30 kunlik reja tayyorlanmoqda...',
-        guestMessage: lang === 'en' ? 'Create an account to save your AI plan' : 'Rejangizni saqlab qolish uchun ro\'yxatdan o\'ting'
-    };
-
-    const handleSelect = async (opt: string) => {
-        const newSelections = [...selections, opt];
-        setSelections(newSelections);
-
-        if (step < t.steps.length) {
-            setStep(step + 1);
-        } else {
-            setIsGenerating(true);
-
-            // Store results temporarily
-            localStorage.setItem('pendingSurvey', JSON.stringify({
-                current_level: newSelections[0],
-                target_level: newSelections[1],
-                weakness: newSelections[2],
-                frequency: newSelections[3],
-                time_left: newSelections[4]
-            }));
-
-            if (userId) {
-                // If logged in, save to DB immediately
-                await supabase.from('profiles').upsert({
-                    id: userId,
-                    current_level: newSelections[0],
-                    target_level: newSelections[1],
-                    onboarding_completed: true,
-                    weakness: newSelections[2],
-                    frequency: newSelections[3],
-                    time_left: newSelections[4]
-                });
-                setTimeout(() => navigate('/dashboard'), 2500);
-            } else {
-                // If guest, redirect to signup after a short delay
-                setTimeout(() => navigate('/login?mode=signup'), 2500);
-            }
+    const categories = [
+        {
+            id: 'reading',
+            icon: <BookOpen size={64} />,
+            title: lang === 'en' ? 'Reading Strategy' : 'O\'qish strategiyasi',
+            desc: lang === 'en'
+                ? 'Master 60-minute time management and Rasch-based text complexity.'
+                : '60 daqiqalik vaqt menejmenti va matn murakkabligini o\'rganing.',
+            color: '#3b82f6',
+            action: '/dashboard/reading',
+            stats: lang === 'en' ? '30+ Passages' : '30+ Matnlar'
+        },
+        {
+            id: 'listening',
+            icon: <Headphones size={64} />,
+            title: lang === 'en' ? 'Listening Acoustics' : 'Eshitish qobiliyati',
+            desc: lang === 'en'
+                ? 'Practice with real Uzbekistan exam recording speeds and accents.'
+                : 'Haqiqiy imtihon tezligi va aksentlarida mashq qiling.',
+            color: '#10b981',
+            action: '/dashboard/listening',
+            stats: lang === 'en' ? '45+ Audios' : '45+ Audiolar'
+        },
+        {
+            id: 'writing',
+            icon: <GraduationCap size={64} />,
+            title: lang === 'en' ? 'Writing Evaluation' : 'Yozish mahorati',
+            desc: lang === 'en'
+                ? 'AI analysis of your Task 1 and Task 2 based on DTM criteria.'
+                : 'Task 1 va Task 2 uchun DTM mezonlari asosida AI tahlil.',
+            color: '#8b5cf6',
+            action: '/dashboard/writing',
+            stats: lang === 'en' ? 'AI Feedback' : 'AI Tahlil'
+        },
+        {
+            id: 'speaking',
+            icon: <Mic size={64} />,
+            title: lang === 'en' ? 'Speaking Conversation' : 'Gapirish mahorati',
+            desc: lang === 'en'
+                ? 'Real-time conversation with Atlas AI about exam topics.'
+                : 'Imtihon mavzularida Atlas AI bilan jonli suhbat.',
+            color: '#f59e0b',
+            action: '/dashboard/speaking',
+            stats: lang === 'en' ? 'Live Chat' : 'Jonli muloqot'
         }
-    };
+    ];
 
     return (
-        <div className="onboarding-page">
-            <AnimatePresence mode="wait">
-                {!isGenerating ? (
-                    <motion.div
-                        key={`step-${step}`}
-                        className="onboarding-card"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                    >
-                        <div className="onboarding-icon">
-                            {t.steps[step - 1].icon}
-                        </div>
-                        <div className="step-count">STEP {step} OF {t.steps.length}</div>
-                        <h2>{t.steps[step - 1].q}</h2>
-                        <div className="onboarding-options">
-                            {t.steps[step - 1].opts.map((opt, i) => (
-                                <button key={i} className="option-btn" onClick={() => handleSelect(opt)}>
-                                    {opt}
-                                    <ArrowRight size={18} style={{ opacity: 0.3 }} />
-                                </button>
-                            ))}
-                        </div>
-                        <div className="progress-dots">
-                            {t.steps.map((_, i) => (
-                                <div key={i} className={`dot ${i + 1 === step ? 'active' : ''}`} />
-                            ))}
-                        </div>
-                    </motion.div>
-                ) : (
-                    <motion.div
-                        key="generating"
-                        className="onboarding-card text-center"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                    >
-                        <div className="onboarding-icon">
-                            <Sparkles size={64} className="animate-pulse text-primary" />
-                        </div>
-                        <h2 style={{ marginTop: '2rem' }}>{t.generate}</h2>
-                        <p className="text-muted" style={{ fontSize: '1.1rem', marginTop: '1rem' }}>{t.generating}</p>
-                        {!userId && <p className="guest-alert">{t.guestMessage}</p>}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+        <div className="onboarding-scroll-container">
+            {/* Quick Links Nav */}
+            <nav className="onboarding-sticky-nav">
+                {categories.map(cat => (
+                    <a key={cat.id} href={`#${cat.id}`} className="nav-anchor">
+                        {cat.icon}
+                        <span>{cat.id.charAt(0).toUpperCase() + cat.id.slice(1)}</span>
+                    </a>
+                ))}
+            </nav>
+
+            {/* Intro Section */}
+            <section className="onboarding-section intro">
+                <motion.div
+                    className="intro-content"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                >
+                    <span className="badge-premium"><BrainCircuit size={16} /> {lang === 'en' ? 'DIAGNOSTIC TOUR' : 'DIAGNOSTIKA'}</span>
+                    <h1>{lang === 'en' ? 'Welcome to your AI Journey' : 'AI O\'quv yo\'nalishiga xush kelibsiz'}</h1>
+                    <p>{lang === 'en' ? 'Scroll down to explore each category and start your personalized preparation.' : 'Har bir bo\'limni o\'rganish uchun pastga tushing va tayyorgarlikni boshlang.'}</p>
+                    <div className="scroll-indicator">
+                        <div className="mouse"></div>
+                        <span>Scroll Down</span>
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* Category Sections */}
+            {categories.map((cat, i) => (
+                <section key={cat.id} id={cat.id} className="onboarding-section category-page" style={{ background: i % 2 === 0 ? '#fff' : '#f8fafc' }}>
+                    <div className="container category-grid">
+                        <motion.div
+                            className="category-visual"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <div className="icon-main-large" style={{ color: cat.color, background: `${cat.color}15` }}>
+                                {cat.icon}
+                            </div>
+                            <div className="visual-decoration">
+                                <div className="floating-stat"><Star size={16} /> {cat.stats}</div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            className="category-info"
+                            initial={{ opacity: 0, x: 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                        >
+                            <div className="step-tag">Phase 0{i + 1}</div>
+                            <h2>{cat.title}</h2>
+                            <p>{cat.desc}</p>
+
+                            <div className="feature-bullets">
+                                <div className="bullet"><CheckCircle size={18} /> {lang === 'en' ? 'Authentic DTM materials' : 'Haqiqiy DTM materiallari'}</div>
+                                <div className="bullet"><CheckCircle size={18} /> {lang === 'en' ? 'Personalized feedback' : 'Shaxsiy tahlillar'}</div>
+                            </div>
+
+                            <button onClick={() => navigate(cat.action)} className="btn btn-primary btn-lg" style={{ background: cat.color }}>
+                                {lang === 'en' ? 'Enter' : 'Kirish'} {cat.title} <ArrowRight size={20} />
+                            </button>
+                        </motion.div>
+                    </div>
+                </section>
+            ))}
+
+            <section className="onboarding-section final">
+                <motion.div
+                    className="final-card"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                >
+                    <Zap size={48} className="text-warning" />
+                    <h2>{lang === 'en' ? 'Ready to achieve C1?' : 'C1 darajaga tayyormisiz?'}</h2>
+                    <p>{lang === 'en' ? 'Atlas is ready to build your 30-day study roadmap based on these selections.' : 'Atlas tanlovlaringiz asosida 30 kunlik reja tuzishga tayyor.'}</p>
+                    <button onClick={() => navigate('/dashboard')} className="btn btn-primary btn-glow">
+                        {lang === 'en' ? 'Go to My Dashboard' : 'Dashboardga o\'tish'}
+                    </button>
+                </motion.div>
+            </section>
         </div>
     );
 };
+
+// Help helper
+const CheckCircle = ({ size }: { size: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+);
 
 export default OnboardingSurvey;
