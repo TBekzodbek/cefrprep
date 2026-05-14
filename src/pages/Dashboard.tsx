@@ -224,7 +224,7 @@ const Dashboard = ({ lang }: Props) => {
                 <div className="grid grid-cols-2">
                     <Link to="/dashboard/reading" className="training-card-modern" style={{ padding: '1.5rem' }}>
                         <div className="training-icon-circle" style={{ background: '#eff6ff', color: '#3b82f6', width: '3.5rem', height: '3.5rem' }}><BookOpen size={28} /></div>
-                        <div className="training-info"><h5>Reading</h5><p>National Exam Prep</p></div>
+                        <div className="training-info"><h5>Reading</h5><p>National Exam Academy</p></div>
                         <ArrowRight size={20} className="arrow-fade" />
                     </Link>
                     <Link to="/dashboard/writing" className="training-card-modern" style={{ padding: '1.5rem' }}>
