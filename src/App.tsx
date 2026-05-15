@@ -12,6 +12,8 @@ import Profile from './pages/Profile';
 import Plan from './pages/Plan';
 import Pricing from './pages/Pricing';
 import { useState } from 'react';
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [lang, setLang] = useState<'en' | 'uz'>('en');
@@ -22,6 +24,8 @@ function App() {
 
   return (
     <Router>
+      <SpeedInsights />
+      <Analytics />
       <Routes>
         {/* Unified Home & Onboarding */}
         <Route path="/" element={<OnboardingSurvey lang={lang} toggleLang={toggleLang} />} />
