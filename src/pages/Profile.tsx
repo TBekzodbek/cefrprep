@@ -25,6 +25,8 @@ const Profile = ({ lang }: Props) => {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
+    const [username, setUsername] = useState('');
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -41,11 +43,29 @@ const Profile = ({ lang }: Props) => {
                     plan_tier: data?.plan_tier || 'free',
                     avatar_url: data?.avatar_url
                 });
+                setUsername(data?.username || '');
             } else navigate('/login');
             setLoading(false);
         };
         fetchProfile();
     }, [navigate]);
+
+    const handleUpdateUsername = async () => {
+        try {
+            setSaving(true);
+            const { error } = await supabase.from('profiles').upsert({
+                id: profile?.id,
+                username: username,
+                updated_at: new Date().toISOString()
+            });
+            if (error) throw error;
+            alert('Username updated successfully!');
+        } catch (error: any) {
+            alert(error.message);
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         try {
@@ -57,7 +77,12 @@ const Profile = ({ lang }: Props) => {
             const filePath = `avatars/${fileName}`;
 
             const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file);
-            if (uploadError) throw uploadError;
+            if (uploadError) {
+                if (uploadError.message.includes('bucket not found')) {
+                    throw new Error('Storage bucket "avatars" not found. Please create it in your Supabase dashboard under Storage.');
+                }
+                throw uploadError;
+            }
 
             const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath);
             await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', profile?.id);
@@ -99,13 +124,37 @@ const Profile = ({ lang }: Props) => {
                 </div>
 
                 <div style={{ flexGrow: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                        <h2 style={{ fontSize: '2rem', margin: 0 }}>{profile?.email.split('@')[0]}</h2>
-                        {profile && (
-                            <div className="badge-premium" style={{ background: 'var(--gradient-primary)', color: 'white', border: 'none' }}>
-                                Lvl {calculateLevel(profile.points).level}
-                            </div>
-                        )}
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem', marginBottom: '1rem' }}>
+                        <div style={{ flex: 1 }}>
+                            <label style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }}>
+                                {lang === 'en' ? 'Username' : 'Foydalanuvchi nomi'}
+                            </label>
+                            <input
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder={lang === 'en' ? 'Enter username...' : 'Nom kiriting...'}
+                                style={{
+                                    fontSize: '1.5rem',
+                                    fontWeight: 800,
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '2px solid var(--color-background-alt)',
+                                    color: 'var(--color-text-main)',
+                                    outline: 'none',
+                                    padding: '0 0 0.5rem 0',
+                                    width: '100%'
+                                }}
+                            />
+                        </div>
+                        <button
+                            onClick={handleUpdateUsername}
+                            disabled={saving}
+                            className="btn btn-primary"
+                            style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                        >
+                            {saving ? <Loader2 size={14} className="animate-spin" /> : (lang === 'en' ? 'Save' : 'Saqlash')}
+                        </button>
                     </div>
                     <div style={{ display: 'flex', gap: '1.5rem', color: 'var(--color-text-muted)', fontSize: '0.95rem' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={16} /> {profile?.email}</span>

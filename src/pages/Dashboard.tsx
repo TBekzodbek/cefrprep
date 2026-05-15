@@ -23,6 +23,7 @@ interface UserProfile {
     weakness?: string;
     frequency?: string;
     time_left?: string;
+    username?: string;
 }
 
 interface PlanTask {
@@ -44,7 +45,7 @@ const Dashboard = ({ lang }: Props) => {
             if (user) {
                 const { data, error } = await supabase
                     .from('profiles')
-                    .select('current_level, target_level, points, tests_completed, avg_score, weakness, frequency, time_left')
+                    .select('current_level, target_level, points, tests_completed, avg_score, weakness, frequency, time_left, username')
                     .eq('id', user.id)
                     .single();
 
@@ -142,7 +143,7 @@ const Dashboard = ({ lang }: Props) => {
                         <img src={atlasWolfSmall} alt="Atlas" style={{ width: '80px' }} />
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>{lang === 'en' ? 'Learning Dash' : 'O\'quv paneli'}</h1>
+                        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>{lang === 'en' ? `Welcome, ${profile?.username || 'Learner'}` : `Xush kelibsiz, ${profile?.username || 'O\'quvchi'}`}</h1>
                         <p style={{ opacity: 0.7 }}>{getLevelDescription()}</p>
                     </div>
                 </div>
