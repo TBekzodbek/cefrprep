@@ -20,10 +20,10 @@ const Reading = ({ lang }: Props) => {
                 <div>
                     <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: 0 }}>
                         <BookOpen className="text-primary" size={28} />
-                        {lang === 'en' ? 'Reading Test Practice' : 'O\'qish amaliyoti'}
+                        {lang === 'en' ? 'O\'qib tushunish (Reading)' : 'O\'qib tushunish (O\'qish)'}
                     </h1>
                     <p className="text-muted" style={{ margin: '0.5rem 0 0 0' }}>
-                        {lang === 'en' ? 'Test 1: Academic Reading' : 'Test 1: Akademik O\'qish'}
+                        {lang === 'en' ? '4 Parts • 60-70 Minutes • 30 Questions' : '4 qism • 60-70 daqiqa • 30 savol'}
                     </p>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>

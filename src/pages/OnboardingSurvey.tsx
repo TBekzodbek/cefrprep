@@ -36,57 +36,57 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         {
             id: 'reading',
             icon: <BookOpen size={48} />,
-            title: lang === 'en' ? 'Reading Strategy' : 'O\'qish strategiyasi',
+            title: lang === 'en' ? 'Reading Comprehension' : 'O\'qib tushunish',
             desc: lang === 'en'
-                ? 'Master the national CEFR reading format with 3 adaptive levels.'
-                : 'Miliiy CEFR o\'qish formatini 3 ta adaptiv darajada o\'rganing.',
+                ? 'Master 4 parts of authentic texts: from ads and emails to academic articles.'
+                : '4 qismdan iborat autentik matnlar: e\'lonlardan tortib akademik maqolalargacha.',
             color: '#3b82f6',
             features: [
-                lang === 'en' ? 'Rasch text complexity' : 'Rasch bo\'yicha matn murakkabligi',
-                lang === 'en' ? '60-minute mock trials' : '60 daqiqalik mock testlar',
-                lang === 'en' ? 'Scanning speed drills' : 'Tez o\'qish mashqlari'
+                lang === 'en' ? 'Scanning & Skimming techniques' : 'Scanning va Skimming usullari',
+                lang === 'en' ? 'Genre-specific practice' : 'Janrli matnlar ustida ishlash',
+                lang === 'en' ? 'Detailed detail extraction' : 'Detallashgan tahlillar'
             ]
         },
         {
             id: 'listening',
             icon: <Headphones size={48} />,
-            title: lang === 'en' ? 'Listening Lab' : 'Eshitish laboratoriyasi',
+            title: lang === 'en' ? 'Listening Proficiency' : 'Tinglab tushunish',
             desc: lang === 'en'
-                ? 'High-fidelity audio recorded based on official state exam standards.'
-                : 'Rasmiy davlat imtihon standartlari asosida yozilgan yuqori sifatli audiolar.',
+                ? '4-part listening lab covering dialogues, radio reports, and academic presentations.'
+                : '4 qismdan iborat laboratoriya: muloqotlar, radio-reportajlar va ma\'ruzalar.',
             color: '#10b981',
             features: [
-                lang === 'en' ? 'Natural accents (UZB/ENG)' : 'Tabiiy aksentlar',
-                lang === 'en' ? 'Detail-oriented questions' : 'Detallashgan savollar',
-                lang === 'en' ? 'Acoustic simulation' : 'Akustik simulyatsiya'
+                lang === 'en' ? 'Monologue & Dialogue analysis' : 'Monolog va Dialog tahlili',
+                lang === 'en' ? 'Acoustic situational training' : 'Vaziyatli audio mashqlar',
+                lang === 'en' ? 'Keyword identification' : 'Kalit so\'zlarni topish'
             ]
         },
         {
             id: 'writing',
             icon: <GraduationCap size={48} />,
-            title: lang === 'en' ? 'Writing AI Mentor' : 'Yozish bo\'yicha AI mentor',
+            title: lang === 'en' ? 'Writing Competence' : 'Yozma nutq',
             desc: lang === 'en'
-                ? 'Submit Task 1 & 2 for instant AI evaluation on the 75-point scale.'
-                : 'Task 1 va 2 ni yuboring va 75 ballik tizimda AI tahlilini oling.',
+                ? 'Practice Task 1 (Letters/Situations) and Task 2 (Opinion Essays).'
+                : 'Task 1 (Xat/Vaziyat) va Task 2 (Insho/Esse) bo\'yicha amaliyot.',
             color: '#8b5cf6',
             features: [
-                lang === 'en' ? 'DTM-based criteria' : 'DTM mezonlari',
-                lang === 'en' ? 'Cohesion feedback' : 'Mantiqiy bog\'liqlik tahlili',
-                lang === 'en' ? 'Vocabulary suggestions' : 'Lug\'at boyligi bo\'yicha maslahatlar'
+                lang === 'en' ? 'Cohesion & Coherence training' : 'Mantiqiy bog\'liqlik (Cohesion)',
+                lang === 'en' ? 'Vocabulary range optimization' : 'Lug\'at boyligini oshirish',
+                lang === 'en' ? 'Official Uzbek DTM criteria' : 'Rasmiy DTM mezonlari asosida'
             ]
         },
         {
             id: 'speaking',
             icon: <Mic size={48} />,
-            title: lang === 'en' ? 'Speaking Simulator' : 'Gapirish simulyatori',
+            title: lang === 'en' ? 'Speaking Fluency' : 'Og\'zaki nutq',
             desc: lang === 'en'
-                ? 'Talk to Atlas about topical cards and receive a point prediction.'
-                : 'Atlas bilan mavzuli kartochkalar orqali gapiring va bashorat qilingan ballni oling.',
+                ? '3-part interview simulation: from personal questions to logical presentations.'
+                : '3 qismdan iborat suhbat: shaxsiy savollardan mantiqiy taqdimotgacha.',
             color: '#f59e0b',
             features: [
-                lang === 'en' ? 'Real-time conversation' : 'Jonli muloqot',
-                lang === 'en' ? 'Pronunciation analysis' : 'Talaffuz tahlili',
-                lang === 'en' ? 'Topic-specific cards' : 'Maxsus mavzuli kartochkalar'
+                lang === 'en' ? 'Unprepared speech practice' : 'Tayyorgarliksiz nutq tajribasi',
+                lang === 'en' ? 'Problem-solving monologues' : 'Muammoli vaziyatli monologlar',
+                lang === 'en' ? 'Advanced reasoning skills' : 'Mantiqiy asoslash ko\'nikmasi'
             ]
         }
     ];
@@ -242,6 +242,62 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                         <div className="stat-pill"><Star size={24} /> <span>2.4k Successful Students</span></div>
                     </div>
                 </div>
+
+                {/* Benefits Informational Section */}
+                <section id="benefits" className="benefits-section container" style={{ marginTop: '4rem', padding: '3rem', background: 'var(--color-background-alt)', borderRadius: '2rem', border: '1px solid var(--color-border)', marginBottom: '4rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1.2fr) minmax(280px, 0.8fr)', gap: '4rem', alignItems: 'center' }}>
+                        <div>
+                            <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '2rem', lineHeight: 1.2 }}>
+                                {lang === 'en' ? 'Why get a National Certificate?' : 'Nega milliy sertifikat olish kerak?'}
+                            </h2>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                <div style={{ display: 'flex', gap: '1.25rem' }}>
+                                    <div style={{ background: '#3b82f61a', padding: '0.75rem', borderRadius: '1rem' }}><ShieldCheck size={28} className="text-primary" /></div>
+                                    <div>
+                                        <h4 style={{ marginBottom: '0.25rem' }}>{lang === 'en' ? 'University Entrance Bonus' : 'OTM kirish imtihonlari'}</h4>
+                                        <p className="text-muted" style={{ fontSize: '0.95rem' }}>{lang === 'en' ? 'Get the maximum score automatically for Bachelor\'s (B1+) and Master\'s (B2+) entrance exams in Uzbekistan.' : 'Bakalavriat (B1+) va Magistratura (B2+) kirish imtihonlarida chet tili fanidan avtomatik ravishda maksimal ballga ega bo\'ling.'}</p>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1.25rem' }}>
+                                    <div style={{ background: '#10b9811a', padding: '0.75rem', borderRadius: '1rem' }}><Star size={28} className="text-secondary" /></div>
+                                    <div>
+                                        <h4 style={{ marginBottom: '0.25rem' }}>{lang === 'en' ? '3 Years Validity' : '3 yillik imtiyoz'}</h4>
+                                        <p className="text-muted" style={{ fontSize: '0.95rem' }}>{lang === 'en' ? 'The certificate is valid for 3 years, recognized by all major institutions and employers.' : 'Sertifikat berilgan kundan boshlab 3 yil davomida o\'z kuchini saqlab qoladi.'}</p>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1.25rem' }}>
+                                    <div style={{ background: '#8b5cf61a', padding: '0.75rem', borderRadius: '1rem' }}><Clock size={28} className="text-purple" /></div>
+                                    <div>
+                                        <h4 style={{ marginBottom: '0.25rem' }}>{lang === 'en' ? 'Optimized Time Structure' : 'Vaqtni to\'g\'ri boshqarish'}</h4>
+                                        <p className="text-muted" style={{ fontSize: '0.95rem' }}>{lang === 'en' ? 'Train under real exam conditions: 3h 05m (B1), 3h 35m (B2), and 3h 50m (C1).' : 'Haqiqiy imtihon sharoitida shug\'ullaning: 3s 05daqiqa (B1) dan 3s 50daqiqa (C1) gacha.'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ padding: '2.5rem', background: 'var(--color-surface)', borderRadius: '2rem', boxShadow: 'var(--shadow-xl)', border: '1px solid var(--color-border)' }}>
+                            <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.1rem' }}>
+                                <Layout className="text-primary" /> {lang === 'en' ? 'Official Exam Format (DTM)' : 'Rasmiy imtihon formati (DTM)'}
+                            </h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                {[
+                                    { n: lang === 'en' ? 'Listening' : 'Tinglab tushunish', t: '30-35 min', q: '30 Qs' },
+                                    { n: lang === 'en' ? 'Reading' : 'O\'qib tushunish', t: '60-70 min', q: '30 Qs' },
+                                    { n: lang === 'en' ? 'Grammar & Vocab' : 'Leksik-grammatika', t: '30-40 min', q: '30 Qs' },
+                                    { n: lang === 'en' ? 'Writing' : 'Yozma nutq', t: '45-80 min', q: '2 Tasks' },
+                                    { n: lang === 'en' ? 'Speaking' : 'Og\'zaki nutq', t: '15-20 min', q: '3 Parts' }
+                                ].map((row, idx) => (
+                                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: idx < 4 ? '1px solid var(--color-background-alt)' : 'none' }}>
+                                        <span style={{ fontWeight: 500 }}>{row.n}</span>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>{row.t}</div>
+                                            <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>{row.q}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 {categories.map((cat, i) => (
                     <section key={cat.id} id={cat.id} className="category-section" style={{ borderLeft: `8px solid ${cat.color}` }}>

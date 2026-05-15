@@ -18,10 +18,10 @@ const Speaking = ({ lang }: Props) => {
             <header style={{ textAlign: 'center', marginBottom: '3rem' }}>
                 <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', margin: 0 }}>
                     <Mic className="text-orange" style={{ color: '#f97316' }} size={32} />
-                    {lang === 'en' ? 'Speaking Interview' : 'Gapirish suhbati'}
+                    {lang === 'en' ? 'Og\'zaki nutq (Speaking)' : 'Og\'zaki nutq (Gapirish)'}
                 </h1>
                 <p className="text-muted" style={{ margin: '0.5rem 0 0 0', fontSize: '1.1rem' }}>
-                    {lang === 'en' ? 'AI Examiner is ready.' : 'AI Imtihon oluvchi tayyor.'}
+                    {lang === 'en' ? '3 Parts • 15 Minutes • 30 Points Total' : '3 qism • 15 daqiqa • Umumiy 30 ball'}
                 </p>
             </header>
 

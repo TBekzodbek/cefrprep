@@ -19,10 +19,10 @@ const Listening = ({ lang }: Props) => {
                 <div>
                     <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: 0 }}>
                         <Headphones className="text-secondary" size={28} />
-                        {lang === 'en' ? 'Listening Comprehension' : 'Eshitishni tushunish'}
+                        {lang === 'en' ? 'Tinglab tushunish (Listening)' : 'Tinglab tushunish (Eshitish)'}
                     </h1>
                     <p className="text-muted" style={{ margin: '0.5rem 0 0 0' }}>
-                        {lang === 'en' ? 'Audio Session #3' : 'Audio Sessiya #3'}
+                        {lang === 'en' ? '4 Parts • 30-35 Minutes • 30 Questions' : '4 qism • 30-35 daqiqa • 30 savol'}
                     </p>
                 </div>
                 <button className="btn btn-primary">

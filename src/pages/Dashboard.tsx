@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Loader2, BookOpen, GraduationCap, BarChart, TrendingUp, ArrowRight, CheckCircle2, Calendar, MessageSquare, Compass, Award } from 'lucide-react';
+import { Loader2, BookOpen, GraduationCap, BarChart, TrendingUp, ArrowRight, CheckCircle2, Calendar, MessageSquare, Compass, Award, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { CEFR_MARKING_SYSTEM } from '../lib/marking';
@@ -105,6 +105,22 @@ const Dashboard = ({ lang, theme }: Props) => {
     const progressPercent = profile?.avg_score ? Math.min((profile.avg_score / 75) * 100, 100) : 0;
     const targetPercent = (targetBoundary / 75) * 100;
 
+    const getLevelDescription = () => {
+        if (profile?.target_level?.includes('C1')) {
+            return lang === 'en'
+                ? 'Advanced fluency: Understand complex texts and implicit meanings with professional precision.'
+                : 'C1 darajasi: Murakkab matnlarni yashirin ma\'nolarigacha tushunish va professional muloqot.';
+        }
+        if (profile?.target_level?.includes('B2')) {
+            return lang === 'en'
+                ? 'Upper-Intermediate: Communicate fluently and spontaneously with native speakers without strain.'
+                : 'B2 darajasi: Tayyorgarliksiz ravon gapirish va murakkab mavzularda aniq xabarlar tuzish.';
+        }
+        return lang === 'en'
+            ? 'Intermediate: Understand main points of familiar matters and produce simple connected text.'
+            : 'B1 darajasi: Kundalik mavzularni tushunish va shaxsiy qiziqishlarda erkin muloqot qilish.';
+    };
+
     if (loading) {
         return (
             <div className="page-container container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
@@ -127,7 +143,7 @@ const Dashboard = ({ lang, theme }: Props) => {
                     </div>
                     <div>
                         <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>{lang === 'en' ? 'Learning Dash' : 'O\'quv paneli'}</h1>
-                        <p style={{ opacity: 0.7 }}>{lang === 'en' ? `Atlas personalized your plan for ${profile?.target_level}.` : `Atlas siz uchun ${profile?.target_level} rejasini tuzdi.`}</p>
+                        <p style={{ opacity: 0.7 }}>{getLevelDescription()}</p>
                     </div>
                 </div>
             </header>
@@ -230,6 +246,18 @@ const Dashboard = ({ lang, theme }: Props) => {
                             <div className="badge-small" style={{ background: '#fef2f2', color: '#b91c1c' }}>⚠️ {profile?.weakness}</div>
                             <div className="badge-small" style={{ background: '#f0fdf4', color: '#16a34a' }}>📅 {profile?.frequency}</div>
                         </div>
+                    </div>
+
+                    <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--gradient-surface)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                        <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-primary)' }}>
+                            <Shield size={16} /> {lang === 'en' ? 'Official Registration' : 'Rasmiy ro\'yxatdan o\'tish'}
+                        </h4>
+                        <ol style={{ paddingLeft: '1.25rem', fontSize: '0.8rem', color: 'var(--color-text-muted)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <li>{lang === 'en' ? 'Register online at nsfla.uz' : 'nsfla.uz saytida onlayn ro\'yxatdan o\'ting'}</li>
+                            <li>{lang === 'en' ? 'Print the PDF application' : 'PDF arizani chop eting'}</li>
+                            <li>{lang === 'en' ? 'Pay the fee (1.5x MRZP) at any bank' : 'Istalgan bankda to\'lovni amalga oshiring'}</li>
+                            <li>{lang === 'en' ? 'Submit docs to DTM (Bog\'ishamol 12)' : 'Hujjatlarni DTMga (Bog\'ishamol 12) topshiring'}</li>
+                        </ol>
                     </div>
 
                     <Link to="/ai-chat" className="btn btn-primary" style={{ padding: '1.25rem', borderRadius: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem' }}>

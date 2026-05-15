@@ -19,10 +19,10 @@ const Writing = ({ lang }: Props) => {
                 <div>
                     <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: 0 }}>
                         <GraduationCap className="text-purple" style={{ color: '#9333ea' }} size={28} />
-                        {lang === 'en' ? 'Writing Task' : 'Yozish vazifasi'}
+                        {lang === 'en' ? 'Yozma nutq (Writing)' : 'Yozma nutq (Yozish)'}
                     </h1>
                     <p className="text-muted" style={{ margin: '0.5rem 0 0 0' }}>
-                        {lang === 'en' ? 'Part 2: Essay' : '2-Qism: Insho'}
+                        {lang === 'en' ? '2 Tasks • 45-60 Minutes • 30 Points Total' : '2 ta topshiriq • 45-60 daqiqa • Umumiy 30 ball'}
                     </p>
                 </div>
                 <button className="btn btn-primary" style={{ background: 'var(--gradient-primary)' }}>
