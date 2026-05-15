@@ -3,8 +3,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// We use the 'latest' alias to ensure compatibility with different API versions
-export const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+// Switching to the most stable 'gemini-pro' model for maximum compatibility
+export const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 export const getAIResponse = async (prompt: string) => {
     if (!API_KEY) {
