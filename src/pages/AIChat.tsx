@@ -77,15 +77,18 @@ const AIChat = ({ lang }: Props) => {
             };
 
             setMessages(prev => [...prev, botMsg]);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Chat Error:", error);
-            const errorMsg: Message = {
-                id: 'err',
-                text: lang === 'en' ? "I'm sorry, I'm having trouble thinking right now. Try again?" : "Kechirasiz, hozir o'ylay olmayapman. Yana urinib ko'rasizmi?",
+            const errorMessage = error.message || "Unknown Error";
+            const botMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                text: lang === 'en'
+                    ? `I'm having trouble: ${errorMessage}. Please check your API Key and connection.`
+                    : `Muammo yuzaga keldi: ${errorMessage}. Iltimos, API kalitini va ulanishni tekshiring.`,
                 sender: 'bot',
                 timestamp: new Date()
             };
-            setMessages(prev => [...prev, errorMsg]);
+            setMessages(prev => [...prev, botMsg]);
         } finally {
             setIsTyping(false);
         }

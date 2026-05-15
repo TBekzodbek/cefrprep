@@ -15,6 +15,6 @@ export const getAIResponse = async (prompt: string) => {
         return response.text();
     } catch (error: any) {
         console.error("Gemini API Error:", error);
-        return "Sorry, I am having trouble connecting to my brain right now. Please try again later.";
+        return `AI Error: ${error.message || "Could not connect to Google AI"}`;
     }
 };
