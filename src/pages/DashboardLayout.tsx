@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, User, Crown, CreditCard, BookOpen, Headphones, GraduationCap, Mic, LogOut, CheckCircle, Globe, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, User, Crown, CreditCard, BookOpen, Headphones, GraduationCap, Mic, LogOut, CheckCircle, Globe, Sun, Moon, Sparkles } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import './DashboardLayout.css';
 
@@ -33,6 +33,7 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         { to: '/dashboard', icon: <LayoutDashboard size={20} />, label: lang === 'en' ? 'Overview' : 'Umumiy' },
         { to: '/dashboard/profile', icon: <User size={20} />, label: lang === 'en' ? 'My Profile' : 'Mening Profilim' },
         { to: '/dashboard/plan', icon: <CheckCircle size={20} />, label: lang === 'en' ? 'My AI Plan' : 'AI Rejam' },
+        { to: '/dashboard/ai-chat', icon: <Sparkles size={20} />, label: lang === 'en' ? 'Atlas AI Chat' : 'Atlas AI Suhbat' },
 
         { section: lang === 'en' ? 'Practice Categories' : 'Amaliyot bo\'limlari' },
         { to: '/dashboard/reading', icon: <BookOpen size={20} />, label: lang === 'en' ? 'Reading' : 'O\'qib tushunish' },
