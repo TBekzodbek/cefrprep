@@ -22,7 +22,7 @@ const Navigation = ({ lang, toggleLang, theme, toggleTheme }: NavigationProps) =
     return (
         <nav className="glass-panel main-nav">
             <div className="container nav-content">
-                <Link to="/" className="brand">
+                <Link to="/" className="brand allow-select">
                     <span className="brand-logo">CEFR</span>
                     <span className="brand-text">ACADEMY.uz</span>
                 </Link>

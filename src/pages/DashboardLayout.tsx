@@ -49,7 +49,7 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         <div className="dashboard-layout">
             <aside className="dashboard-sidebar glass-panel">
                 <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                    <Link to="/" className="brand">
+                    <Link to="/" className="brand allow-select">
                         <span className="brand-logo">CEFR</span>
                         <span className="brand-text">ACADEMY</span>
                     </Link>
