@@ -67,10 +67,10 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                 <div className="sidebar-premium-card">
                     <Crown size={24} className="text-warning" style={{ marginBottom: '0.5rem' }} />
                     <h4>{lang === 'en' ? 'Free Plan' : 'Bepul ta\'rif'}</h4>
-                    <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1rem' }}>
+                    <p style={{ fontSize: '0.85rem', marginBottom: '1rem', opacity: 0.9 }}>
                         {lang === 'en' ? 'Limited access to standard tests.' : 'Cheklangan testlarga kirish.'}
                     </p>
-                    <Link to="/dashboard/pricing" className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.9rem' }}>
+                    <Link to="/dashboard/pricing" className="btn btn-primary" style={{ width: '100%', padding: '0.5rem', fontSize: '0.9rem', color: 'white' }}>
                         {lang === 'en' ? 'Upgrade to Premium' : 'Premiumga o\'tish'}
                     </Link>
                 </div>

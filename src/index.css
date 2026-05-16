@@ -6,21 +6,22 @@
 
   /* IELTS Nation inspired Palette: High Contrast & Professional */
   --color-primary: #2563eb;
-  /* Brighter Blue */
   --color-primary-soft: rgba(37, 99, 235, 0.05);
   --color-secondary: #7c3aed;
-  /* Purple Accent */
   --color-dark: #0f172a;
-  /* Slate 900 */
+
   --color-background: #ffffff;
   --color-background-alt: #f8fafc;
+  --color-background-glass: rgba(255, 255, 255, 0.85);
 
   --color-text-main: #0f172a;
   --color-text-muted: #475569;
   --color-text-light: #94a3b8;
   --color-border: #e2e8f0;
+
   --color-surface: #ffffff;
   --color-surface-alt: #f8fafc;
+  --color-surface-glass: rgba(255, 255, 255, 0.9);
 
   --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
   --gradient-subtle: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
@@ -45,8 +46,11 @@
   --color-background: #020617;
   --color-background-alt: #0f172a;
   --color-background-glass: rgba(15, 23, 42, 0.8);
+
   --color-surface: #1e293b;
-  --color-surface-alt: #0f172a;
+  --color-surface-alt: #020617;
+  --color-surface-glass: rgba(30, 41, 59, 0.85);
+
   --color-text-main: #f8fafc;
   --color-text-muted: #cbd5e1;
   --color-text-light: #94a3b8;
@@ -92,7 +96,6 @@ h4 {
 }
 
 /* Reusable Components */
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -141,7 +144,7 @@ h4 {
 }
 
 .glass-panel {
-  background: var(--color-background);
+  background: var(--color-surface-glass);
   backdrop-filter: blur(12px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
@@ -184,14 +187,26 @@ h4 {
   align-items: center;
 }
 
-.flex-col {
-  flex-direction: column;
-}
-
 .text-center {
   text-align: center;
 }
 
 .text-muted {
   color: var(--color-text-muted);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.text-warning {
+  color: #f59e0b;
+}
+
+.text-error {
+  color: #f43f5e;
 }

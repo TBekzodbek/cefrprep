@@ -36,11 +36,25 @@
     color: var(--color-primary);
 }
 
+.brand {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.brand-logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--color-text-main);
+}
+
 .brand-text {
     font-family: var(--font-heading);
     font-weight: 800;
     font-size: 1.25rem;
     letter-spacing: -0.02em;
+    color: var(--color-primary);
 }
 
 .sidebar-nav {
@@ -49,37 +63,39 @@
 }
 
 .sidebar-section-title {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--color-text-light);
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    padding: 2rem 1rem 0.75rem;
+    letter-spacing: 0.15em;
+    padding: 2.5rem 1.25rem 0.75rem;
+    opacity: 0.8;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
     gap: 0.85rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 12px;
+    padding: 0.85rem 1.25rem;
+    border-radius: 14px;
     color: var(--color-text-muted);
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.95rem;
     transition: all var(--transition-fast);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.35rem;
     text-decoration: none;
 }
 
 .sidebar-link:hover {
-    background: var(--color-background-alt);
-    color: var(--color-text-main);
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
 }
 
 .sidebar-link.active {
-    background: var(--color-primary-soft);
-    color: var(--color-primary);
+    background: var(--color-primary);
+    color: white !important;
     font-weight: 700;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .sidebar-premium-card {
@@ -87,13 +103,25 @@
     padding: 1.5rem;
     background: var(--gradient-primary);
     border-radius: 20px;
-    color: white;
+    color: white !important;
     box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
 }
 
-.sidebar-premium-card h4 {
-    color: white;
-    margin-bottom: 0.5rem;
+.sidebar-premium-card h4,
+.sidebar-premium-card p {
+    color: white !important;
+}
+
+.sidebar-premium-card .btn-primary {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white !important;
+}
+
+.sidebar-premium-card .btn-primary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 .sidebar-footer {
