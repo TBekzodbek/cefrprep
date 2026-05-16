@@ -108,9 +108,9 @@ const Profile = ({ lang }: Props) => {
             animate={{ opacity: 1 }}
             className="page-container"
         >
-            <div className="glass-panel" style={{ padding: '3rem', display: 'flex', gap: '3rem', alignItems: 'center', marginBottom: '3rem', background: '#ffffff', position: 'relative' }}>
+            <div className="glass-panel" style={{ padding: '3rem', display: 'flex', gap: '3rem', alignItems: 'center', marginBottom: '3rem' }}>
                 <div style={{ position: 'relative', width: '120px', height: '120px' }}>
-                    <div style={{ width: '120px', height: '120px', borderRadius: 'var(--radius-xl)', background: 'var(--color-background-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+                    <div style={{ width: '120px', height: '120px', borderRadius: 'var(--radius-xl)', background: 'var(--color-surface-alt)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
                         {profile?.avatar_url ? (
                             <img src={profile.avatar_url} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
@@ -139,7 +139,7 @@ const Profile = ({ lang }: Props) => {
                                     fontWeight: 800,
                                     background: 'transparent',
                                     border: 'none',
-                                    borderBottom: '2px solid var(--color-background-alt)',
+                                    borderBottom: '2px solid var(--color-border)',
                                     color: 'var(--color-text-main)',
                                     outline: 'none',
                                     padding: '0 0 0.5rem 0',
@@ -163,37 +163,37 @@ const Profile = ({ lang }: Props) => {
                         </span>
                     </div>
                 </div>
-                <button onClick={handleLogout} className="btn btn-outline" style={{ color: 'var(--color-error)', borderColor: 'rgba(239, 68, 68, 0.1)' }}>
+                <button onClick={handleLogout} className="btn btn-outline" style={{ color: 'var(--color-error)' }}>
                     <LogOut size={18} /> {lang === 'en' ? 'Logout' : 'Chiqish'}
                 </button>
             </div>
 
             <div className="grid grid-cols-2">
-                <div className="glass-panel" style={{ padding: '2.5rem', background: '#ffffff' }}>
-                    <h3 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div className="glass-panel" style={{ padding: '2.5rem' }}>
+                    <h3 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-text-main)' }}>
                         <Target className="text-primary" /> {lang === 'en' ? 'Assessment & Goals' : 'Baholash va Maqsadlar'}
                     </h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-background-alt)', paddingBottom: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-border)', paddingBottom: '1rem' }}>
                             <span className="text-muted">{lang === 'en' ? 'Current Level' : 'Hozirgi daraja'}</span>
-                            <span style={{ fontWeight: 700 }}>{profile?.current_level}</span>
+                            <span style={{ fontWeight: 700, color: 'var(--color-text-main)' }}>{profile?.current_level}</span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-background-alt)', paddingBottom: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--color-border)', paddingBottom: '1rem' }}>
                             <span className="text-muted">{lang === 'en' ? 'Target CEFR' : 'Maqsadli CEFR'}</span>
-                            <span style={{ fontWeight: 700 }}>{profile?.target_level}</span>
+                            <span style={{ fontWeight: 700, color: 'var(--color-text-main)' }}>{profile?.target_level}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="glass-panel" style={{ padding: '2.5rem', background: '#ffffff' }}>
-                    <h3 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div className="glass-panel" style={{ padding: '2.5rem' }}>
+                    <h3 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-text-main)' }}>
                         <Activity className="text-primary" /> {lang === 'en' ? 'Learning Rank' : 'O\'rganish darajasi'}
                     </h3>
                     <div style={{ textAlign: 'center', padding: '1rem 0' }}>
                         {profile && (
                             <>
                                 <div style={{ fontSize: '3.5rem', fontWeight: 800, color: 'var(--color-primary)', lineHeight: 1 }}>{calculateLevel(profile.points).level}</div>
-                                <div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '1rem' }}>{calculateLevel(profile.points).title}</div>
+                                <div style={{ fontWeight: 700, fontSize: '1.2rem', marginBottom: '1rem', color: 'var(--color-text-main)' }}>{calculateLevel(profile.points).title}</div>
                                 <div className="text-muted" style={{ fontSize: '0.9rem' }}>{profile.points} Total XP</div>
                                 <div className="mini-progress-track" style={{ marginTop: '1rem', height: '8px' }}>
                                     <div className="mini-progress-bar" style={{ width: `${calculateLevel(profile.points).progress}%` }}></div>

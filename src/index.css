@@ -8,6 +8,9 @@
   --color-primary: #2563eb;
   --color-primary-soft: rgba(37, 99, 235, 0.05);
   --color-secondary: #7c3aed;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #f43f5e;
   --color-dark: #0f172a;
 
   --color-background: #ffffff;
@@ -87,6 +90,7 @@ h4 {
   font-family: var(--font-heading);
   line-height: 1.1;
   letter-spacing: -0.02em;
+  color: var(--color-text-main);
 }
 
 .container {
@@ -112,7 +116,7 @@ h4 {
 
 .btn-primary {
   background: var(--color-primary);
-  color: #fff;
+  color: #fff !important;
 }
 
 .btn-primary:hover {
@@ -204,9 +208,9 @@ h4 {
 }
 
 .text-warning {
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .text-error {
-  color: #f43f5e;
+  color: var(--color-error);
 }

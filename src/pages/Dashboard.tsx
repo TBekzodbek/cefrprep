@@ -68,7 +68,6 @@ const Dashboard = ({ lang }: Props) => {
         const isAdvanced = prof.current_level?.includes('B2') || prof.current_level?.includes('C1');
         const intensity = prof.frequency?.includes('Intensive') ? 4 : 2;
 
-        // 1. Core Task based on weakness
         if (prof.weakness?.includes('Writing')) {
             tasks.push({ id: 1, task: lang === 'en' ? 'Advanced Writing Analysis' : 'Writing tahlili (Task 2)', done: false, time: '25m', priority: true });
         } else if (prof.weakness?.includes('Reading')) {
@@ -77,25 +76,20 @@ const Dashboard = ({ lang }: Props) => {
             tasks.push({ id: 1, task: lang === 'en' ? 'General Diagnostic Session' : 'Umumiy diagnostika', done: true, time: '15m', priority: false });
         }
 
-        // 2. Skill Builder
         if (isAdvanced) {
             tasks.push({ id: 2, task: lang === 'en' ? 'C1 Vocabulary Expansion' : 'C1 darajadagi lug\'at', done: false, time: '15m', priority: false });
         } else {
             tasks.push({ id: 2, task: lang === 'en' ? 'B1/B2 Grammar Focus' : 'B1/B2 Grammatika', done: false, time: '20m', priority: false });
         }
 
-        // 3. Mock Practice
         tasks.push({ id: 3, task: lang === 'en' ? 'Partial Mock (Reading Part 1)' : 'Mock test (Reading bo\'limi)', done: false, time: '30m', priority: prof.weakness?.includes('Reading') || false });
 
-        // 4. Intensive extra task
         if (intensity > 2) {
             tasks.push({ id: 4, task: lang === 'en' ? 'Atlas AI Feedback Review' : 'Atlas AI tahlillarini ko\'rish', done: false, time: '10m', priority: false });
         }
 
         setDailyPlan(tasks);
     };
-
-
 
     const getScoreBoundary = (level: string) => {
         const range = CEFR_MARKING_SYSTEM.find(r => level.includes(r.level));
@@ -139,12 +133,12 @@ const Dashboard = ({ lang }: Props) => {
         >
             <header className="page-header" style={{ position: 'relative' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                    <div className="avatar-placeholder-large" style={{ background: '#f8fafc', borderRadius: '1rem', padding: '0.5rem' }}>
+                    <div className="avatar-placeholder-large" style={{ background: 'var(--color-surface-alt)', borderRadius: '1rem', padding: '0.5rem', border: '1px solid var(--color-border)' }}>
                         <img src={atlasWolfSmall} alt="Atlas" style={{ width: '80px' }} />
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>{lang === 'en' ? `Welcome, ${profile?.username || 'Learner'}` : `Xush kelibsiz, ${profile?.username || 'O\'quvchi'}`}</h1>
-                        <p style={{ opacity: 0.7 }}>{getLevelDescription()}</p>
+                        <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-text-main)' }}>{lang === 'en' ? `Welcome, ${profile?.username || 'Learner'}` : `Xush kelibsiz, ${profile?.username || 'O\'quvchi'}`}</h1>
+                        <p style={{ opacity: 0.7, color: 'var(--color-text-main)' }}>{getLevelDescription()}</p>
                     </div>
                 </div>
             </header>
@@ -155,28 +149,28 @@ const Dashboard = ({ lang }: Props) => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     <div className="glass-panel" style={{ padding: '2.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><Calendar size={32} /> {lang === 'en' ? 'Active Study Plan' : 'Faol o\'quv rejasi'}</h3>
+                            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-text-main)' }}><Calendar size={32} /> {lang === 'en' ? 'Active Study Plan' : 'Faol o\'quv rejasi'}</h3>
                             <div className="progress-badge">Day 1 of 30</div>
                         </div>
 
                         <div className="daily-tasks-list">
                             {dailyPlan.map(item => (
-                                <div key={item.id} className={`task-item ${item.done ? 'task-done' : ''}`}>
+                                <div key={item.id} className={`task-item ${item.done ? 'task-done' : ''}`} style={{ background: 'var(--color-surface-alt)', borderColor: 'var(--color-border)' }}>
                                     <div className="task-checkbox">
-                                        {item.done ? <CheckCircle2 className="text-secondary" /> : <div className="empty-check" />}
+                                        {item.done ? <CheckCircle2 className="text-secondary" /> : <div className="empty-check" style={{ borderColor: 'var(--color-border)' }} />}
                                     </div>
                                     <div className="task-info">
-                                        <span className="task-name">{item.task}</span>
-                                        <span className="task-meta">{item.time} • {item.priority ? '🔥 Priority' : 'Regular'}</span>
+                                        <span className="task-name" style={{ color: 'var(--color-text-main)' }}>{item.task}</span>
+                                        <span className="task-meta" style={{ color: 'var(--color-text-muted)' }}>{item.time} • {item.priority ? '🔥 Priority' : 'Regular'}</span>
                                     </div>
                                     {!item.done && <button className="btn-start-task">{lang === 'en' ? 'Start' : 'Boshlash'}</button>}
                                 </div>
                             ))}
                         </div>
 
-                        <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#f0f9ff', borderRadius: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'var(--color-primary-soft)', borderRadius: '1rem', display: 'flex', gap: '1rem', alignItems: 'center', border: '1px solid var(--color-primary-soft)' }}>
                             <Compass className="text-primary" size={32} />
-                            <p style={{ fontSize: '1rem', color: '#0369a1', margin: 0 }}>
+                            <p style={{ fontSize: '1rem', color: 'var(--color-primary)', margin: 0 }}>
                                 <strong>Atlas AI Robot:</strong> {profile?.weakness?.includes('Writing')
                                     ? (lang === 'en' ? 'Focus on cohesive devices today to boost your Task 2 score.' : 'Task 2 ballini oshirish uchun bugun bog\'lovchi vositalarga e\'tibor bering.')
                                     : (lang === 'en' ? 'Read 2 articles from BBC today to improve reading speed.' : 'O\'qish tezligini oshirish uchun BBC dan 2 ta maqola o\'qing.')}
@@ -185,10 +179,10 @@ const Dashboard = ({ lang }: Props) => {
                     </div>
 
                     <div className="glass-panel" style={{ padding: '2.5rem' }}>
-                        <h3 style={{ marginBottom: '2rem' }}><BarChart size={32} /> {lang === 'en' ? 'Performance' : 'Natijalar'}</h3>
+                        <h3 style={{ marginBottom: '2rem', color: 'var(--color-text-main)' }}><BarChart size={32} /> {lang === 'en' ? 'Performance' : 'Natijalar'}</h3>
                         <div className="score-viz-container" style={{ display: 'flex', alignItems: 'flex-end', height: '100px', gap: '1rem' }}>
                             {[0.2, 0.4, 0.35, 0.5, 0.6, 0.55, 0.72].map((v, i) => (
-                                <div key={i} style={{ flex: 1, background: i === 6 ? 'var(--color-primary)' : '#e2e8f0', height: `${v * 100}%`, borderRadius: '4px' }} />
+                                <div key={i} style={{ flex: 1, background: i === 6 ? 'var(--color-primary)' : 'var(--color-border)', height: `${v * 100}%`, borderRadius: '4px' }} />
                             ))}
                         </div>
                     </div>
@@ -218,7 +212,7 @@ const Dashboard = ({ lang }: Props) => {
                     {(() => {
                         const levelData = calculateLevel(profile?.points || 0);
                         return (
-                            <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--gradient-primary)', color: 'white' }}>
+                            <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--gradient-primary)', color: 'white', border: 'none' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                     <div>
                                         <p style={{ fontSize: '0.75rem', opacity: 0.8 }}>Current Level</p>
@@ -240,16 +234,16 @@ const Dashboard = ({ lang }: Props) => {
                     })()}
 
                     <div className="glass-panel" style={{ padding: '1.5rem' }}>
-                        <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-main)' }}>
                             <TrendingUp size={16} /> {lang === 'en' ? 'Current Path' : 'Joriy yo\'nalish'}
                         </h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <div className="badge-small" style={{ background: '#fef2f2', color: '#b91c1c' }}>⚠️ {profile?.weakness}</div>
-                            <div className="badge-small" style={{ background: '#f0fdf4', color: '#16a34a' }}>📅 {profile?.frequency}</div>
+                            <div className="badge-small" style={{ background: 'var(--color-background-alt)', color: 'var(--color-text-main)', border: '1px solid var(--color-border)' }}>⚠️ {profile?.weakness}</div>
+                            <div className="badge-small" style={{ background: 'var(--color-primary-soft)', color: 'var(--color-primary)', border: '1px solid var(--color-primary-soft)' }}>📅 {profile?.frequency}</div>
                         </div>
                     </div>
 
-                    <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--gradient-surface)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                    <div className="glass-panel" style={{ padding: '1.5rem', background: 'var(--color-surface-glass)', border: '1px solid var(--color-border)' }}>
                         <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-primary)' }}>
                             <Shield size={16} /> {lang === 'en' ? 'Official Registration' : 'Rasmiy ro\'yxatdan o\'tish'}
                         </h4>
@@ -261,7 +255,7 @@ const Dashboard = ({ lang }: Props) => {
                         </ol>
                     </div>
 
-                    <Link to="/ai-chat" className="btn btn-primary" style={{ padding: '1.25rem', borderRadius: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem' }}>
+                    <Link to="/dashboard/ai-chat" className="btn btn-primary" style={{ padding: '1.25rem', borderRadius: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem' }}>
                         <MessageSquare size={20} /> {lang === 'en' ? 'Ask Atlas AI' : 'Atlas AI dan so\'rash'}
                     </Link>
 
@@ -269,11 +263,11 @@ const Dashboard = ({ lang }: Props) => {
 
                     {/* Marking System Guide */}
                     <div className="glass-panel" style={{ padding: '1.5rem' }}>
-                        <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>{lang === 'en' ? 'Official Marking Guide' : 'Rasmiy baholash tizimi'}</h4>
+                        <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: 'var(--color-text-main)' }}>{lang === 'en' ? 'Official Marking Guide' : 'Rasmiy baholash tizimi'}</h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                             {CEFR_MARKING_SYSTEM.map(range => (
                                 <div key={range.level} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
-                                    <span style={{ fontWeight: 700 }}>{range.level}</span>
+                                    <span style={{ fontWeight: 700, color: 'var(--color-text-main)' }}>{range.level}</span>
                                     <span className="text-muted">{range.minPoints}-{range.maxPoints} pts</span>
                                 </div>
                             ))}
@@ -283,15 +277,15 @@ const Dashboard = ({ lang }: Props) => {
             </div>
 
             <section style={{ marginTop: '4rem' }}>
-                <h2 style={{ marginBottom: '2rem', fontSize: '1.5rem' }}>{lang === 'en' ? 'Full Mock Exams' : 'To\'liq Mock imtihonlari'}</h2>
+                <h2 style={{ marginBottom: '2rem', fontSize: '1.5rem', color: 'var(--color-text-main)' }}>{lang === 'en' ? 'Full Mock Exams' : 'To\'liq Mock imtihonlari'}</h2>
                 <div className="grid grid-cols-2">
                     <Link to="/dashboard/reading" className="training-card-modern" style={{ padding: '1.5rem' }}>
-                        <div className="training-icon-circle" style={{ background: '#eff6ff', color: '#3b82f6', width: '3.5rem', height: '3.5rem' }}><BookOpen size={28} /></div>
+                        <div className="training-icon-circle" style={{ background: 'var(--color-primary-soft)', color: 'var(--color-primary)', width: '3.5rem', height: '3.5rem' }}><BookOpen size={28} /></div>
                         <div className="training-info"><h5>Reading</h5><p>National Exam Academy</p></div>
                         <ArrowRight size={20} className="arrow-fade" />
                     </Link>
                     <Link to="/dashboard/writing" className="training-card-modern" style={{ padding: '1.5rem' }}>
-                        <div className="training-icon-circle" style={{ background: '#f5f3ff', color: '#8b5cf6', width: '3.5rem', height: '3.5rem' }}><GraduationCap size={28} /></div>
+                        <div className="training-icon-circle" style={{ background: 'var(--color-primary-soft)', color: 'var(--color-secondary)', width: '3.5rem', height: '3.5rem' }}><GraduationCap size={28} /></div>
                         <div className="training-info"><h5>Writing</h5><p>AI Evaluated Tasks</p></div>
                         <ArrowRight size={20} className="arrow-fade" />
                     </Link>
