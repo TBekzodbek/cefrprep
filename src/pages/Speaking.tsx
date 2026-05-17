@@ -107,7 +107,7 @@ const Speaking = ({ lang }: Props) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            style={{ display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center', paddingBottom: '4rem' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingBottom: '4rem' }}
         >
             <header style={{ textAlign: 'center', marginBottom: '3rem' }}>
                 <h1 style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', margin: 0 }}>
