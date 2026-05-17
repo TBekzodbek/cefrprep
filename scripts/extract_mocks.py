@@ -58,6 +58,21 @@ def extract_keys(text):
                 keys[current_section][num] = val
     return keys
 
+def clean_passage(text):
+    if not text: return ""
+    # Remove junk headers
+    junk = [
+        r"CEFR\s*academy", r"Page\s*\d+\s*of\s*\d+", r"GO\s*TO\s*THE\s*NEXT\s*PAGE", 
+        r"DO\s*NOT\s*TURN\s*OVER", r"GOOD\s*LUCK", r"STUDENT\s*NAME", r"DATE:",
+        r"Instructions:.*?\n", r"Read the text.*?\n"
+    ]
+    for pattern in junk:
+        text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+    
+    # Strip excessive newlines
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
+
 def run():
     if not os.path.exists(MAPPING_FILE):
         print("Mapping file missing!")
@@ -75,7 +90,7 @@ def run():
         pdf_file = next((f for f in os.listdir(folder_path) if f.endswith(".pdf")), None)
         if not pdf_file: continue
         
-        print(f"Deep processing Mock {display_id} (Source {source_id})...")
+        print(f"Deep cleaning Mock {display_id}...")
         full_path = os.path.join(folder_path, pdf_file)
         
         data = extract_all_text(full_path)
@@ -83,8 +98,8 @@ def run():
         
         final_mocks[display_id] = {
             "title": f"CEFR Mock Exam #{display_id}",
-            "listening": data.get("listening_parts", []),
-            "reading": data.get("reading_parts", []),
+            "listening": [clean_passage(p) for p in data.get("listening_parts", [])],
+            "reading": [clean_passage(p) for p in data.get("reading_parts", [])],
             "keys": keys
         }
 
