@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, CheckCircle, Loader2, ArrowLeft, Trophy, AlertCircle } from 'lucide-react';
-import { MockService, MockTest } from '../data/MockService';
+import { MockService } from '../data/MockService';
+import type { MockTest } from '../data/MockService';
 import './PageLayout.css';
 
 interface Props { lang: 'en' | 'uz'; }

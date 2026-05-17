@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Headphones, PlayCircle, CheckCircle, Loader2, ArrowLeft, Trophy, AlertCircle, PauseCircle, SkipForward, SkipBack } from 'lucide-react';
-import { MockService, MockTest } from '../data/MockService';
+import { Headphones, CheckCircle, Loader2, ArrowLeft, Trophy, AlertCircle } from 'lucide-react';
+import { MockService } from '../data/MockService';
+import type { MockTest } from '../data/MockService';
 import './PageLayout.css';
 
 interface Props { lang: 'en' | 'uz'; }
@@ -13,7 +14,6 @@ const Listening = ({ lang }: Props) => {
     const [results, setResults] = useState<{ score: number; total: number; detail: Record<string, boolean> } | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentAudioPart, setCurrentAudioPart] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
 
     const mockIds = MockService.getMockList();
 
@@ -24,7 +24,6 @@ const Listening = ({ lang }: Props) => {
         setUserAnswers({});
         setResults(null);
         setCurrentAudioPart(0);
-        setIsPlaying(false);
         window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
@@ -150,8 +149,6 @@ const Listening = ({ lang }: Props) => {
                                 controls
                                 className="custom-player"
                                 style={{ width: '100%', filter: 'invert(1)' }}
-                                onPlay={() => setIsPlaying(true)}
-                                onPause={() => setIsPlaying(false)}
                             >
                                 <source src={audioUrl} type="audio/mpeg" />
                             </audio>

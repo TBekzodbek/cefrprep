@@ -14,7 +14,7 @@ const typedMocksData = mocksData as Record<string, MockTest>;
 
 export const MockService = {
     getMockList: () => {
-        return Object.keys(typedMocksData).sort((a, b) => Number(a) - b);
+        return Object.keys(typedMocksData).sort((a, b) => Number(a) - Number(b));
     },
 
     getMock: (id: string): MockTest | null => {
