@@ -295,7 +295,7 @@ const Home = ({ lang }: HomeProps) => {
             {/* ════════════════════════ HOW IT WORKS ═══════════════ */}
             <section className="section-hiw">
                 <div className="container text-center">
-                    <motion.div {...fadeUp(0)} viewport={{ once: true }} whileInView={fadeUp(0).animate as Record<string, unknown>}>
+                    <motion.div {...fadeUp(0)} viewport={{ once: true }} whileInView={fadeUp(0).animate}>
                         <span className="section-label">How It Works</span>
                         <h2 className="section-title">Three steps to your target score</h2>
                         <p className="section-sub">
