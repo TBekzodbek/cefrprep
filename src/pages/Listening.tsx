@@ -43,7 +43,7 @@ const Listening = ({ lang }: Props) => {
         }, 1200);
     };
 
-    const audioUrl = selectedMockId ? `/audio/mock_${selectedMockId}/part${currentAudioPart + 1}.mp3` : '';
+    const audioUrl = selectedMockId ? `https://mctcstvjdpcnzypfjhka.supabase.co/storage/v1/object/public/audio/mock_${selectedMockId}/part${currentAudioPart + 1}.mp3` : '';
 
     if (!selectedMockId) {
         return (
