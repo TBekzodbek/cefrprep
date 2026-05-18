@@ -53,7 +53,7 @@ function App() {
         <Route path="/login" element={
           <div className="app-container">
             <Navigation {...commonProps} />
-            <Login lang={lang} theme={theme} />
+            <Login lang={lang} theme={theme} toggleLang={toggleLang} />
           </div>
         } />
 

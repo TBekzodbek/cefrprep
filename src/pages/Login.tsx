@@ -8,6 +8,7 @@ import './Login.css';
 interface Props {
     lang: 'en' | 'uz';
     theme: 'light' | 'dark';
+    toggleLang: () => void;
 }
 
 interface TelegramUser {
@@ -26,14 +27,7 @@ declare global {
     }
 }
 
-const features = [
-    { icon: <BookOpen size={16} />, text: '50 full CEFR mock exams' },
-    { icon: <Headphones size={16} />, text: 'Real listening audio tracks' },
-    { icon: <Mic size={16} />, text: 'AI-powered speaking feedback' },
-    { icon: <GraduationCap size={16} />, text: 'Personalised study plans' },
-];
-
-const Login = ({ lang }: Props) => {
+const Login = ({ lang, toggleLang }: Props) => {
     const navigate = useNavigate();
     const [isSignUp, setIsSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -55,32 +49,50 @@ const Login = ({ lang }: Props) => {
         check();
     }, [navigate]);
 
+    /* ─── Translations ──────────────────────────────── */
+    const uz = lang === 'uz';
+
+    const features = [
+        { icon: <BookOpen size={16} />, text: uz ? "50 ta to'liq CEFR mock imtihoni"        : '50 full CEFR mock exams' },
+        { icon: <Headphones size={16} />, text: uz ? 'Haqiqiy audio materiallar (Listening)'  : 'Real listening audio tracks' },
+        { icon: <Mic size={16} />,        text: uz ? "AI yordamida og'zaki nutq baholash"     : 'AI-powered speaking feedback' },
+        { icon: <GraduationCap size={16} />, text: uz ? "Shaxsiy AI o'quv rejasi"             : 'Personalised AI study plan' },
+    ];
+
     const t = {
-        title: isSignUp
-            ? (lang === 'en' ? 'Create Account' : 'Akkaunt yaratish')
-            : (lang === 'en' ? 'Welcome Back' : 'Xush kelibsiz'),
-        subtitle: isSignUp
-            ? (lang === 'en' ? 'Join 12,000+ students preparing for CEFR success.' : 'CEFR muvaffaqiyatiga tayyorlanayotgan 12 000+ talabaga qo\'shiling.')
-            : (lang === 'en' ? 'Continue your national exam preparation.' : 'Milliy imtihon tayyorgarligini davom ettiring.'),
-        emailLabel: lang === 'en' ? 'Email address' : 'Elektron pochta',
-        passwordLabel: lang === 'en' ? 'Password' : 'Parol',
-        forgot: lang === 'en' ? 'Forgot?' : 'Unutdingizmi?',
-        loginBtn: lang === 'en' ? 'Sign In' : 'Kirish',
-        signUpBtn: lang === 'en' ? 'Create Account' : 'Ro\'yxatdan o\'tish',
-        noAccount: lang === 'en' ? "Don't have an account?" : "Akkauntingiz yo'qmi?",
-        haveAccount: lang === 'en' ? "Already have an account?" : "Akkauntingiz bormi?",
-        switchLogin: lang === 'en' ? 'Sign in' : 'Kirish',
-        switchSignUp: lang === 'en' ? 'Sign up' : 'Ro\'yxatdan o\'tish',
-        backHome: lang === 'en' ? 'Back to home' : 'Bosh sahifaga',
-        or: lang === 'en' ? 'or' : 'yoki',
-        googleBtn: lang === 'en' ? 'Continue with Google' : 'Google orqali',
-        telegramBtn: lang === 'en' ? 'Continue with Telegram' : 'Telegram orqali',
-        telegramHint: lang === 'en' ? 'Tap Confirm in your Telegram app — no password needed.' : 'Telegram ilovangizda Tasdiqlash tugmasini bosing.',
+        panelTitle1:   uz ? "Milliy imtihonda"                         : 'Everything you need to',
+        panelTitle2:   uz ? "muvaffaqiyat qozonin"                     : 'ace the national exam',
+        panelSub:      uz ? "To'rt ko'nikmani mashq qiling, AI bilan rivojlanishingizni kuzating va maqsad CEFR darajangizga erishing."
+                          : "Practise all four skills, track your progress with AI, and unlock your target CEFR level.",
+        panelUsers:    uz ? "talaba ro'yxatdan o'tgan"                  : 'students joined',
+
+        title:         isSignUp ? (uz ? 'Akkaunt yaratish'   : 'Create Account')
+                                : (uz ? 'Xush kelibsiz'      : 'Welcome Back'),
+        subtitle:      isSignUp ? (uz ? "CEFR imtihonida muvaffaqiyat sari birinchi qadamingizni qo'ying."
+                                      : 'Start your journey to CEFR success.')
+                                : (uz ? 'Milliy imtihonga tayyorgarligingizni davom ettiring.'
+                                      : 'Continue your national exam preparation.'),
+        emailLabel:    uz ? 'Elektron pochta'         : 'Email address',
+        passwordLabel: uz ? 'Parol'                   : 'Password',
+        forgot:        uz ? 'Unutdingizmi?'           : 'Forgot?',
+        loginBtn:      uz ? 'Kirish'                  : 'Sign In',
+        signUpBtn:     uz ? "Ro'yxatdan o'tish"       : 'Create Account',
+        noAccount:     uz ? "Akkauntingiz yo'qmi?"    : "Don't have an account?",
+        haveAccount:   uz ? 'Akkauntingiz bormi?'     : 'Already have an account?',
+        switchLogin:   uz ? 'Kirish'                  : 'Sign in',
+        switchSignUp:  uz ? "Ro'yxatdan o'tish"       : 'Sign up',
+        backHome:      uz ? 'Bosh sahifaga'           : 'Back to home',
+        or:            uz ? 'yoki'                    : 'or',
+        googleBtn:     uz ? 'Google orqali kirish'    : 'Continue with Google',
+        tgHint:        uz ? "Telegram ilovangizda «Tasdiqlash»ni bosing — parol shart emas."
+                          : "Tap Confirm in your Telegram app — no password needed.",
+        verifying:     uz ? 'Tekshirilmoqda…'         : 'Verifying…',
+        successEmail:  uz ? 'Pochtangizni tekshiring — tasdiqlash havolasi yuborildi.'
+                          : 'Check your inbox — we sent a confirmation link.',
     };
 
     /* ─── Auth handlers ─────────────────────────────── */
 
-    // useCallback so the widget useEffect can safely depend on it
     const handleTelegramAuth = useCallback(async (user: TelegramUser) => {
         setLoadingSource('telegram');
         setError(null);
@@ -103,10 +115,11 @@ const Login = ({ lang }: Props) => {
         }
     }, [navigate]);
 
-    // Inject the official Telegram widget iframe into its container
+    // Inject official Telegram widget — data-lang="en" forces English so it
+    // doesn't render in Russian/etc based on the user's Telegram language setting.
     useEffect(() => {
         if (!tgContainerRef.current) return;
-        tgContainerRef.current.innerHTML = '';          // clear on re-render
+        tgContainerRef.current.innerHTML = '';
         window.onTelegramAuth = handleTelegramAuth;
 
         const script = document.createElement('script');
@@ -114,6 +127,7 @@ const Login = ({ lang }: Props) => {
         script.setAttribute('data-telegram-login', 'cefracademy1bot');
         script.setAttribute('data-size', 'large');
         script.setAttribute('data-radius', '10');
+        script.setAttribute('data-lang', 'en');          // force English button text
         script.setAttribute('data-onauth', 'onTelegramAuth(user)');
         script.setAttribute('data-request-access', 'write');
         script.async = true;
@@ -131,7 +145,6 @@ const Login = ({ lang }: Props) => {
             },
         });
         if (error) { setError(error.message); setLoadingSource(null); }
-        // On success Supabase redirects automatically, no cleanup needed
     };
 
     const handleAuth = async (e: React.FormEvent) => {
@@ -146,18 +159,15 @@ const Login = ({ lang }: Props) => {
                     options: { emailRedirectTo: 'https://cefracademy.uz/onboarding' },
                 });
                 if (err) throw err;
-                if (data.user) {
-                    setSuccessMsg(lang === 'en'
-                        ? 'Check your inbox — we sent a confirmation link.'
-                        : 'Pochtangizni tekshiring — tasdiqlash havolasi yuborildi.');
-                }
+                if (data.user) setSuccessMsg(t.successEmail);
             } else {
                 const { error: err } = await supabase.auth.signInWithPassword({ email, password });
                 if (err) throw err;
                 navigate('/dashboard');
             }
         } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : (lang === 'en' ? 'Authentication error.' : 'Kirishda xatolik.'));
+            setError(err instanceof Error ? err.message
+                : (uz ? 'Kirishda xatolik yuz berdi.' : 'Authentication error.'));
         } finally {
             setLoadingSource(null);
         }
@@ -167,25 +177,24 @@ const Login = ({ lang }: Props) => {
 
     return (
         <div className="auth-page">
-            {/* Decorative blobs */}
             <div className="auth-blob auth-blob-1" />
             <div className="auth-blob auth-blob-2" />
 
             <div className="auth-layout">
-                {/* ── Left panel ── */}
+
+                {/* ── Left branding panel ── */}
                 <div className="auth-panel-left">
                     <Link to="/" className="auth-brand">
                         <span className="auth-brand-logo">CEFR</span>
                         <span className="auth-brand-text">ACADEMY</span>
                     </Link>
+
                     <div className="auth-panel-body">
                         <h3 className="auth-panel-title">
-                            Everything you need to<br />
-                            <span className="auth-panel-grad">ace the national exam</span>
+                            {t.panelTitle1}<br />
+                            <span className="auth-panel-grad">{t.panelTitle2}</span>
                         </h3>
-                        <p className="auth-panel-sub">
-                            Practise all four skills, track your progress with AI, and unlock your target CEFR level.
-                        </p>
+                        <p className="auth-panel-sub">{t.panelSub}</p>
                         <ul className="auth-feature-list">
                             {features.map((f, i) => (
                                 <li key={i} className="auth-feature-item">
@@ -195,36 +204,48 @@ const Login = ({ lang }: Props) => {
                             ))}
                         </ul>
                     </div>
+
                     <div className="auth-panel-users">
                         <div className="auth-avatars">
-                            {['AT','SM','FN','ZR'].map((init, i) => (
-                                <div key={i} className="auth-avatar" style={{ background: ['#5B50E8','#0EA5E9','#10B981','#F59E0B'][i] }}>{init}</div>
+                            {['AT', 'SM', 'FN', 'ZR'].map((init, i) => (
+                                <div key={i} className="auth-avatar"
+                                    style={{ background: ['#5B50E8','#0EA5E9','#10B981','#F59E0B'][i] }}>
+                                    {init}
+                                </div>
                             ))}
                         </div>
-                        <span>Joined by <strong>12,000+</strong> students</span>
+                        <span><strong>12,000+</strong> {t.panelUsers}</span>
                     </div>
                 </div>
 
-                {/* ── Right panel (auth card) ── */}
+                {/* ── Right auth card ── */}
                 <motion.div
                     className="auth-card"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <Link to="/" className="back-link">
-                        <ArrowLeft size={15} /> {t.backHome}
-                    </Link>
+                    {/* Top row: back link + lang toggle */}
+                    <div className="auth-top-row">
+                        <Link to="/" className="back-link">
+                            <ArrowLeft size={15} /> {t.backHome}
+                        </Link>
+                        <button className="lang-pill" onClick={toggleLang} title="Switch language">
+                            <span className={lang === 'en' ? 'lang-active' : ''}>EN</span>
+                            <span className="lang-sep">|</span>
+                            <span className={lang === 'uz' ? 'lang-active' : ''}>UZ</span>
+                        </button>
+                    </div>
 
                     {/* Header */}
                     <div className="auth-header">
                         <AnimatePresence mode="wait">
                             <motion.div
-                                key={isSignUp ? 'signup' : 'signin'}
+                                key={`${isSignUp}-${lang}`}
                                 initial={{ opacity: 0, y: 6 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -6 }}
-                                transition={{ duration: 0.22 }}
+                                transition={{ duration: 0.2 }}
                             >
                                 <h2>{t.title}</h2>
                                 <p>{t.subtitle}</p>
@@ -235,11 +256,7 @@ const Login = ({ lang }: Props) => {
                     {/* Social buttons */}
                     <div className="social-grid">
                         {/* Google */}
-                        <button
-                            className="btn-social btn-google"
-                            onClick={handleGoogleLogin}
-                            disabled={loading}
-                        >
+                        <button className="btn-social btn-google" onClick={handleGoogleLogin} disabled={loading}>
                             {loadingSource === 'google'
                                 ? <Loader2 size={18} className="spin" />
                                 : <svg width="18" height="18" viewBox="0 0 24 24">
@@ -254,56 +271,42 @@ const Login = ({ lang }: Props) => {
 
                         {/* Telegram — official iframe widget */}
                         {loadingSource === 'telegram'
-                            ? <div className="btn-social btn-telegram btn-telegram-loading">
+                            ? <div className="btn-social btn-telegram-loading">
                                 <Loader2 size={18} className="spin" />
-                                <span>Verifying…</span>
+                                <span>{t.verifying}</span>
                               </div>
                             : <div ref={tgContainerRef} className="tg-widget-container" />
                         }
                     </div>
 
-                    {/* Telegram hint */}
-                    <p className="tg-hint">{t.telegramHint}</p>
+                    <p className="tg-hint">{t.tgHint}</p>
 
                     {/* Divider */}
                     <div className="auth-divider"><span>{t.or}</span></div>
 
-                    {/* Error / Success banners */}
+                    {/* Banners */}
                     <AnimatePresence>
                         {error && (
-                            <motion.div
-                                className="auth-banner auth-banner-error"
-                                initial={{ opacity: 0, y: -6 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0 }}
-                            >
+                            <motion.div className="auth-banner auth-banner-error"
+                                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                                 {error}
                             </motion.div>
                         )}
                         {successMsg && (
-                            <motion.div
-                                className="auth-banner auth-banner-success"
-                                initial={{ opacity: 0, y: -6 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0 }}
-                            >
+                            <motion.div className="auth-banner auth-banner-success"
+                                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                                 {successMsg}
                             </motion.div>
                         )}
                     </AnimatePresence>
 
-                    {/* Email form */}
+                    {/* Email / password form */}
                     <form className="auth-form" onSubmit={handleAuth}>
                         <div className="form-group">
                             <label>{t.emailLabel}</label>
-                            <input
-                                type="email"
-                                required
-                                value={email}
+                            <input type="email" required value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="name@example.com"
-                                disabled={loading}
-                            />
+                                placeholder="name@example.com" disabled={loading} />
                         </div>
 
                         <div className="form-group">
@@ -312,31 +315,18 @@ const Login = ({ lang }: Props) => {
                                 {!isSignUp && <Link to="/login" className="forgot-link">{t.forgot}</Link>}
                             </div>
                             <div className="input-pw-wrap">
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="••••••••"
-                                    disabled={loading}
-                                />
-                                <button
-                                    type="button"
-                                    className="pw-toggle"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    tabIndex={-1}
-                                >
+                                <input type={showPassword ? 'text' : 'password'} required
+                                    value={password} onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••" disabled={loading} />
+                                <button type="button" className="pw-toggle"
+                                    onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
                                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                 </button>
                             </div>
                         </div>
 
-                        <motion.button
-                            type="submit"
-                            disabled={loading}
-                            className="btn-submit"
-                            whileTap={{ scale: 0.98 }}
-                        >
+                        <motion.button type="submit" disabled={loading}
+                            className="btn-submit" whileTap={{ scale: 0.98 }}>
                             {loadingSource === 'email'
                                 ? <Loader2 size={18} className="spin" />
                                 : (isSignUp ? <UserPlus size={18} /> : <LogIn size={18} />)
@@ -347,10 +337,8 @@ const Login = ({ lang }: Props) => {
 
                     <div className="auth-footer">
                         <span>{isSignUp ? t.haveAccount : t.noAccount}</span>
-                        <button
-                            type="button"
-                            onClick={() => { setIsSignUp(!isSignUp); setError(null); setSuccessMsg(null); }}
-                        >
+                        <button type="button"
+                            onClick={() => { setIsSignUp(!isSignUp); setError(null); setSuccessMsg(null); }}>
                             {isSignUp ? t.switchLogin : t.switchSignUp}
                         </button>
                     </div>
