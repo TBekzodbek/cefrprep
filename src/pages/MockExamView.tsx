@@ -298,7 +298,8 @@ const MockExamView = ({ lang, type }: Props) => {
     const [currentPart, setCurrentPart] = useState(0);
     const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
     const [results, setResults] = useState<Results | null>(null);
-    const [timeLeft, setTimeLeft] = useState(type === 'reading' ? 3600 : 2100);
+    // Only reading has a countdown — listening is untimed
+    const [timeLeft, setTimeLeft] = useState(3600);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const inputRefs = useRef<Map<string, HTMLInputElement>>(new Map());
@@ -316,6 +317,7 @@ const MockExamView = ({ lang, type }: Props) => {
 
     const totalParts = displayParts.length;
     const answeredCount = Object.values(userAnswers).filter(v => v.trim()).length;
+    const showTimer = type === 'reading';
     const timerClass =
         timeLeft < 120 ? 'danger' :
         timeLeft < 300 ? 'warning' : '';
@@ -351,18 +353,19 @@ const MockExamView = ({ lang, type }: Props) => {
         setIsSubmitting(false);
     }, [mockData, selectedMockId, isSubmitting, type, userAnswers]);
 
-    // ── Timer ─────────────────────────────────────────────────────────────────
+    // ── Timer (reading only — listening is untimed) ───────────────────────────
     useEffect(() => {
-        if (!selectedMockId || results) return;
+        if (type !== 'reading' || !selectedMockId || results) return;
         const id = setInterval(() => setTimeLeft(t => Math.max(0, t - 1)), 1000);
         return () => clearInterval(id);
-    }, [selectedMockId, results]);
+    }, [type, selectedMockId, results]);
 
     useEffect(() => {
+        if (type !== 'reading') return;
         if (timeLeft === 0 && selectedMockId && !results && !isSubmitting) {
             handleSubmit();
         }
-    }, [timeLeft, selectedMockId, results, isSubmitting, handleSubmit]);
+    }, [type, timeLeft, selectedMockId, results, isSubmitting, handleSubmit]);
 
     // ── Select mock ───────────────────────────────────────────────────────────
     const handleSelectMock = (id: string) => {
@@ -372,7 +375,7 @@ const MockExamView = ({ lang, type }: Props) => {
         setUserAnswers({});
         setResults(null);
         setCurrentPart(0);
-        setTimeLeft(type === 'reading' ? 3600 : 2100);
+        setTimeLeft(3600); // reading = 60 min; listening is untimed
     };
 
     const handleAnswerChange = (q: string, val: string) => {
@@ -405,13 +408,13 @@ const MockExamView = ({ lang, type }: Props) => {
                                 ? '50 full-length mock exams · 35 questions each · 60 minutes · All question types covered'
                                 : '50 ta to\'liq mock test · har birida 35 savol · 60 daqiqa')
                             : (lang === 'en'
-                                ? '50 listening tests · 35 questions each · 35 minutes · Multiple formats'
-                                : '50 ta listening testi · 35 savol · 35 daqiqa')}
+                                ? '50 listening tests · 35 questions each · No time limit · Work at your own pace'
+                                : '50 ta listening testi · 35 savol · Vaqt chegarasi yo\'q')}
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                         <div className="lib-stat-chip">
                             <Clock size={14} />
-                            {type === 'reading' ? '60 min' : '35 min'}
+                            {type === 'reading' ? '60 min' : (lang === 'en' ? 'No time limit' : 'Vaqtsiz')}
                         </div>
                         <div className="lib-stat-chip">
                             <BarChart3 size={14} />
@@ -490,10 +493,17 @@ const MockExamView = ({ lang, type }: Props) => {
                 </div>
 
                 <div className="exam-topbar-right">
-                    <div className={`exam-clock${timerClass ? ' ' + timerClass : ''}`}>
-                        <Clock size={16} />
-                        <span>{fmt(timeLeft)}</span>
-                    </div>
+                    {showTimer ? (
+                        <div className={`exam-clock${timerClass ? ' ' + timerClass : ''}`}>
+                            <Clock size={16} />
+                            <span>{fmt(timeLeft)}</span>
+                        </div>
+                    ) : (
+                        <div className="exam-no-timer-badge">
+                            <Clock size={14} />
+                            {lang === 'en' ? 'No time limit' : 'Vaqtsiz'}
+                        </div>
+                    )}
                     <div className="exam-progress-pill">
                         {answeredCount}<span>/35</span>
                     </div>

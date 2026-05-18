@@ -100,7 +100,7 @@ function useCountdown(initialSeconds: number, active: boolean) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const TOTAL_SECONDS = 45 * 60; // 45 minutes
+const TOTAL_SECONDS = 60 * 60; // 60 minutes — official CEFR writing exam time
 
 const Writing = ({ lang }: Props) => {
     const [task, setTask] = useState<1 | 2>(1);
@@ -229,7 +229,7 @@ Score on CEFR scale (A2/B1/B2/C1). Feedback language: ${uz ? 'Uzbek (Latin scrip
                             {uz ? 'Yozma nutq' : 'Writing Practice'}
                         </span>
                         <span className="writing-subtitle">
-                            {uz ? '2 ta topshiriq · 45 daqiqa' : '2 Tasks · 45 Minutes · AI Scoring'}
+                            {uz ? '2 ta topshiriq · 60 daqiqa' : '2 Tasks · 60 Minutes · AI Scoring'}
                         </span>
                     </div>
                 </div>
@@ -237,7 +237,7 @@ Score on CEFR scale (A2/B1/B2/C1). Feedback language: ${uz ? 'Uzbek (Latin scrip
                 <div className="writing-topbar-right">
                     <div className={`writing-clock ${timerClass}`}>
                         <Clock size={15} />
-                        <span>{timerStarted ? fmt(timeLeft) : '45:00'}</span>
+                        <span>{timerStarted ? fmt(timeLeft) : '60:00'}</span>
                         {!timerStarted && (
                             <span className="clock-hint">
                                 {uz ? 'yozishni boshlang' : 'starts on first keystroke'}
