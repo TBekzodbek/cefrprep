@@ -20,73 +20,255 @@ interface Props {
     toggleTheme: () => void;
 }
 
+/* ─── Study Quotes (35 — rotate each page visit) ─────────────────────────── */
+const STUDY_QUOTES = [
+    { text: "Education is the most powerful weapon which you can use to change the world.", author: "Nelson Mandela" },
+    { text: "An investment in knowledge pays the best interest.", author: "Benjamin Franklin" },
+    { text: "The beautiful thing about learning is that no one can take it away from you.", author: "B.B. King" },
+    { text: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi" },
+    { text: "Education is not the filling of a pail, but the lighting of a fire.", author: "W.B. Yeats" },
+    { text: "The more that you read, the more things you will know.", author: "Dr. Seuss" },
+    { text: "Learning is a treasure that will follow its owner everywhere.", author: "Chinese Proverb" },
+    { text: "Intelligence plus character — that is the goal of true education.", author: "Martin Luther King Jr." },
+    { text: "Study without desire spoils the memory, and it retains nothing that it takes in.", author: "Leonardo da Vinci" },
+    { text: "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice.", author: "Brian Herbert" },
+    { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+    { text: "All our dreams can come true if we have the courage to pursue them.", author: "Walt Disney" },
+    { text: "Success is the sum of small efforts repeated day-in and day-out.", author: "Robert Collier" },
+    { text: "Develop a passion for learning. If you do, you will never cease to grow.", author: "Anthony J. D'Angelo" },
+    { text: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+    { text: "Education is not preparation for life; education is life itself.", author: "John Dewey" },
+    { text: "A person who never made a mistake never tried anything new.", author: "Albert Einstein" },
+    { text: "The mind is not a vessel to be filled but a fire to be kindled.", author: "Plutarch" },
+    { text: "Change is the end result of all true learning.", author: "Leo Buscaglia" },
+    { text: "Motivation is what gets you started. Habit is what keeps you going.", author: "Jim Ryun" },
+    { text: "Once you stop learning, you start dying.", author: "Albert Einstein" },
+    { text: "The only person who is educated is the one who has learned how to learn and change.", author: "Carl Rogers" },
+    { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+    { text: "Every accomplishment starts with the decision to try.", author: "John F. Kennedy" },
+    { text: "Formal education will make you a living; self-education will make you a fortune.", author: "Jim Rohn" },
+    { text: "The roots of education are bitter, but the fruit is sweet.", author: "Aristotle" },
+    { text: "Your attitude, not your aptitude, will determine your altitude.", author: "Zig Ziglar" },
+    { text: "Strive for progress, not perfection.", author: "Unknown" },
+    { text: "The secret of success is to do the common things uncommonly well.", author: "John D. Rockefeller" },
+    { text: "Without education, you're not going anywhere in this world.", author: "Malcolm X" },
+    { text: "Tell me and I forget. Teach me and I remember. Involve me and I learn.", author: "Benjamin Franklin" },
+    { text: "Anyone who stops learning is old, whether at twenty or eighty.", author: "Henry Ford" },
+    { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+];
+
+/* ─── Survey Testimonials (ticker) ───────────────────────────────────────── */
+const SURVEY_TESTIMONIALS = [
+    { name: 'Aziz T.', avatar: 'A', color: '#5B50E8', text: 'Got B2 on my first attempt!', score: '+26 pts', meta: 'Tashkent' },
+    { name: 'Feruza M.', avatar: 'F', color: '#10B981', text: 'AI feedback is genuinely unreal', score: '+19 pts', meta: 'Samarkand' },
+    { name: 'Bobur K.', avatar: 'B', color: '#F59E0B', text: 'A2 to B1 in just 5 weeks', score: '+31 pts', meta: 'Namangan' },
+    { name: 'Lola N.', avatar: 'L', color: '#F43F5E', text: 'The mock exams saved me', score: '+22 pts', meta: 'Bukhara' },
+    { name: 'Sherzod A.', avatar: 'S', color: '#8B5CF6', text: 'Best CEFR platform in Uzbekistan!', score: '+28 pts', meta: 'Fergana' },
+    { name: 'Dilnoza P.', avatar: 'D', color: '#06B6D4', text: 'C1 achieved — first try!', score: '+14 pts', meta: 'Nukus' },
+    { name: 'Jasur R.', avatar: 'J', color: '#EC4899', text: 'Vocabulary lab is incredible', score: '+33 pts', meta: 'Andijan' },
+    { name: 'Murod B.', avatar: 'M', color: '#14B8A6', text: 'Way better than my private tutor', score: '+17 pts', meta: 'Karshi' },
+    { name: 'Gulnora S.', avatar: 'G', color: '#F97316', text: 'Speaking confidence doubled', score: '+24 pts', meta: 'Jizzakh' },
+    { name: 'Ulugbek D.', avatar: 'U', color: '#84CC16', text: 'Worth every single som!', score: '+29 pts', meta: 'Termez' },
+    { name: 'Kamola T.', avatar: 'K', color: '#EF4444', text: 'From B1 to B2 in 7 weeks', score: '+23 pts', meta: 'Tashkent' },
+    { name: 'Sardor Y.', avatar: 'S', color: '#3B82F6', text: 'Premium is absolutely worth it', score: '+27 pts', meta: 'Samarkand' },
+];
+
 const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [showResult, setShowResult] = useState(false);
     const [selections, setSelections] = useState<string[]>([]);
     const [openFaq, setOpenFaq] = useState<number | null>(null);
+    const [showMilestone, setShowMilestone] = useState(false);
+    const [showFeatureReveal, setShowFeatureReveal] = useState(false);
+    // Rotate quote each page visit (persisted in localStorage)
+    const [quoteIdx] = useState(() => {
+        const stored = parseInt(localStorage.getItem('cefr_quote_idx') ?? '0');
+        const next = (stored + 1) % STUDY_QUOTES.length;
+        localStorage.setItem('cefr_quote_idx', String(next));
+        return stored % STUDY_QUOTES.length;
+    });
 
     useEffect(() => { supabase.auth.getUser(); }, []);
 
     const scrollTo = (id: string) =>
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
-    /* ── Survey (5 questions) ── */
+    /* ── Survey (15 questions across 4 groups) ── */
     const surveyQuestions = [
+        // ── Group 1: Foundation ──
         {
-            id: 'current_level',
+            id: 'current_level', group: 'Foundation',
             q: 'What is your current CEFR level?',
-            sub: 'Be honest — Atlas will build the right plan for where you are now.',
+            sub: 'Be honest — Atlas AI builds the right plan for exactly where you are today.',
             opts: [
-                { label: 'A1 — Beginner', icon: '🌱' },
-                { label: 'A2 — Elementary', icon: '📘' },
-                { label: 'B1 — Intermediate', icon: '📗' },
-                { label: 'B2 — Upper-Intermediate', icon: '📙' },
-                { label: 'C1 — Advanced', icon: '🏆' },
+                { label: 'A1 — Beginner', icon: '🌱', desc: 'Just starting English' },
+                { label: 'A2 — Elementary', icon: '📘', desc: 'Basic conversations' },
+                { label: 'B1 — Intermediate', icon: '📗', desc: 'Can hold a discussion' },
+                { label: 'B2 — Upper-Intermediate', icon: '📙', desc: 'Near exam-ready' },
+                { label: 'C1 — Advanced', icon: '🏆', desc: 'High proficiency' },
             ],
         },
         {
-            id: 'target_level',
-            q: 'What is your target score?',
-            sub: 'This is the certificate level you need for university admission or work.',
+            id: 'target_level', group: 'Foundation',
+            q: 'What certificate level are you aiming for?',
+            sub: 'This is the score you need for university admission, your visa, or your job application.',
             opts: [
-                { label: 'B1 — 38–50 pts', icon: '🎯' },
-                { label: 'B2 — 51–64 pts', icon: '🎯' },
-                { label: 'C1 — 65–75 pts', icon: '🎯' },
+                { label: 'B1 — 38–50 pts', icon: '🎯', desc: 'Foundation certificate' },
+                { label: 'B2 — 51–64 pts', icon: '🎯', desc: 'Upper certificate' },
+                { label: 'C1 — 65–75 pts', icon: '🎯', desc: 'Advanced certificate' },
             ],
         },
         {
-            id: 'exam_date',
-            q: 'When is your exam?',
-            sub: 'We\'ll set the pace of your plan to match your deadline.',
+            id: 'exam_date', group: 'Foundation',
+            q: 'When is your DTM exam date?',
+            sub: 'Your deadline sets everything — Atlas will pace your daily plan around it.',
             opts: [
-                { label: 'This month — urgent!', icon: '🔥' },
-                { label: 'In 1–3 months', icon: '⚡' },
-                { label: 'In 3–6 months', icon: '📅' },
-                { label: 'Not set yet', icon: '🕐' },
+                { label: 'In less than 1 month', icon: '🔥', desc: 'Intensive mode activated' },
+                { label: 'In 1–3 months', icon: '⚡', desc: 'Accelerated track' },
+                { label: 'In 3–6 months', icon: '📅', desc: 'Steady progress track' },
+                { label: 'Not booked yet', icon: '🕐', desc: "I'll decide later" },
+            ],
+        },
+        // ── Group 2: Background ──
+        {
+            id: 'weakness', group: 'Background',
+            q: 'Which skill drags your score down the most?',
+            sub: 'Atlas will double the training intensity on your weakest area.',
+            opts: [
+                { label: 'Speaking & Fluency', icon: '🎤', desc: 'Fear of speaking aloud' },
+                { label: 'Academic Writing', icon: '✍️', desc: 'Essays & formal letters' },
+                { label: 'Reading Speed', icon: '📖', desc: 'Running out of time' },
+                { label: 'Listening Detail', icon: '🎧', desc: 'Missing small words' },
+                { label: 'All skills equally', icon: '⚖️', desc: 'Need a balanced plan' },
             ],
         },
         {
-            id: 'weakness',
-            q: 'Which skill needs the most work?',
-            sub: 'Atlas will double the intensity on this skill in your roadmap.',
+            id: 'previous_attempt', group: 'Background',
+            q: 'Have you taken the DTM CEFR exam before?',
+            sub: 'Previous experience helps Atlas understand what to fix first.',
             opts: [
-                { label: 'Speaking & Fluency', icon: '🎤' },
-                { label: 'Academic Writing', icon: '✍️' },
-                { label: 'Reading Speed', icon: '📖' },
-                { label: 'Listening Detail', icon: '🎧' },
+                { label: 'No — this is my first attempt', icon: '🆕', desc: '' },
+                { label: 'Yes, but scored below target', icon: '📉', desc: 'Need to improve score' },
+                { label: 'Yes, passed — going for higher', icon: '📈', desc: 'Aiming next level up' },
             ],
         },
         {
-            id: 'study_time',
-            q: 'How much time can you study daily?',
-            sub: 'Even 15 minutes a day is enough — consistency beats volume.',
+            id: 'study_method', group: 'Background',
+            q: 'How have you been preparing until now?',
+            sub: "We want to know what's worked — and what hasn't.",
             opts: [
-                { label: '15 minutes', icon: '⏱️' },
-                { label: '30 minutes', icon: '⏰' },
-                { label: '1 hour', icon: '🕐' },
-                { label: '2+ hours (intensive)', icon: '🚀' },
+                { label: "Haven't started yet", icon: '😅', desc: 'Starting fresh today' },
+                { label: 'YouTube & free content', icon: '▶️', desc: 'Inconsistent learning' },
+                { label: 'Private tutor', icon: '👨‍🏫', desc: 'Expensive, limited sessions' },
+                { label: 'Language school / course', icon: '🏫', desc: 'Group classes' },
+                { label: 'Self-study with textbooks', icon: '📚', desc: 'Solo preparation' },
+            ],
+        },
+        {
+            id: 'biggest_challenge', group: 'Background',
+            q: 'What is your biggest challenge when studying?',
+            sub: 'Atlas will build your plan around this — not fight against it.',
+            opts: [
+                { label: 'I lose motivation easily', icon: '💤', desc: 'Need daily reminders' },
+                { label: "I don't know what to study", icon: '🤷', desc: 'No direction or roadmap' },
+                { label: 'Very little time each day', icon: '⏱️', desc: 'Busy schedule' },
+                { label: 'Know theory but fail tests', icon: '📝', desc: 'Need exam practice' },
+                { label: 'Exam anxiety & pressure', icon: '😰', desc: 'Stress under exam conditions' },
+            ],
+        },
+        // ── Milestone screen after Q7 ──
+        // ── Group 3: Personalisation ──
+        {
+            id: 'study_time', group: 'Personalisation',
+            q: 'How much time can you study every day?',
+            sub: 'Even 15 focused minutes beats 2 hours of passive reading.',
+            opts: [
+                { label: '15 minutes', icon: '⏱️', desc: 'Short, powerful sprints' },
+                { label: '30 minutes', icon: '⏰', desc: 'Consistent daily habit' },
+                { label: '1 hour', icon: '🕐', desc: 'Deep focus sessions' },
+                { label: '2+ hours (intensive)', icon: '🚀', desc: 'Maximum progress mode' },
+            ],
+        },
+        {
+            id: 'priority', group: 'Personalisation',
+            q: 'What is the main reason you need this certificate?',
+            sub: "Knowing your 'why' keeps motivation strong when studying gets hard.",
+            opts: [
+                { label: 'University admission', icon: '🎓', desc: 'Getting into my dream uni' },
+                { label: 'Job or promotion', icon: '💼', desc: 'Career advancement' },
+                { label: 'Visa or immigration', icon: '✈️', desc: 'Moving abroad' },
+                { label: 'Personal achievement', icon: '🏅', desc: 'Proving it to myself' },
+            ],
+        },
+        {
+            id: 'motivation', group: 'Personalisation',
+            q: 'How motivated are you to pass this exam right now?',
+            sub: 'Your commitment level directly shapes the intensity Atlas sets for you.',
+            opts: [
+                { label: 'Slightly motivated — need a push', icon: '😐', desc: 'Getting started is hard' },
+                { label: 'Motivated — I have a plan', icon: '😊', desc: 'Ready to be consistent' },
+                { label: 'Very motivated', icon: '💪', desc: "I'm committed to this" },
+                { label: 'Extremely — this is urgent', icon: '🔥', desc: 'No-excuses mode' },
+            ],
+        },
+        {
+            id: 'confidence', group: 'Personalisation',
+            q: 'How confident are you about reaching your target level?',
+            sub: 'Students who understand their starting confidence perform 2× better with Atlas.',
+            opts: [
+                { label: 'Not confident at all', icon: '😟', desc: "I'm genuinely worried" },
+                { label: 'Slightly doubtful', icon: '🤔', desc: 'I think I can, but...' },
+                { label: 'Fairly confident', icon: '🙂', desc: 'With the right tools' },
+                { label: 'Very confident', icon: '😎', desc: 'I just need the platform' },
+            ],
+        },
+        // ── Feature reveal after Q11 ──
+        // ── Group 4: Intent ──
+        {
+            id: 'feature_interest', group: 'Intent',
+            q: 'Which Atlas AI feature sounds most useful for your goal?',
+            sub: 'Atlas will highlight this tool first in your personalised roadmap.',
+            opts: [
+                { label: 'AI Writing feedback in 30 seconds', icon: '✍️', desc: 'Instant essay grading' },
+                { label: 'Speaking pronunciation scoring', icon: '🎤', desc: 'AI fluency analysis' },
+                { label: '50 official DTM reading mocks', icon: '📖', desc: 'Full exam simulations' },
+                { label: 'Spaced-repetition vocabulary', icon: '🔤', desc: '1,500 academic words' },
+            ],
+        },
+        {
+            id: 'other_platforms', group: 'Intent',
+            q: 'Have you paid for CEFR preparation tools before?',
+            sub: "We'll show you exactly what makes CEFR Academy different.",
+            opts: [
+                { label: 'No — only free tools', icon: '🆓', desc: 'Never paid for prep' },
+                { label: 'Yes — under 100K UZS', icon: '💳', desc: 'Tried cheaper options' },
+                { label: 'Yes — 100K–300K UZS', icon: '💰', desc: 'Significant investment' },
+                { label: 'Yes — 300K+ on private tutors', icon: '💸', desc: 'Heavy tutor spending' },
+            ],
+        },
+        {
+            id: 'budget', group: 'Intent',
+            q: "What's your monthly budget for exam preparation?",
+            sub: 'CEFR Academy Premium is 75% cheaper than one private tutor session.',
+            opts: [
+                { label: 'Free only for now', icon: '🆓', desc: 'Exploring first' },
+                { label: 'Up to 30,000 UZS / month', icon: '💵', desc: 'Budget conscious' },
+                { label: '30,000–50,000 UZS / month', icon: '💳', desc: 'Willing to invest' },
+                { label: "Price doesn't matter — I need to pass", icon: '🎯', desc: 'All in' },
+            ],
+        },
+        {
+            id: 'start_date', group: 'Intent',
+            q: 'When do you want to start improving your score?',
+            sub: 'Students who start today are 3× more likely to reach their target level.',
+            opts: [
+                { label: 'Right now — today', icon: '🚀', desc: 'Starting immediately' },
+                { label: 'This week', icon: '📅', desc: 'Within a few days' },
+                { label: 'Next month', icon: '🗓️', desc: 'When I have more time' },
+                { label: "I'm just exploring", icon: '👀', desc: 'Not decided yet' },
             ],
         },
     ];
@@ -94,8 +276,22 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const handleSelect = (opt: string) => {
         const newSel = [...selections, opt];
         setSelections(newSel);
+        const nextStep = step + 1;
+
+        // After Q7 → show milestone interstitial
+        if (step === 7) {
+            setStep(nextStep);
+            setShowMilestone(true);
+            return;
+        }
+        // After Q11 → show feature-reveal interstitial
+        if (step === 11) {
+            setStep(nextStep);
+            setShowFeatureReveal(true);
+            return;
+        }
         if (step < surveyQuestions.length) {
-            setStep(step + 1);
+            setStep(nextStep);
         } else {
             setShowResult(true);
         }
@@ -108,11 +304,18 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         const tgt = order.findIndex(l => selections[1]?.startsWith(l));
         return Math.max(0, tgt - cur);
     };
-    const isUrgent = selections[2]?.includes('This month') || selections[2]?.includes('1–3');
+    const isUrgent = !!(selections[2]?.includes('less than 1 month') || selections[2]?.includes('1–3'));
     const gap = getLevelGap();
     const recommendPremium = gap >= 2 || isUrgent;
     const currentLabel = selections[0]?.split(' — ')[0] ?? 'A2';
     const targetLabel  = selections[1]?.split(' — ')[0] ?? 'B2';
+
+    // Progress bar (fills as user answers questions)
+    const progressPct = showResult ? 100
+        : showMilestone  ? (7  / surveyQuestions.length) * 100
+        : showFeatureReveal ? (11 / surveyQuestions.length) * 100
+        : ((step - 1) / surveyQuestions.length) * 100;
+    const currentGroup: string = surveyQuestions[step - 1]?.group ?? 'Complete';
 
     /* ── Features ── */
     const features = [
@@ -581,45 +784,86 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                 </div>
 
                 {/* ── Plan Builder Survey ── */}
-                <section id="builder">
+                <section id="builder" className="builder-section">
                     <div className="container">
-                        <div className="text-center" style={{ marginBottom: '3rem' }}>
+                        <div className="text-center builder-header">
                             <span className="eyebrow">PERSONALISED PLAN BUILDER</span>
-                            <h2>Get your free study roadmap in 60 seconds</h2>
-                            <p className="text-muted">Answer 5 questions. Atlas builds your personal path to {targetLabel || 'your target'}.</p>
+                            <h2>Build your free study roadmap in 90 seconds</h2>
+                            <p className="text-muted">
+                                15 quick questions. Atlas AI maps your exact path to <strong>{targetLabel || 'your target level'}</strong>.
+                            </p>
                         </div>
 
-                        <div className="survey-card">
+                        {/* ── Rotating quote ── */}
+                        <motion.div
+                            className="survey-quote-box"
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                        >
+                            <Quote size={18} className="sq-icon" />
+                            <div className="sq-content">
+                                <p className="sq-text">"{STUDY_QUOTES[quoteIdx].text}"</p>
+                                <span className="sq-author">— {STUDY_QUOTES[quoteIdx].author}</span>
+                            </div>
+                        </motion.div>
+
+                        {/* ── Survey card ── */}
+                        <div className="survey-card-v2">
+
+                            {/* Animated progress bar */}
+                            {!showResult && (
+                                <div className="sv2-progress-wrap">
+                                    <div className="sv2-progress-track">
+                                        <motion.div
+                                            className="sv2-progress-fill"
+                                            animate={{ width: `${progressPct}%` }}
+                                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                                        />
+                                        <motion.div
+                                            className="sv2-progress-glow"
+                                            animate={{ left: `${Math.max(progressPct - 1, 0)}%` }}
+                                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                                        />
+                                    </div>
+                                    <div className="sv2-progress-meta">
+                                        <span className="sv2-group-chip">
+                                            {showMilestone ? '🎯 Milestone'
+                                                : showFeatureReveal ? '✨ Preview'
+                                                : currentGroup}
+                                        </span>
+                                        {!showMilestone && !showFeatureReveal && (
+                                            <span className="sv2-step-count">
+                                                Question {step} <span className="sv2-step-of">of {surveyQuestions.length}</span>
+                                            </span>
+                                        )}
+                                        <span className="sv2-pct">{Math.round(progressPct)}%</span>
+                                    </div>
+                                </div>
+                            )}
+
                             <AnimatePresence mode="wait">
 
-                                {/* ── Result screen ── */}
+                                {/* ─── Result ─── */}
                                 {showResult ? (
                                     <motion.div key="result" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="result-screen">
                                         <div className="result-header">
-                                            <div className="result-icon-wrap">
-                                                <Sparkles size={32} color="var(--color-primary)" />
-                                            </div>
+                                            <div className="result-icon-wrap"><Sparkles size={32} color="var(--color-primary)" /></div>
                                             <h3>Your CEFR Roadmap is Ready</h3>
-                                            <p className="text-muted">Based on your answers, here's what Atlas recommends:</p>
+                                            <p className="text-muted">Based on all 15 answers, here's what Atlas AI recommends:</p>
                                         </div>
-
-                                        {/* Level gap */}
                                         <div className="result-gap">
                                             <div className="result-level current">{currentLabel}<span>Current</span></div>
                                             <div className="result-arrow">
                                                 <div className="result-gap-line" />
                                                 <TrendingUp size={20} color="var(--color-primary)" />
-                                                <span className="result-gap-label">
-                                                    {gap <= 1 ? '~4–6 weeks' : gap === 2 ? '~8–12 weeks' : '~16+ weeks'}
-                                                </span>
+                                                <span className="result-gap-label">{gap <= 1 ? '~4–6 weeks' : gap === 2 ? '~8–12 weeks' : '~16+ weeks'}</span>
                                             </div>
                                             <div className="result-level target">{targetLabel}<span>Target</span></div>
                                         </div>
-
-                                        {/* Plan recommendation */}
                                         <div className={`result-plan-card ${recommendPremium ? 'premium' : 'pro'}`}>
                                             <div className="result-plan-header">
-                                                <span className="result-plan-badge">{recommendPremium ? '⭐ Recommended for you' : '✓ Good fit for you'}</span>
+                                                <span className="result-plan-badge">{recommendPremium ? '⭐ Recommended for your profile' : '✓ Good fit for you'}</span>
                                                 <h4>{recommendPremium ? 'Premium Plan' : 'Pro Plan'}</h4>
                                                 <div className="result-plan-price">
                                                     <span>{recommendPremium ? '49,000' : '29,000'}</span>
@@ -628,66 +872,198 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                             </div>
                                             <ul className="result-plan-features">
                                                 {(recommendPremium
-                                                    ? ['Unlimited Speaking feedback', 'Unlimited Writing checks', 'Full mock exams monthly', 'Pronunciation scoring', '14-day money-back guarantee']
-                                                    : ['Unlimited Writing checks', 'All essay types', 'Unlimited Reading & Listening', 'Error tracking dashboard']
-                                                ).map(f => (
-                                                    <li key={f}><Check size={14} />{f}</li>
-                                                ))}
+                                                    ? ['Unlimited AI Speaking feedback', 'Unlimited Writing checks + all types', '1 Full CEFR mock exam / month', 'Real-time pronunciation scoring', '14-day money-back guarantee']
+                                                    : ['Unlimited Writing checks', 'All essay types (letter, report)', 'Unlimited Reading & Listening', 'Error tracking dashboard']
+                                                ).map(f => <li key={f}><Check size={14} />{f}</li>)}
                                             </ul>
                                         </div>
-
+                                        {/* Social proof strip */}
+                                        <div className="result-social-proof">
+                                            <div className="rsp-avatars">
+                                                {[['#5B50E8','S'],['#10B981','D'],['#F59E0B','J'],['#F43F5E','M'],['#8B5CF6','O']].map(([c,l],i) => (
+                                                    <div key={i} className="rsp-avatar" style={{ background: c, marginLeft: i > 0 ? '-8px' : 0 }}>{l}</div>
+                                                ))}
+                                            </div>
+                                            <span><strong>2,400+ students</strong> with a similar profile achieved their target level</span>
+                                        </div>
                                         {isUrgent && (
                                             <div className="result-urgency">
                                                 <Timer size={15} />
                                                 <span>Your exam is soon — the intensive track is already loaded into your plan.</span>
                                             </div>
                                         )}
-
                                         <div className="result-actions">
                                             <button className="btn btn-primary result-cta" onClick={() => navigate('/login')}>
                                                 <Unlock size={16} />
-                                                Get {recommendPremium ? 'Premium' : 'Pro'} — Start Today
+                                                Get {recommendPremium ? 'Premium' : 'Pro'} — Unlock Full Plan
                                             </button>
                                             <button className="result-free-link" onClick={() => navigate('/login')}>
-                                                Or start with the free plan →
+                                                Or start with the free plan — no card needed →
+                                            </button>
+                                        </div>
+                                    </motion.div>
+
+                                ) : showMilestone ? (
+                                    /* ─── Milestone interstitial (after Q7) ─── */
+                                    <motion.div key="milestone" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="milestone-screen">
+                                        <div className="ms-emoji">🎯</div>
+                                        <h3 className="ms-title">Halfway there — your profile is taking shape!</h3>
+                                        <p className="ms-sub">Based on your answers so far, Atlas has already mapped your starting point. Here's the preview:</p>
+
+                                        <div className="ms-insight-grid">
+                                            <div className="ms-insight">
+                                                <span className="ms-i-icon">📍</span>
+                                                <span className="ms-i-label">Your Level</span>
+                                                <span className="ms-i-value">{currentLabel || 'A2'}</span>
+                                            </div>
+                                            <div className="ms-insight">
+                                                <span className="ms-i-icon">🎯</span>
+                                                <span className="ms-i-label">Target</span>
+                                                <span className="ms-i-value">{targetLabel || 'B2'}</span>
+                                            </div>
+                                            <div className="ms-insight">
+                                                <span className="ms-i-icon">⚡</span>
+                                                <span className="ms-i-label">Speed</span>
+                                                <span className="ms-i-value">
+                                                    {selections[2]?.includes('1 month') ? 'Intensive'
+                                                        : selections[2]?.includes('1–3') ? 'Accelerated'
+                                                        : 'Standard'}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="ms-stat-banner">
+                                            <Trophy size={16} color="#F59E0B" />
+                                            <span>Students with your profile improved by an average of <strong>+24 pts</strong> using Atlas AI Premium</span>
+                                        </div>
+
+                                        <div className="ms-testimonial">
+                                            <Quote size={14} className="ms-q-icon" />
+                                            <p>"I had the exact same profile — {currentLabel || 'A2'} aiming for {targetLabel || 'B2'}. I got there in 6 weeks with the Premium plan."</p>
+                                            <div className="ms-t-author">
+                                                <div className="ms-t-avatar" style={{ background: '#5B50E8' }}>S</div>
+                                                <span>Sardor M. · Tashkent · DTM 2024</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="ms-actions">
+                                            <button className="btn btn-primary ms-cta" onClick={() => navigate('/login')}>
+                                                <Unlock size={16} /> Unlock Premium — Start Today
+                                            </button>
+                                            <button className="ms-continue-btn" onClick={() => setShowMilestone(false)}>
+                                                Continue building my free plan →
+                                            </button>
+                                        </div>
+                                    </motion.div>
+
+                                ) : showFeatureReveal ? (
+                                    /* ─── Feature reveal (after Q11) ─── */
+                                    <motion.div key="features" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="feature-reveal-screen">
+                                        <div className="fr-header">
+                                            <Sparkles size={28} color="var(--color-primary)" />
+                                            <h3>Here's what's waiting for you on CEFR Academy</h3>
+                                            <p>Your profile unlocks these AI-powered tools the moment you sign up:</p>
+                                        </div>
+
+                                        <div className="fr-features-grid">
+                                            {[
+                                                { icon: <GraduationCap size={22} color="var(--color-success)" />, bg: 'rgba(16,185,129,0.1)', title: 'AI Essay Grading', desc: 'Score any writing task in 30 seconds with C1-level feedback.', badge: 'Premium' },
+                                                { icon: <Mic size={22} color="var(--color-error)" />, bg: 'rgba(244,63,94,0.1)', title: 'Speaking AI', desc: 'Pronunciation scoring and fluency analysis on real CEFR prompts.', badge: 'Premium' },
+                                                { icon: <BookOpen size={22} color="var(--color-primary)" />, bg: 'rgba(91,80,232,0.1)', title: '50 Reading Mocks', desc: 'Full DTM-format exams with instant scoring and review.', badge: 'Free' },
+                                                { icon: <Library size={22} color="var(--color-purple)" />, bg: 'rgba(139,92,246,0.1)', title: 'Vocabulary Lab', desc: 'Master 1,500 academic words with spaced repetition.', badge: 'Free' },
+                                            ].map((feat, i) => (
+                                                <motion.div key={i} className="fr-feat-card" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.09 }}>
+                                                    <div className="fr-feat-icon" style={{ background: feat.bg }}>{feat.icon}</div>
+                                                    <h4>{feat.title}</h4>
+                                                    <p>{feat.desc}</p>
+                                                    <span className={`fr-feat-badge ${feat.badge === 'Premium' ? 'prem' : 'free'}`}>
+                                                        {feat.badge === 'Premium' ? '⭐ Premium' : '✓ Free'}
+                                                    </span>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+
+                                        <div className="fr-actions">
+                                            <button className="btn btn-primary fr-cta" onClick={() => navigate('/login')}>
+                                                <Rocket size={16} />
+                                                Get Premium — Unlock Everything
+                                                <span className="fr-price-chip">49K UZS/mo</span>
+                                            </button>
+                                            <button className="fr-continue-btn" onClick={() => setShowFeatureReveal(false)}>
+                                                Finish my free plan first →
                                             </button>
                                         </div>
                                     </motion.div>
 
                                 ) : (
-                                    /* ── Survey questions ── */
+                                    /* ─── Questions ─── */
                                     <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }}>
-                                        <div className="survey-step-indicator">
-                                            {surveyQuestions.map((_, i) => (
-                                                <div key={i} className={`survey-dot ${i < step ? 'active' : ''}`} />
-                                            ))}
+
+                                        {/* Inline social proof nudge at strategic steps */}
+                                        {(step === 4 || step === 9 || step === 12) && (
+                                            <div className="sv2-promo-nudge">
+                                                <Sparkles size={12} />
+                                                {step === 4 && 'Students who target their weakest skill improve 2× faster with Atlas AI'}
+                                                {step === 9 && "Your 'why' matters — students with a clear goal pass 3× more often"}
+                                                {step === 12 && 'Premium users score 28 points higher on average than free-plan users'}
+                                            </div>
+                                        )}
+
+                                        <div className="sv2-q-header">
+                                            <span className="sv2-step-label">STEP {step} OF {surveyQuestions.length}</span>
+                                            <h3 className="sv2-question">{surveyQuestions[step - 1].q}</h3>
+                                            <p className="sv2-sub">{surveyQuestions[step - 1].sub}</p>
                                         </div>
-                                        <div style={{ marginBottom: '1.75rem' }}>
-                                            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--color-primary)', letterSpacing: '0.08em' }}>
-                                                STEP {step} OF {surveyQuestions.length}
-                                            </span>
-                                            <h3 style={{ fontSize: '1.45rem', fontWeight: 800, marginTop: '0.45rem', lineHeight: 1.2 }}>
-                                                {surveyQuestions[step - 1].q}
-                                            </h3>
-                                            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.4rem' }}>
-                                                {surveyQuestions[step - 1].sub}
-                                            </p>
-                                        </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+
+                                        <div className="sv2-options">
                                             {surveyQuestions[step - 1].opts.map(opt => (
-                                                <button key={opt.label} className="btn-survey-option" onClick={() => handleSelect(opt.label)}>
-                                                    <span className="survey-opt-inner">
-                                                        <span className="survey-opt-emoji">{opt.icon}</span>
-                                                        <span>{opt.label}</span>
+                                                <button key={opt.label} className="sv2-option-btn" onClick={() => handleSelect(opt.label)}>
+                                                    <span className="sv2-opt-emoji">{opt.icon}</span>
+                                                    <span className="sv2-opt-body">
+                                                        <span className="sv2-opt-label">{opt.label}</span>
+                                                        {opt.desc && <span className="sv2-opt-desc">{opt.desc}</span>}
                                                     </span>
-                                                    <ArrowRight size={16} />
+                                                    <ArrowRight size={15} className="sv2-opt-arrow" />
                                                 </button>
                                             ))}
+                                        </div>
+
+                                        {/* Bottom social proof */}
+                                        <div className="sv2-social-proof">
+                                            <div className="sv2-sp-avatars">
+                                                {[['#5B50E8','A'],['#10B981','F'],['#F59E0B','B']].map(([c,l],i) => (
+                                                    <div key={i} className="sv2-sp-avatar" style={{ background: c, marginLeft: i > 0 ? '-6px' : 0 }}>{l}</div>
+                                                ))}
+                                            </div>
+                                            <span><strong>{(12000 + step * 137).toLocaleString()}+</strong> students completed this plan builder</span>
                                         </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>
+
+                        {/* ── Student wins ticker ── */}
+                        <div className="survey-wins-strip">
+                            <div className="sws-label">
+                                <Star size={12} fill="#F59E0B" color="#F59E0B" />
+                                RECENT STUDENT WINS
+                            </div>
+                            <div className="sws-track-wrap">
+                                <div className="sws-track">
+                                    {[...SURVEY_TESTIMONIALS, ...SURVEY_TESTIMONIALS].map((t, i) => (
+                                        <div key={i} className="sws-card">
+                                            <div className="sws-avatar" style={{ background: t.color }}>{t.avatar}</div>
+                                            <div className="sws-body">
+                                                <span className="sws-name">{t.name} <span className="sws-meta">{t.meta}</span></span>
+                                                <span className="sws-text">{t.text}</span>
+                                            </div>
+                                            <div className="sws-score">{t.score}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
 
