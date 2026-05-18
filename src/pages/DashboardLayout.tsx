@@ -14,17 +14,41 @@ interface Props {
     toggleTheme: () => void;
 }
 
+// ── Read the Supabase session synchronously from localStorage ──────────────
+// Supabase v2 stores the session as "sb-<projectRef>-auth-token".
+// Scanning for it lets us check per-user promo status BEFORE any async call,
+// preventing the gate from flashing on every navigation.
+function getCachedUserId(): string | null {
+    try {
+        for (const key of Object.keys(localStorage)) {
+            if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+                const parsed = JSON.parse(localStorage.getItem(key) ?? 'null');
+                return (parsed?.user?.id as string | undefined) ?? null;
+            }
+        }
+    } catch { /* ignore */ }
+    return null;
+}
+
+function promoKey(uid: string) { return `promo_ok_${uid}`; }
+function isPromoOk(uid: string | null) { return !!uid && localStorage.getItem(promoKey(uid)) === '1'; }
+
+// ──────────────────────────────────────────────────────────────────────────
+
 const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [stats, setStats] = useState({ xp: 0, streak: 0, level: 1 });
     const [showPricing, setShowPricing] = useState(false);
-    // Start as 'ok' immediately if user was already verified in a previous session
+
+    // Initialise immediately from the cached session — no flash for verified users
     const [promoStatus, setPromoStatus] = useState<'checking' | 'required' | 'ok'>(() =>
-        localStorage.getItem('promo_ok') === '1' ? 'ok' : 'checking'
+        isPromoOk(getCachedUserId()) ? 'ok' : 'checking'
     );
-    // Ref so navigations within a session never re-show the gate
-    const promoCheckedRef = useRef(localStorage.getItem('promo_ok') === '1');
+    const promoCheckedRef = useRef(isPromoOk(getCachedUserId()));
+
+    // Store the logged-in user's ID so we can clear the right key on logout
+    const userIdRef = useRef<string | null>(getCachedUserId());
 
     const closePricing = () => {
         localStorage.setItem('pricing_seen', '1');
@@ -33,7 +57,7 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
 
     // Called by PromoGate after a code is verified
     const onPromoVerified = () => {
-        localStorage.setItem('promo_ok', '1');
+        if (userIdRef.current) localStorage.setItem(promoKey(userIdRef.current), '1');
         promoCheckedRef.current = true;
         setPromoStatus('ok');
         if (!localStorage.getItem('pricing_seen')) {
@@ -43,7 +67,7 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            // Only show the gate spinner on first load — not on every navigation
+            // Don't flash the gate if already verified for this user
             if (!promoCheckedRef.current) {
                 setPromoStatus('checking');
             }
@@ -54,11 +78,14 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                 return;
             }
 
+            // Track user ID for logout cleanup
+            userIdRef.current = user.id;
+
             // ── Admin bypass: skip the promo gate entirely ──────────────
             const adminEmail = (import.meta.env.VITE_ADMIN_EMAIL as string | undefined)?.toLowerCase().trim();
             if (adminEmail && user.email?.toLowerCase().trim() === adminEmail) {
+                localStorage.setItem(promoKey(user.id), '1');
                 promoCheckedRef.current = true;
-                localStorage.setItem('promo_ok', '1');
                 setPromoStatus('ok');
                 if (!localStorage.getItem('pricing_seen')) {
                     setTimeout(() => setShowPricing(true), 600);
@@ -80,6 +107,12 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
             }
             // ────────────────────────────────────────────────────────────
 
+            // Re-check localStorage now that we have the confirmed user ID
+            if (!promoCheckedRef.current && isPromoOk(user.id)) {
+                promoCheckedRef.current = true;
+                setPromoStatus('ok');
+            }
+
             // Fetch profile — use maybeSingle so missing row doesn't throw
             const { data: profile } = await supabase
                 .from('profiles')
@@ -95,8 +128,8 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                 if (!isVerified) {
                     setPromoStatus('required');
                 } else {
+                    localStorage.setItem(promoKey(user.id), '1');
                     promoCheckedRef.current = true;
-                    localStorage.setItem('promo_ok', '1');
                     setPromoStatus('ok');
                     if (!localStorage.getItem('pricing_seen')) {
                         setTimeout(() => setShowPricing(true), 600);
@@ -117,8 +150,11 @@ const DashboardLayout = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     }, [navigate, location.pathname]);
 
     const handleLogout = async () => {
-        localStorage.removeItem('promo_ok');
-        localStorage.removeItem('pricing_seen');
+        // Remove only THIS user's promo cache — other users on this device are unaffected
+        if (userIdRef.current) {
+            localStorage.removeItem(promoKey(userIdRef.current));
+            localStorage.removeItem('pricing_seen');
+        }
         await supabase.auth.signOut();
         navigate('/');
     };
