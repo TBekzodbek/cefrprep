@@ -97,28 +97,18 @@ const Login = ({ lang, toggleLang }: Props) => {
         setLoadingSource('telegram');
         setError(null);
         try {
-            const res = await fetch(
-                'https://mctcstvjdpcnzypfjhka.supabase.co/functions/v1/telegram-auth',
-                { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user) }
-            );
+            // Use supabase.functions.invoke — automatically sends the anon key
+            // so Supabase's gateway lets the request through before JWT check.
+            const { data, error: fnError } = await supabase.functions.invoke('telegram-auth', {
+                body: user,
+            });
 
-            // Parse response body safely
-            let data: Record<string, unknown> = {};
-            try { data = await res.json(); } catch { /* empty body */ }
+            if (fnError) throw new Error(fnError.message || 'Edge function error');
+            if (!data?.session) throw new Error('No session returned from server');
 
-            if (!res.ok) {
-                const msg = (typeof data.error === 'string' && data.error)
-                    ? data.error
-                    : `Server error ${res.status}`;
-                throw new Error(msg);
-            }
-
-            if (!data.session) throw new Error('No session returned from server');
-
-            const session = data.session as { access_token: string; refresh_token: string };
             const { error: sessionErr } = await supabase.auth.setSession({
-                access_token:  session.access_token,
-                refresh_token: session.refresh_token,
+                access_token:  data.session.access_token,
+                refresh_token: data.session.refresh_token,
             });
             if (sessionErr) throw sessionErr;
             navigate('/dashboard');
