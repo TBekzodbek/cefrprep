@@ -159,7 +159,7 @@ const Login = ({ lang, toggleLang }: Props) => {
             if (isSignUp) {
                 const { error: err, data } = await supabase.auth.signUp({
                     email, password,
-                    options: { emailRedirectTo: 'https://cefracademy.uz/onboarding' },
+                    options: { emailRedirectTo: `${window.location.origin}/dashboard` },
                 });
                 if (err) throw err;
                 if (data.user) setSuccessMsg(t.successEmail);
