@@ -301,6 +301,8 @@ const MockExamView = ({ lang, type }: Props) => {
     // Only reading has a countdown — listening is untimed
     const [timeLeft, setTimeLeft] = useState(3600);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    // Mobile: 'passage' | 'answers' tab (only active on small screens)
+    const [mobileTab, setMobileTab] = useState<'passage' | 'answers'>('passage');
 
     const inputRefs = useRef<Map<string, HTMLInputElement>>(new Map());
 
@@ -352,6 +354,11 @@ const MockExamView = ({ lang, type }: Props) => {
         }
         setIsSubmitting(false);
     }, [mockData, selectedMockId, isSubmitting, type, userAnswers]);
+
+    // ── Auto-switch to answers tab when results arrive ────────────────────────
+    useEffect(() => {
+        if (results) setMobileTab('answers');
+    }, [results]);
 
     // ── Timer (reading only — listening is untimed) ───────────────────────────
     useEffect(() => {
@@ -511,7 +518,7 @@ const MockExamView = ({ lang, type }: Props) => {
             </header>
 
             {/* ── Body ── */}
-            <div className="exam-body-grid">
+            <div className="exam-body-grid" data-mobile-tab={mobileTab}>
 
                 {/* Passage pane */}
                 <div className="exam-passage-pane">
@@ -603,6 +610,27 @@ const MockExamView = ({ lang, type }: Props) => {
                         </>
                     )}
                 </aside>
+            </div>
+
+            {/* ── Mobile bottom tabs — hidden on desktop via CSS ── */}
+            <div className="exam-mobile-tabs">
+                <button
+                    className={`exam-mob-tab${mobileTab === 'passage' ? ' active' : ''}`}
+                    onClick={() => setMobileTab('passage')}
+                >
+                    <BookOpen size={20} />
+                    <span>{lang === 'en' ? 'Passage' : 'Matn'}</span>
+                </button>
+                <button
+                    className={`exam-mob-tab${mobileTab === 'answers' ? ' active' : ''}`}
+                    onClick={() => setMobileTab('answers')}
+                >
+                    <CheckCircle2 size={20} />
+                    <span>{lang === 'en' ? 'Answers' : 'Javoblar'}</span>
+                    {answeredCount > 0 && (
+                        <span className="exam-mob-tab-badge">{answeredCount}</span>
+                    )}
+                </button>
             </div>
         </div>
     );

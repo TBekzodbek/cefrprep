@@ -48,7 +48,7 @@ function App() {
       <Analytics />
       <Routes>
         {/* Unified Home & Onboarding */}
-        <Route path="/" element={<OnboardingSurvey lang={lang} />} />
+        <Route path="/" element={<OnboardingSurvey {...commonProps} />} />
 
         {/* Auth with Navigation */}
         <Route path="/login" element={
@@ -73,7 +73,7 @@ function App() {
         </Route>
 
         {/* Legacy redirect for old bookmarkers */}
-        <Route path="/onboarding" element={<OnboardingSurvey lang={lang} />} />
+        <Route path="/onboarding" element={<OnboardingSurvey {...commonProps} />} />
 
         {/* Admin — promo code generator (only the admin email can use it) */}
         <Route path="/promo-admin" element={<PromoAdmin />} />

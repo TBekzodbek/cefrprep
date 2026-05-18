@@ -635,7 +635,11 @@
     white-space: nowrap;
 }
 
-/* ── Responsive ───────────────────────────────────────────── */
+/* ── Mobile tab bar (hidden on desktop) ──────────────────── */
+
+.exam-mobile-tabs { display: none; }
+
+/* ── Responsive: tablet 720–900px — stacked panes ──────────*/
 
 @media (max-width: 900px) {
     .exam-body-grid {
@@ -655,6 +659,111 @@
     }
 
     .part-tab-btn { width: 28px; height: 28px; font-size: 0.65rem; }
-
     .exam-clock { font-size: 0.95rem; padding: 0.3rem 0.7rem; }
+}
+
+/* ── Responsive: phone ≤720px — tab switcher mode ──────────*/
+
+@media (max-width: 720px) {
+    /* Show the tab bar */
+    .exam-mobile-tabs {
+        display: flex;
+        height: 58px;
+        flex-shrink: 0;
+        background: var(--color-surface);
+        border-top: 2px solid var(--color-border);
+        align-items: stretch;
+    }
+
+    .exam-mob-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.22rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--color-text-muted);
+        font-size: 0.68rem;
+        font-weight: 700;
+        font-family: var(--font-family);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        position: relative;
+        transition: color 0.15s;
+    }
+
+    .exam-mob-tab.active {
+        color: var(--color-primary);
+    }
+
+    .exam-mob-tab.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 20%;
+        right: 20%;
+        height: 2.5px;
+        background: var(--color-primary);
+        border-radius: 0 0 3px 3px;
+    }
+
+    .exam-mob-tab-badge {
+        position: absolute;
+        top: 7px;
+        right: calc(50% - 26px);
+        background: var(--color-primary);
+        color: white;
+        font-size: 0.6rem;
+        font-weight: 800;
+        padding: 0.1rem 0.32rem;
+        border-radius: 10px;
+        min-width: 16px;
+        text-align: center;
+        line-height: 1.4;
+    }
+
+    /* Override stacked layout — single pane at a time */
+    .exam-body-grid {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: 1fr !important;
+        overflow: hidden;
+    }
+
+    /* Hide the inactive pane */
+    [data-mobile-tab="passage"] .exam-answer-pane { display: none; }
+    [data-mobile-tab="answers"] .exam-passage-pane { display: none; }
+
+    /* Active pane fills all available height */
+    .exam-passage-pane,
+    .exam-answer-pane {
+        max-height: none !important;
+        height: 100%;
+        border-right: none;
+        border-bottom: none;
+        padding: 1rem 1.1rem 1.5rem;
+    }
+
+    /* Topbar: hide the part tabs (nav via prev/next) + shrink labels */
+    .part-tab-row { display: none; }
+    .exam-type-label { display: none; }
+    .exam-topbar { padding: 0 0.875rem; height: 56px; }
+    .exam-clock { font-size: 0.88rem; padding: 0.3rem 0.65rem; }
+    .exam-no-timer-badge { font-size: 0.75rem; padding: 0.3rem 0.65rem; }
+    .exam-progress-pill { font-size: 0.82rem; padding: 0.28rem 0.6rem; }
+}
+
+/* ── Responsive: small phone ≤480px ────────────────────────*/
+
+@media (max-width: 480px) {
+    .exam-topbar { padding: 0 0.75rem; }
+    .exam-passage-pane { padding: 0.875rem 0.9rem 1.25rem; }
+    .passage-para { font-size: 0.93rem; line-height: 1.75; }
+    .passage-instruction { font-size: 0.88rem; padding: 0.65rem 0.9rem; }
+    .answer-panel-content { padding: 0.8rem 0.9rem; }
+    .answer-input-field { height: 42px; font-size: 0.92rem; } /* bigger tap target */
+    .exam-nav-footer { padding: 0 0.9rem; height: 60px; }
+    .results-grid { grid-template-columns: repeat(5, 1fr); gap: 0.3rem; }
 }

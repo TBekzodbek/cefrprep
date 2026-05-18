@@ -56,7 +56,36 @@ section { padding: 96px 0; }
 }
 .nav-link:hover { color: var(--color-text-main); }
 
-.header-right { display: flex; align-items: center; gap: 0.875rem; }
+.header-right { display: flex; align-items: center; gap: 0.75rem; }
+
+/* Theme & language icon buttons in the landing nav */
+.landing-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1.5px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.18s;
+    flex-shrink: 0;
+}
+.landing-icon-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+}
+.landing-lang-btn {
+    width: auto;
+    padding: 0 0.6rem;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
 
 .streak-pills {
     display: flex; align-items: center; gap: 0.35rem;
@@ -515,20 +544,27 @@ section { padding: 96px 0; }
     .survey-card { padding: 2rem 1.5rem; }
     .nav-links { display: none; }
     .guarantee-inner { gap: 1.25rem; }
+    .streak-pills { display: none; }
 }
 
 @media (max-width: 768px) {
     .testimonials-grid { grid-template-columns: 1fr; }
     .comparison-table th, .comparison-table td { padding: 0.75rem; font-size: 0.8rem; }
+    .header-right { gap: 0.5rem; }
+    .landing-icon-btn { width: 30px; height: 30px; }
+    .landing-lang-btn { padding: 0 0.5rem; font-size: 0.68rem; }
 }
 
 @media (max-width: 640px) {
     section { padding: 64px 0; }
-    .hero-section { padding-top: 112px; padding-bottom: 64px; }
+    .hero-section { padding-top: 96px; padding-bottom: 56px; }
     .hero-btn-group { flex-direction: column; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
     .footer-grid { grid-template-columns: 1fr; }
     .urgency-inner { flex-direction: column; text-align: center; }
     .urgency-left { flex-direction: column; text-align: center; }
     .result-gap { flex-direction: column; }
+    /* Nav: only show brand + icon buttons on very small screens */
+    .header-inner { gap: 0; }
+    .onboarding-header { height: 56px; }
 }

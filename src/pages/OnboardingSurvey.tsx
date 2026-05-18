@@ -8,15 +8,19 @@ import {
     BookOpen, GraduationCap, Mic, Library, TrendingUp,
     Star, Shield, Trophy, Users, ChevronDown,
     Unlock, Check, X,
-    Rocket, Timer, Award
+    Rocket, Timer, Award, Sun, Moon, Globe,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import './OnboardingSurvey.css';
 
-interface Props { lang: 'en' | 'uz'; }
+interface Props {
+    lang: 'en' | 'uz';
+    toggleLang: () => void;
+    theme: 'light' | 'dark';
+    toggleTheme: () => void;
+}
 
-const OnboardingSurvey = ({ lang }: Props) => {
-    void lang;
+const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [showResult, setShowResult] = useState(false);
@@ -197,9 +201,27 @@ const OnboardingSurvey = ({ lang }: Props) => {
                         <button onClick={() => scrollTo('faq')}      className="nav-link">FAQ</button>
                     </nav>
                     <div className="header-right">
+                        {/* Theme toggle */}
+                        <button
+                            className="landing-icon-btn"
+                            onClick={toggleTheme}
+                            title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+                        >
+                            {theme === 'light' ? <Moon size={17} /> : <Sun size={17} />}
+                        </button>
+                        {/* Language toggle */}
+                        <button
+                            className="landing-icon-btn landing-lang-btn"
+                            onClick={toggleLang}
+                            title="Switch language"
+                        >
+                            <Globe size={15} />
+                            <span>{lang.toUpperCase()}</span>
+                        </button>
                         <div className="streak-pills"><Flame size={14} /><span>12 DAYS</span></div>
                         <button className="btn btn-primary" onClick={() => scrollTo('builder')} style={{ padding: '0.6rem 1.25rem', fontSize: '0.875rem' }}>
-                            <Sparkles size={14} /> Get Started Free
+                            <Sparkles size={14} />
+                            {lang === 'en' ? 'Get Started Free' : 'Bepul Boshlash'}
                         </button>
                     </div>
                 </div>
