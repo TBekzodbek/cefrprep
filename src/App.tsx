@@ -1,4 +1,4 @@
-// CEFR Academy - v1.0.2 - Premium Build
+// CEFR Academy - v1.0.3 - Premium Build
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Login from './pages/Login';
