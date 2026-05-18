@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { LogIn, UserPlus, Loader2, ArrowLeft, Eye, EyeOff, BookOpen, Headphones, Mic, GraduationCap } from 'lucide-react';
@@ -22,14 +22,7 @@ interface TelegramUser {
 
 declare global {
     interface Window {
-        Telegram?: {
-            Login: {
-                auth: (
-                    params: { bot_id: string; request_access?: string; lang?: string },
-                    callback: (user: TelegramUser | false) => void
-                ) => void;
-            };
-        };
+        onTelegramAuth: (user: TelegramUser) => void;
     }
 }
 
@@ -49,23 +42,9 @@ const Login = ({ lang }: Props) => {
     const [loadingSource, setLoadingSource] = useState<'email' | 'google' | 'telegram' | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
-    const tgScriptLoaded = useRef(false);
+    const tgContainerRef = useRef<HTMLDivElement>(null);
 
     const loading = loadingSource !== null;
-
-    // Load Telegram widget script silently – no visible button, programmatic use only
-    useEffect(() => {
-        if (tgScriptLoaded.current) return;
-        tgScriptLoaded.current = true;
-        // Must include data-telegram-login so the SDK initialises window.Telegram.Login
-        const s = document.createElement('script');
-        s.src = 'https://telegram.org/js/telegram-widget.js?22';
-        s.setAttribute('data-telegram-login', 'SadoMedia_bot');
-        s.setAttribute('data-request-access', 'write');
-        s.async = true;
-        // Append to head — no visible button is rendered when placed here
-        document.head.appendChild(s);
-    }, []);
 
     // Redirect if already logged in
     useEffect(() => {
@@ -101,7 +80,8 @@ const Login = ({ lang }: Props) => {
 
     /* ─── Auth handlers ─────────────────────────────── */
 
-    const handleTelegramAuth = async (user: TelegramUser) => {
+    // useCallback so the widget useEffect can safely depend on it
+    const handleTelegramAuth = useCallback(async (user: TelegramUser) => {
         setLoadingSource('telegram');
         setError(null);
         try {
@@ -121,41 +101,24 @@ const Login = ({ lang }: Props) => {
             setError(err instanceof Error ? err.message : 'Telegram login failed');
             setLoadingSource(null);
         }
-    };
+    }, [navigate]);
 
-    const handleTelegramLogin = () => {
-        setLoadingSource('telegram');
-        setError(null);
+    // Inject the official Telegram widget iframe into its container
+    useEffect(() => {
+        if (!tgContainerRef.current) return;
+        tgContainerRef.current.innerHTML = '';          // clear on re-render
+        window.onTelegramAuth = handleTelegramAuth;
 
-        let attempts = 0;
-        const MAX_ATTEMPTS = 20; // 6 s total wait
-
-        // Safety net: if the popup closes or callback never fires, unfreeze after 90s
-        const safetyTimer = setTimeout(() => setLoadingSource(null), 90_000);
-
-        const tryAuth = () => {
-            if (!window.Telegram?.Login) {
-                attempts++;
-                if (attempts >= MAX_ATTEMPTS) {
-                    clearTimeout(safetyTimer);
-                    setError('Could not load Telegram. Please refresh and try again.');
-                    setLoadingSource(null);
-                    return;
-                }
-                setTimeout(tryAuth, 300);
-                return;
-            }
-            window.Telegram.Login.auth(
-                { bot_id: 'SadoMedia_bot', request_access: 'write' },
-                (user) => {
-                    clearTimeout(safetyTimer);
-                    if (!user) { setLoadingSource(null); return; }
-                    handleTelegramAuth(user);
-                }
-            );
-        };
-        tryAuth();
-    };
+        const script = document.createElement('script');
+        script.src = 'https://telegram.org/js/telegram-widget.js?22';
+        script.setAttribute('data-telegram-login', 'SadoMedia_bot');
+        script.setAttribute('data-size', 'large');
+        script.setAttribute('data-radius', '10');
+        script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+        script.setAttribute('data-request-access', 'write');
+        script.async = true;
+        tgContainerRef.current.appendChild(script);
+    }, [handleTelegramAuth]);
 
     const handleGoogleLogin = async () => {
         setLoadingSource('google');
@@ -289,20 +252,14 @@ const Login = ({ lang }: Props) => {
                             <span>{t.googleBtn}</span>
                         </button>
 
-                        {/* Telegram */}
-                        <button
-                            className="btn-social btn-telegram"
-                            onClick={handleTelegramLogin}
-                            disabled={loading}
-                        >
-                            {loadingSource === 'telegram'
-                                ? <Loader2 size={18} className="spin" />
-                                : <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.17 13.547l-2.95-.924c-.64-.204-.654-.64.135-.954l11.566-4.461c.537-.194 1.006.131.973.013z"/>
-                                  </svg>
-                            }
-                            <span>{t.telegramBtn}</span>
-                        </button>
+                        {/* Telegram — official iframe widget */}
+                        {loadingSource === 'telegram'
+                            ? <div className="btn-social btn-telegram btn-telegram-loading">
+                                <Loader2 size={18} className="spin" />
+                                <span>Verifying…</span>
+                              </div>
+                            : <div ref={tgContainerRef} className="tg-widget-container" />
+                        }
                     </div>
 
                     {/* Telegram hint */}

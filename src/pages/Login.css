@@ -286,18 +286,24 @@
     border-color: var(--color-text-light);
 }
 
-/* Telegram */
-.btn-telegram {
+/* Telegram widget container — sizes to match the Google button */
+.tg-widget-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+/* Loading placeholder while edge-function verifies */
+.btn-telegram-loading {
     background: #0088CC;
     color: white;
     border: 1.5px solid transparent;
+    pointer-events: none;
+    opacity: 0.8;
 }
-.btn-telegram:hover:not(:disabled) {
-    background: #0077B5;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0,136,204,0.35);
-}
-.btn-telegram:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
 
 /* Telegram hint */
 .tg-hint {
