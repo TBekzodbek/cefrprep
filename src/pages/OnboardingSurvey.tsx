@@ -75,14 +75,151 @@ const SURVEY_TESTIMONIALS = [
     { name: 'Sardor Y.', avatar: 'S', color: '#3B82F6', text: 'Premium is absolutely worth it', score: '+27 pts', meta: 'Samarkand' },
 ];
 
+/* ─── Atlas Scan Interstitial (midpoint after Q6) ────────────────────────── */
+
+interface AtlasScanProps { selections: string[]; onContinue: () => void; }
+
+function AtlasScanScreen({ selections, onContinue }: AtlasScanProps) {
+    const [phase, setPhase] = useState<'scanning' | 'reveal'>('scanning');
+
+    const weakness = selections[3] ?? '';
+    const weakKey = weakness.toLowerCase().includes('speaking') ? 'speaking'
+        : weakness.toLowerCase().includes('writing') ? 'writing'
+        : weakness.toLowerCase().includes('reading') ? 'reading'
+        : weakness.toLowerCase().includes('listening') ? 'listening'
+        : 'all';
+
+    const skillBars = [
+        { name: 'Reading',   icon: '📖', score: weakKey === 'reading'   ? 34 : weakKey === 'all' ? 49 : 74 },
+        { name: 'Listening', icon: '🎧', score: weakKey === 'listening' ? 29 : weakKey === 'all' ? 47 : 68 },
+        { name: 'Writing',   icon: '✍️', score: weakKey === 'writing'   ? 31 : weakKey === 'all' ? 45 : 71 },
+        { name: 'Speaking',  icon: '🎤', score: weakKey === 'speaking'  ? 26 : weakKey === 'all' ? 42 : 63 },
+    ];
+    const critical = skillBars.reduce((min, s) => s.score < min.score ? s : min, skillBars[0]);
+
+    useEffect(() => {
+        const t = setTimeout(() => setPhase('reveal'), 2600);
+        return () => clearTimeout(t);
+    }, []);
+
+    return (
+        <motion.div className="atlas-scan-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {phase === 'scanning' ? (
+                <>
+                    <motion.div
+                        className="as-brain"
+                        animate={{ rotate: [0, 6, -6, 0], scale: [1, 1.06, 1] }}
+                        transition={{ duration: 2.2, repeat: Infinity }}
+                    >🧠</motion.div>
+                    <h3>Atlas AI is scanning your profile…</h3>
+                    <p className="as-sub">Comparing with 2,400+ similar student journeys</p>
+                    <div className="as-skill-bars">
+                        {skillBars.map((s, i) => (
+                            <div key={s.name} className="as-skill-row">
+                                <span className="as-skill-name">{s.icon} {s.name}</span>
+                                <div className="as-bar-track">
+                                    <motion.div
+                                        className={`as-bar-fill ${s.score < 45 ? 'critical' : s.score < 62 ? 'medium' : 'strong'}`}
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${s.score}%` }}
+                                        transition={{ duration: 1.3, delay: 0.3 + i * 0.22, ease: 'easeOut' }}
+                                    />
+                                </div>
+                                <motion.span
+                                    className={`as-bar-pct${s.score < 45 ? ' crit' : ''}`}
+                                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                                    transition={{ delay: 1.6 + i * 0.22 }}
+                                >{s.score}%</motion.span>
+                            </div>
+                        ))}
+                    </div>
+                    <motion.p className="as-scanning-pulse" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.1, repeat: Infinity }}>
+                        Scanning…
+                    </motion.p>
+                </>
+            ) : (
+                <motion.div className="as-reveal" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
+                    <div className="as-found-badge">⚠️ Critical gap identified</div>
+                    <h3>Your <span className="as-weak-name">{critical.name}</span> is limiting your score</h3>
+                    <p className="as-reveal-sub">
+                        {weakKey === 'all'
+                            ? '76% of students with gaps across all skills fail their first DTM attempt without a structured plan.'
+                            : `71% of students who struggle with ${critical.name} fail their first DTM attempt without targeted practice.`}
+                    </p>
+                    <div className="as-contrast-row">
+                        <div className="as-contrast-cell fail">
+                            <span>Without a plan</span>
+                            <strong>71% fail</strong>
+                        </div>
+                        <div className="as-vs">vs</div>
+                        <div className="as-contrast-cell pass">
+                            <span>Atlas Premium users</span>
+                            <strong>89% pass ✓</strong>
+                        </div>
+                    </div>
+                    <div className="as-student-win">
+                        <div className="as-sw-ava" style={{ background: '#5B50E8' }}>A</div>
+                        <div className="as-sw-body">
+                            <strong>Aziz T.</strong> had the same {critical.name} gap — passed B2 in 7 weeks.
+                        </div>
+                        <span className="as-sw-badge">+26 pts 🎉</span>
+                    </div>
+                    <button className="btn btn-primary as-cta-btn" onClick={onContinue}>
+                        Show me how Atlas fixes this →
+                    </button>
+                </motion.div>
+            )}
+        </motion.div>
+    );
+}
+
+/* ─── Plan Building Animation (just before result) ───────────────────────── */
+
+function PlanBuildingScreen() {
+    const items = [
+        { icon: '🔍', text: 'Skill gap analysis complete' },
+        { icon: '📅', text: '12-week schedule calculated' },
+        { icon: '📝', text: 'Mock exam sequence prepared' },
+        { icon: '🎯', text: 'Vocabulary list personalised' },
+    ];
+    return (
+        <div className="plan-building-screen">
+            <motion.div className="pb-pulse"
+                animate={{ scale: [1, 1.14, 1], opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 1.6, repeat: Infinity }}
+            >
+                <Sparkles size={38} color="var(--color-primary)" />
+            </motion.div>
+            <h3>Atlas AI is building your roadmap…</h3>
+            <p>Analysing 15,000+ study paths to personalise yours</p>
+            <div className="pb-list">
+                {items.map((item, i) => (
+                    <motion.div key={i} className="pb-list-item"
+                        initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.35 + i * 0.55 }}
+                    >
+                        <span className="pb-item-icon">{item.icon}</span>
+                        <span className="pb-item-text">{item.text}</span>
+                        <motion.span className="pb-item-check"
+                            initial={{ scale: 0 }} animate={{ scale: 1 }}
+                            transition={{ delay: 0.7 + i * 0.55, type: 'spring', stiffness: 280 }}
+                        >✓</motion.span>
+                    </motion.div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
 const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [showResult, setShowResult] = useState(false);
     const [selections, setSelections] = useState<string[]>([]);
     const [openFaq, setOpenFaq] = useState<number | null>(null);
-    const [showMilestone, setShowMilestone] = useState(false);
-    const [showFeatureReveal, setShowFeatureReveal] = useState(false);
+    const [showScanAnimation, setShowScanAnimation] = useState(false);
+    const [showPlanBuilding, setShowPlanBuilding] = useState(false);
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
     // Rotate quote each page visit (persisted in localStorage)
     const [quoteIdx] = useState(() => {
         const stored = parseInt(localStorage.getItem('cefr_quote_idx') ?? '0');
@@ -96,9 +233,10 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const scrollTo = (id: string) =>
         document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
-    /* ── Survey (15 questions across 4 groups) ── */
+    /* ── Survey — 12 questions, 4 groups ── */
+    // hint?: small insight chip shown above the question on certain steps
     const surveyQuestions = [
-        // ── Group 1: Foundation ──
+        // ── Group 1: Foundation (Q1–3) ──
         {
             id: 'current_level', group: 'Foundation',
             q: 'What is your current CEFR level?',
@@ -114,7 +252,7 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         {
             id: 'target_level', group: 'Foundation',
             q: 'What certificate level are you aiming for?',
-            sub: 'This is the score you need for university admission, your visa, or your job application.',
+            sub: 'This is the score you need for university admission, your visa, or your job.',
             opts: [
                 { label: 'B1 — 38–50 pts', icon: '🎯', desc: 'Foundation certificate' },
                 { label: 'B2 — 51–64 pts', icon: '🎯', desc: 'Upper certificate' },
@@ -124,19 +262,20 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         {
             id: 'exam_date', group: 'Foundation',
             q: 'When is your DTM exam date?',
-            sub: 'Your deadline sets everything — Atlas will pace your daily plan around it.',
+            sub: 'Your deadline sets everything — Atlas paces your daily plan around it.',
             opts: [
-                { label: 'In less than 1 month', icon: '🔥', desc: 'Intensive mode activated' },
+                { label: 'In less than 1 month', icon: '🔥', desc: 'Intensive mode' },
                 { label: 'In 1–3 months', icon: '⚡', desc: 'Accelerated track' },
                 { label: 'In 3–6 months', icon: '📅', desc: 'Steady progress track' },
                 { label: 'Not booked yet', icon: '🕐', desc: "I'll decide later" },
             ],
         },
-        // ── Group 2: Background ──
+        // ── Group 2: Background (Q4–6) ──
         {
             id: 'weakness', group: 'Background',
-            q: 'Which skill drags your score down the most?',
-            sub: 'Atlas will double the training intensity on your weakest area.',
+            hint: '🧠 83% of students who pinpoint their weakest skill score 20+ points higher',
+            q: 'Which skill is dragging your score down the most?',
+            sub: 'Atlas will allocate 60% of your daily training to this exact skill.',
             opts: [
                 { label: 'Speaking & Fluency', icon: '🎤', desc: 'Fear of speaking aloud' },
                 { label: 'Academic Writing', icon: '✍️', desc: 'Essays & formal letters' },
@@ -148,39 +287,27 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         {
             id: 'previous_attempt', group: 'Background',
             q: 'Have you taken the DTM CEFR exam before?',
-            sub: 'Previous experience helps Atlas understand what to fix first.',
+            sub: 'Previous experience tells Atlas which exact gaps to fix first.',
             opts: [
-                { label: 'No — this is my first attempt', icon: '🆕', desc: '' },
-                { label: 'Yes, but scored below target', icon: '📉', desc: 'Need to improve score' },
+                { label: 'No — this is my first attempt', icon: '🆕', desc: 'Clean slate' },
+                { label: 'Yes, but scored below target', icon: '📉', desc: 'Need to improve' },
                 { label: 'Yes, passed — going for higher', icon: '📈', desc: 'Aiming next level up' },
-            ],
-        },
-        {
-            id: 'study_method', group: 'Background',
-            q: 'How have you been preparing until now?',
-            sub: "We want to know what's worked — and what hasn't.",
-            opts: [
-                { label: "Haven't started yet", icon: '😅', desc: 'Starting fresh today' },
-                { label: 'YouTube & free content', icon: '▶️', desc: 'Inconsistent learning' },
-                { label: 'Private tutor', icon: '👨‍🏫', desc: 'Expensive, limited sessions' },
-                { label: 'Language school / course', icon: '🏫', desc: 'Group classes' },
-                { label: 'Self-study with textbooks', icon: '📚', desc: 'Solo preparation' },
             ],
         },
         {
             id: 'biggest_challenge', group: 'Background',
             q: 'What is your biggest challenge when studying?',
-            sub: 'Atlas will build your plan around this — not fight against it.',
+            sub: 'Atlas builds your plan around your obstacle — not against it.',
             opts: [
-                { label: 'I lose motivation easily', icon: '💤', desc: 'Need daily reminders' },
-                { label: "I don't know what to study", icon: '🤷', desc: 'No direction or roadmap' },
+                { label: 'I lose motivation easily', icon: '💤', desc: 'Need daily nudges' },
+                { label: "I don't know what to study", icon: '🤷', desc: 'No clear roadmap' },
                 { label: 'Very little time each day', icon: '⏱️', desc: 'Busy schedule' },
                 { label: 'Know theory but fail tests', icon: '📝', desc: 'Need exam practice' },
-                { label: 'Exam anxiety & pressure', icon: '😰', desc: 'Stress under exam conditions' },
+                { label: 'Exam anxiety & pressure', icon: '😰', desc: 'Stress under test conditions' },
             ],
         },
-        // ── Milestone screen after Q7 ──
-        // ── Group 3: Personalisation ──
+        // ── Atlas Scan after Q6 ──
+        // ── Group 3: Personalisation (Q7–9) ──
         {
             id: 'study_time', group: 'Personalisation',
             q: 'How much time can you study every day?',
@@ -194,8 +321,9 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         },
         {
             id: 'priority', group: 'Personalisation',
+            hint: "🎯 Students with a clear 'why' are 3× more likely to reach their target",
             q: 'What is the main reason you need this certificate?',
-            sub: "Knowing your 'why' keeps motivation strong when studying gets hard.",
+            sub: "Your 'why' becomes the engine that powers your plan when motivation dips.",
             opts: [
                 { label: 'University admission', icon: '🎓', desc: 'Getting into my dream uni' },
                 { label: 'Job or promotion', icon: '💼', desc: 'Career advancement' },
@@ -208,65 +336,44 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
             q: 'How motivated are you to pass this exam right now?',
             sub: 'Your commitment level directly shapes the intensity Atlas sets for you.',
             opts: [
-                { label: 'Slightly motivated — need a push', icon: '😐', desc: 'Getting started is hard' },
+                { label: 'Need a push to get going', icon: '😐', desc: 'Starting is hard' },
                 { label: 'Motivated — I have a plan', icon: '😊', desc: 'Ready to be consistent' },
-                { label: 'Very motivated', icon: '💪', desc: "I'm committed to this" },
-                { label: 'Extremely — this is urgent', icon: '🔥', desc: 'No-excuses mode' },
+                { label: 'Very motivated', icon: '💪', desc: "I'm all in" },
+                { label: 'This is urgent — no excuses', icon: '🔥', desc: 'Maximum intensity mode' },
             ],
         },
-        {
-            id: 'confidence', group: 'Personalisation',
-            q: 'How confident are you about reaching your target level?',
-            sub: 'Students who understand their starting confidence perform 2× better with Atlas.',
-            opts: [
-                { label: 'Not confident at all', icon: '😟', desc: "I'm genuinely worried" },
-                { label: 'Slightly doubtful', icon: '🤔', desc: 'I think I can, but...' },
-                { label: 'Fairly confident', icon: '🙂', desc: 'With the right tools' },
-                { label: 'Very confident', icon: '😎', desc: 'I just need the platform' },
-            ],
-        },
-        // ── Feature reveal after Q11 ──
-        // ── Group 4: Intent ──
+        // ── Group 4: Intent (Q10–12) ──
         {
             id: 'feature_interest', group: 'Intent',
-            q: 'Which Atlas AI feature sounds most useful for your goal?',
-            sub: 'Atlas will highlight this tool first in your personalised roadmap.',
+            hint: '⭐ Premium users score an average of +28 points higher than free-plan users',
+            q: 'Which Atlas AI tool sounds most powerful for your goal?',
+            sub: 'This becomes the #1 tool highlighted in your personalised roadmap.',
             opts: [
                 { label: 'AI Writing feedback in 30 seconds', icon: '✍️', desc: 'Instant essay grading' },
                 { label: 'Speaking pronunciation scoring', icon: '🎤', desc: 'AI fluency analysis' },
-                { label: '50 official DTM reading mocks', icon: '📖', desc: 'Full exam simulations' },
-                { label: 'Spaced-repetition vocabulary', icon: '🔤', desc: '1,500 academic words' },
+                { label: '50 full DTM reading mock exams', icon: '📖', desc: 'Exact exam simulation' },
+                { label: 'Spaced-repetition vocabulary trainer', icon: '🔤', desc: '1,500 academic words' },
             ],
         },
         {
             id: 'other_platforms', group: 'Intent',
-            q: 'Have you paid for CEFR preparation tools before?',
-            sub: "We'll show you exactly what makes CEFR Academy different.",
+            q: 'Have you paid for CEFR prep tools before?',
+            sub: "We'll show you exactly what's different — and why it's better.",
             opts: [
-                { label: 'No — only free tools', icon: '🆓', desc: 'Never paid for prep' },
+                { label: 'No — only free tools so far', icon: '🆓', desc: 'Never invested in prep' },
                 { label: 'Yes — under 100K UZS', icon: '💳', desc: 'Tried cheaper options' },
                 { label: 'Yes — 100K–300K UZS', icon: '💰', desc: 'Significant investment' },
-                { label: 'Yes — 300K+ on private tutors', icon: '💸', desc: 'Heavy tutor spending' },
-            ],
-        },
-        {
-            id: 'budget', group: 'Intent',
-            q: "What's your monthly budget for exam preparation?",
-            sub: 'CEFR Academy Premium is 75% cheaper than one private tutor session.',
-            opts: [
-                { label: 'Free only for now', icon: '🆓', desc: 'Exploring first' },
-                { label: 'Up to 30,000 UZS / month', icon: '💵', desc: 'Budget conscious' },
-                { label: '30,000–50,000 UZS / month', icon: '💳', desc: 'Willing to invest' },
-                { label: "Price doesn't matter — I need to pass", icon: '🎯', desc: 'All in' },
+                { label: 'Yes — 300K+ on private tutors', icon: '💸', desc: 'Heavy spending with limited results' },
             ],
         },
         {
             id: 'start_date', group: 'Intent',
+            hint: '⚡ Students who start today save an average of 2 months of wasted preparation',
             q: 'When do you want to start improving your score?',
-            sub: 'Students who start today are 3× more likely to reach their target level.',
+            sub: 'Your roadmap is ready the moment you answer — the clock is already ticking.',
             opts: [
-                { label: 'Right now — today', icon: '🚀', desc: 'Starting immediately' },
-                { label: 'This week', icon: '📅', desc: 'Within a few days' },
+                { label: 'Right now — today', icon: '🚀', desc: 'Let\'s go immediately' },
+                { label: 'This week', icon: '📅', desc: 'In the next few days' },
                 { label: 'Next month', icon: '🗓️', desc: 'When I have more time' },
                 { label: "I'm just exploring", icon: '👀', desc: 'Not decided yet' },
             ],
@@ -274,28 +381,38 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     ];
 
     const handleSelect = (opt: string) => {
-        const newSel = [...selections, opt];
-        setSelections(newSel);
-        const nextStep = step + 1;
+        // Flash the selected option briefly, then advance
+        setSelectedOption(opt);
+        setTimeout(() => {
+            setSelectedOption(null);
+            const newSel = [...selections, opt];
+            setSelections(newSel);
+            const nextStep = step + 1;
 
-        // After Q7 → show milestone interstitial
-        if (step === 7) {
+            // After Q6 → Atlas Scan animation
+            if (step === 6) {
+                setStep(nextStep);
+                setShowScanAnimation(true);
+                return;
+            }
+            // After Q12 (last question) → Plan Building animation, then result
+            if (step === surveyQuestions.length) {
+                setShowPlanBuilding(true);
+                return;
+            }
             setStep(nextStep);
-            setShowMilestone(true);
-            return;
-        }
-        // After Q11 → show feature-reveal interstitial
-        if (step === 11) {
-            setStep(nextStep);
-            setShowFeatureReveal(true);
-            return;
-        }
-        if (step < surveyQuestions.length) {
-            setStep(nextStep);
-        } else {
-            setShowResult(true);
-        }
+        }, 360);
     };
+
+    // Auto-advance from plan building → result after animation completes
+    useEffect(() => {
+        if (!showPlanBuilding) return;
+        const t = setTimeout(() => {
+            setShowPlanBuilding(false);
+            setShowResult(true);
+        }, 3200);
+        return () => clearTimeout(t);
+    }, [showPlanBuilding]);
 
     /* ── Compute recommendation from selections ── */
     const getLevelGap = () => {
@@ -311,9 +428,8 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const targetLabel  = selections[1]?.split(' — ')[0] ?? 'B2';
 
     // Progress bar (fills as user answers questions)
-    const progressPct = showResult ? 100
-        : showMilestone  ? (7  / surveyQuestions.length) * 100
-        : showFeatureReveal ? (11 / surveyQuestions.length) * 100
+    const progressPct = (showResult || showPlanBuilding) ? 100
+        : showScanAnimation ? 50
         : ((step - 1) / surveyQuestions.length) * 100;
     const currentGroup: string = surveyQuestions[step - 1]?.group ?? 'Complete';
 
@@ -790,7 +906,8 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                             <span className="eyebrow">PERSONALISED PLAN BUILDER</span>
                             <h2>Build your free study roadmap in 90 seconds</h2>
                             <p className="text-muted">
-                                15 quick questions. Atlas AI maps your exact path to <strong>{targetLabel || 'your target level'}</strong>.
+                                12 quick questions. Atlas AI maps your exact path to&nbsp;
+                                <strong>{targetLabel || 'your target level'}</strong>.
                             </p>
                         </div>
 
@@ -811,30 +928,32 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                         {/* ── Survey card ── */}
                         <div className="survey-card-v2">
 
-                            {/* Animated progress bar */}
+                            {/* Animated progress bar — hidden only on pure result screen */}
                             {!showResult && (
                                 <div className="sv2-progress-wrap">
                                     <div className="sv2-progress-track">
                                         <motion.div
                                             className="sv2-progress-fill"
                                             animate={{ width: `${progressPct}%` }}
-                                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                                            transition={{ duration: 0.65, ease: 'easeOut' }}
                                         />
-                                        <motion.div
-                                            className="sv2-progress-glow"
-                                            animate={{ left: `${Math.max(progressPct - 1, 0)}%` }}
-                                            transition={{ duration: 0.6, ease: 'easeOut' }}
-                                        />
+                                        {progressPct < 100 && (
+                                            <motion.div
+                                                className="sv2-progress-glow"
+                                                animate={{ left: `${Math.max(progressPct - 0.5, 0)}%` }}
+                                                transition={{ duration: 0.65, ease: 'easeOut' }}
+                                            />
+                                        )}
                                     </div>
                                     <div className="sv2-progress-meta">
                                         <span className="sv2-group-chip">
-                                            {showMilestone ? '🎯 Milestone'
-                                                : showFeatureReveal ? '✨ Preview'
+                                            {showScanAnimation ? '🧠 Atlas Scan'
+                                                : showPlanBuilding ? '⚙️ Building'
                                                 : currentGroup}
                                         </span>
-                                        {!showMilestone && !showFeatureReveal && (
+                                        {!showScanAnimation && !showPlanBuilding && (
                                             <span className="sv2-step-count">
-                                                Question {step} <span className="sv2-step-of">of {surveyQuestions.length}</span>
+                                                Q{step} <span className="sv2-step-of">of {surveyQuestions.length}</span>
                                             </span>
                                         )}
                                         <span className="sv2-pct">{Math.round(progressPct)}%</span>
@@ -850,7 +969,7 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                         <div className="result-header">
                                             <div className="result-icon-wrap"><Sparkles size={32} color="var(--color-primary)" /></div>
                                             <h3>Your CEFR Roadmap is Ready</h3>
-                                            <p className="text-muted">Based on all 15 answers, here's what Atlas AI recommends:</p>
+                                            <p className="text-muted">Based on your profile, here's what Atlas AI recommends:</p>
                                         </div>
                                         <div className="result-gap">
                                             <div className="result-level current">{currentLabel}<span>Current</span></div>
@@ -877,7 +996,6 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                                 ).map(f => <li key={f}><Check size={14} />{f}</li>)}
                                             </ul>
                                         </div>
-                                        {/* Social proof strip */}
                                         <div className="result-social-proof">
                                             <div className="rsp-avatars">
                                                 {[['#5B50E8','S'],['#10B981','D'],['#F59E0B','J'],['#F43F5E','M'],['#8B5CF6','O']].map(([c,l],i) => (
@@ -903,110 +1021,40 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                         </div>
                                     </motion.div>
 
-                                ) : showMilestone ? (
-                                    /* ─── Milestone interstitial (after Q7) ─── */
-                                    <motion.div key="milestone" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="milestone-screen">
-                                        <div className="ms-emoji">🎯</div>
-                                        <h3 className="ms-title">Halfway there — your profile is taking shape!</h3>
-                                        <p className="ms-sub">Based on your answers so far, Atlas has already mapped your starting point. Here's the preview:</p>
-
-                                        <div className="ms-insight-grid">
-                                            <div className="ms-insight">
-                                                <span className="ms-i-icon">📍</span>
-                                                <span className="ms-i-label">Your Level</span>
-                                                <span className="ms-i-value">{currentLabel || 'A2'}</span>
-                                            </div>
-                                            <div className="ms-insight">
-                                                <span className="ms-i-icon">🎯</span>
-                                                <span className="ms-i-label">Target</span>
-                                                <span className="ms-i-value">{targetLabel || 'B2'}</span>
-                                            </div>
-                                            <div className="ms-insight">
-                                                <span className="ms-i-icon">⚡</span>
-                                                <span className="ms-i-label">Speed</span>
-                                                <span className="ms-i-value">
-                                                    {selections[2]?.includes('1 month') ? 'Intensive'
-                                                        : selections[2]?.includes('1–3') ? 'Accelerated'
-                                                        : 'Standard'}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div className="ms-stat-banner">
-                                            <Trophy size={16} color="#F59E0B" />
-                                            <span>Students with your profile improved by an average of <strong>+24 pts</strong> using Atlas AI Premium</span>
-                                        </div>
-
-                                        <div className="ms-testimonial">
-                                            <Quote size={14} className="ms-q-icon" />
-                                            <p>"I had the exact same profile — {currentLabel || 'A2'} aiming for {targetLabel || 'B2'}. I got there in 6 weeks with the Premium plan."</p>
-                                            <div className="ms-t-author">
-                                                <div className="ms-t-avatar" style={{ background: '#5B50E8' }}>S</div>
-                                                <span>Sardor M. · Tashkent · DTM 2024</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="ms-actions">
-                                            <button className="btn btn-primary ms-cta" onClick={() => navigate('/login')}>
-                                                <Unlock size={16} /> Unlock Premium — Start Today
-                                            </button>
-                                            <button className="ms-continue-btn" onClick={() => setShowMilestone(false)}>
-                                                Continue building my free plan →
-                                            </button>
-                                        </div>
+                                ) : showPlanBuilding ? (
+                                    /* ─── Plan building animation ─── */
+                                    <motion.div key="building" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                        <PlanBuildingScreen />
                                     </motion.div>
 
-                                ) : showFeatureReveal ? (
-                                    /* ─── Feature reveal (after Q11) ─── */
-                                    <motion.div key="features" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="feature-reveal-screen">
-                                        <div className="fr-header">
-                                            <Sparkles size={28} color="var(--color-primary)" />
-                                            <h3>Here's what's waiting for you on CEFR Academy</h3>
-                                            <p>Your profile unlocks these AI-powered tools the moment you sign up:</p>
-                                        </div>
-
-                                        <div className="fr-features-grid">
-                                            {[
-                                                { icon: <GraduationCap size={22} color="var(--color-success)" />, bg: 'rgba(16,185,129,0.1)', title: 'AI Essay Grading', desc: 'Score any writing task in 30 seconds with C1-level feedback.', badge: 'Premium' },
-                                                { icon: <Mic size={22} color="var(--color-error)" />, bg: 'rgba(244,63,94,0.1)', title: 'Speaking AI', desc: 'Pronunciation scoring and fluency analysis on real CEFR prompts.', badge: 'Premium' },
-                                                { icon: <BookOpen size={22} color="var(--color-primary)" />, bg: 'rgba(91,80,232,0.1)', title: '50 Reading Mocks', desc: 'Full DTM-format exams with instant scoring and review.', badge: 'Free' },
-                                                { icon: <Library size={22} color="var(--color-purple)" />, bg: 'rgba(139,92,246,0.1)', title: 'Vocabulary Lab', desc: 'Master 1,500 academic words with spaced repetition.', badge: 'Free' },
-                                            ].map((feat, i) => (
-                                                <motion.div key={i} className="fr-feat-card" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.09 }}>
-                                                    <div className="fr-feat-icon" style={{ background: feat.bg }}>{feat.icon}</div>
-                                                    <h4>{feat.title}</h4>
-                                                    <p>{feat.desc}</p>
-                                                    <span className={`fr-feat-badge ${feat.badge === 'Premium' ? 'prem' : 'free'}`}>
-                                                        {feat.badge === 'Premium' ? '⭐ Premium' : '✓ Free'}
-                                                    </span>
-                                                </motion.div>
-                                            ))}
-                                        </div>
-
-                                        <div className="fr-actions">
-                                            <button className="btn btn-primary fr-cta" onClick={() => navigate('/login')}>
-                                                <Rocket size={16} />
-                                                Get Premium — Unlock Everything
-                                                <span className="fr-price-chip">49K UZS/mo</span>
-                                            </button>
-                                            <button className="fr-continue-btn" onClick={() => setShowFeatureReveal(false)}>
-                                                Finish my free plan first →
-                                            </button>
-                                        </div>
+                                ) : showScanAnimation ? (
+                                    /* ─── Atlas Scan interstitial ─── */
+                                    <motion.div key="scan" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }}>
+                                        <AtlasScanScreen
+                                            selections={selections}
+                                            onContinue={() => setShowScanAnimation(false)}
+                                        />
                                     </motion.div>
 
                                 ) : (
                                     /* ─── Questions ─── */
-                                    <motion.div key={step} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.22 }}>
-
-                                        {/* Inline social proof nudge at strategic steps */}
-                                        {(step === 4 || step === 9 || step === 12) && (
-                                            <div className="sv2-promo-nudge">
-                                                <Sparkles size={12} />
-                                                {step === 4 && 'Students who target their weakest skill improve 2× faster with Atlas AI'}
-                                                {step === 9 && "Your 'why' matters — students with a clear goal pass 3× more often"}
-                                                {step === 12 && 'Premium users score 28 points higher on average than free-plan users'}
-                                            </div>
+                                    <motion.div
+                                        key={step}
+                                        initial={{ opacity: 0, x: 22 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -22 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        {/* Insight hint chip (data-driven, shown on Q4/Q8/Q10/Q12) */}
+                                        {surveyQuestions[step - 1].hint && (
+                                            <motion.div
+                                                className="sv2-hint-chip"
+                                                initial={{ opacity: 0, y: -6 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.18 }}
+                                            >
+                                                {surveyQuestions[step - 1].hint}
+                                            </motion.div>
                                         )}
 
                                         <div className="sv2-q-header">
@@ -1016,19 +1064,28 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                         </div>
 
                                         <div className="sv2-options">
-                                            {surveyQuestions[step - 1].opts.map(opt => (
-                                                <button key={opt.label} className="sv2-option-btn" onClick={() => handleSelect(opt.label)}>
+                                            {surveyQuestions[step - 1].opts.map((opt, i) => (
+                                                <motion.button
+                                                    key={opt.label}
+                                                    className={`sv2-option-btn${selectedOption === opt.label ? ' selected' : ''}`}
+                                                    initial={{ opacity: 0, y: 8 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: i * 0.06 }}
+                                                    onClick={() => handleSelect(opt.label)}
+                                                    disabled={selectedOption !== null}
+                                                >
                                                     <span className="sv2-opt-emoji">{opt.icon}</span>
                                                     <span className="sv2-opt-body">
                                                         <span className="sv2-opt-label">{opt.label}</span>
                                                         {opt.desc && <span className="sv2-opt-desc">{opt.desc}</span>}
                                                     </span>
-                                                    <ArrowRight size={15} className="sv2-opt-arrow" />
-                                                </button>
+                                                    {selectedOption === opt.label
+                                                        ? <CheckCircle2 size={16} className="sv2-opt-check" />
+                                                        : <ArrowRight size={15} className="sv2-opt-arrow" />}
+                                                </motion.button>
                                             ))}
                                         </div>
 
-                                        {/* Bottom social proof */}
                                         <div className="sv2-social-proof">
                                             <div className="sv2-sp-avatars">
                                                 {[['#5B50E8','A'],['#10B981','F'],['#F59E0B','B']].map(([c,l],i) => (
