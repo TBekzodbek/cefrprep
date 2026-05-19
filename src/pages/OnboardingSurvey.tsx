@@ -77,9 +77,9 @@ const SURVEY_TESTIMONIALS = [
 
 /* ─── Atlas Scan Interstitial (midpoint after Q6) ────────────────────────── */
 
-interface AtlasScanProps { selections: string[]; onContinue: () => void; }
+interface AtlasScanProps { selections: string[]; onContinue: () => void; userName?: string; }
 
-function AtlasScanScreen({ selections, onContinue }: AtlasScanProps) {
+function AtlasScanScreen({ selections, onContinue, userName }: AtlasScanProps) {
     const [phase, setPhase] = useState<'scanning' | 'reveal'>('scanning');
 
     const weakness = selections[3] ?? '';
@@ -111,7 +111,7 @@ function AtlasScanScreen({ selections, onContinue }: AtlasScanProps) {
                         animate={{ rotate: [0, 6, -6, 0], scale: [1, 1.06, 1] }}
                         transition={{ duration: 2.2, repeat: Infinity }}
                     >🧠</motion.div>
-                    <h3>Atlas AI is scanning your profile…</h3>
+                    <h3>Scanning your profile{userName ? `, ${userName}` : ''}…</h3>
                     <p className="as-sub">Comparing with students who took the official 405,000 UZS Bilim va malakalarni CEFR exam</p>
                     <div className="as-skill-bars">
                         {skillBars.map((s, i) => (
@@ -160,7 +160,7 @@ function AtlasScanScreen({ selections, onContinue }: AtlasScanProps) {
                     <div className="as-student-win">
                         <div className="as-sw-ava" style={{ background: '#5B50E8' }}>A</div>
                         <div className="as-sw-body">
-                            <strong>Aziz T.</strong> had the same {critical.name} gap — passed B2 in 7 weeks. Now exempt from university entrance foreign language block.
+                            <strong>Aziz T.</strong> had the same {critical.name} gap{userName ? ` as you, ${userName}` : ''} — passed B2 in 7 weeks and earned university entrance exemption.
                         </div>
                         <span className="as-sw-badge">+26 pts 🎉</span>
                     </div>
@@ -175,7 +175,7 @@ function AtlasScanScreen({ selections, onContinue }: AtlasScanProps) {
 
 /* ─── Plan Building Animation (just before result) ───────────────────────── */
 
-function PlanBuildingScreen() {
+function PlanBuildingScreen({ userName }: { userName?: string }) {
     const items = [
         { icon: '🔍', text: 'Skill gap analysis against official CEFR rubric complete' },
         { icon: '📅', text: 'Daily schedule calculated for monthly exam date' },
@@ -190,7 +190,7 @@ function PlanBuildingScreen() {
             >
                 <Sparkles size={38} color="var(--color-primary)" />
             </motion.div>
-            <h3>Atlas AI is building your roadmap…</h3>
+            <h3>{userName ? `Building your plan, ${userName}…` : 'Building your roadmap…'}</h3>
                         <p>Calibrating your path to the official 405,000 UZS CEFR exam</p>
             <div className="pb-list">
                 {items.map((item, i) => (
@@ -220,6 +220,9 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     const [showScanAnimation, setShowScanAnimation] = useState(false);
     const [showPlanBuilding, setShowPlanBuilding] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [showNameStep, setShowNameStep] = useState(true);
+    const [userName, setUserName] = useState('');
+    const [nameInput, setNameInput] = useState('');
     // Rotate quote each page visit (persisted in localStorage)
     const [quoteIdx] = useState(() => {
         const stored = parseInt(localStorage.getItem('cefr_quote_idx') ?? '0');
@@ -404,6 +407,13 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
         }, 360);
     };
 
+    const handleNameSubmit = () => {
+        const trimmed = nameInput.trim();
+        if (!trimmed) return;
+        setUserName(trimmed);
+        setShowNameStep(false);
+    };
+
     // Auto-advance from plan building → result after animation completes
     useEffect(() => {
         if (!showPlanBuilding) return;
@@ -430,8 +440,10 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
     // Progress bar (fills as user answers questions)
     const progressPct = (showResult || showPlanBuilding) ? 100
         : showScanAnimation ? 50
+        : showNameStep ? 0
         : ((step - 1) / surveyQuestions.length) * 100;
-    const currentGroup: string = surveyQuestions[step - 1]?.group ?? 'Complete';
+    const currentGroup: string = showNameStep ? '👋 Welcome'
+        : (surveyQuestions[step - 1]?.group ?? 'Complete');
 
     /* ── Features ── */
     const features = [
@@ -953,7 +965,7 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                                 : showPlanBuilding ? '⚙️ Building'
                                                 : currentGroup}
                                         </span>
-                                        {!showScanAnimation && !showPlanBuilding && (
+                                        {!showScanAnimation && !showPlanBuilding && !showNameStep && (
                                             <span className="sv2-step-count">
                                                 Q{step} <span className="sv2-step-of">of {surveyQuestions.length}</span>
                                             </span>
@@ -965,12 +977,72 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
 
                             <AnimatePresence mode="wait">
 
-                                {/* ─── Result ─── */}
-                                {showResult ? (
+                                {/* ─── Name / greeting step ─── */}
+                                {showNameStep ? (
+                                    <motion.div key="name-step" initial={{ opacity: 0, x: 22 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -22 }} transition={{ duration: 0.2 }}>
+                                        <div className="sv2-name-screen">
+
+                                            {/* Atlas greeting card */}
+                                            <motion.div className="sv2-name-atlas-greeting"
+                                                initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.1, type: 'spring', stiffness: 180 }}
+                                            >
+                                                <div className="sv2-name-atlas-avatar">
+                                                    <Sparkles size={20} color="white" />
+                                                </div>
+                                                <div className="sv2-name-atlas-info">
+                                                    <strong>Hi! I'm Atlas.</strong>
+                                                    <span>Your AI-powered CEFR coach.</span>
+                                                </div>
+                                            </motion.div>
+
+                                            {/* Question */}
+                                            <motion.div className="sv2-name-q-block"
+                                                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.22 }}
+                                            >
+                                                <h3 className="sv2-question">What should I call you?</h3>
+                                                <p className="sv2-sub">I'll use your name throughout every question, every scan, and your final plan — making this truly yours.</p>
+                                            </motion.div>
+
+                                            {/* Input + CTA */}
+                                            <motion.div className="sv2-name-input-wrap"
+                                                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.38 }}
+                                            >
+                                                <input
+                                                    className="sv2-name-input"
+                                                    type="text"
+                                                    placeholder="Your first name (e.g. Jasur)"
+                                                    value={nameInput}
+                                                    onChange={e => setNameInput(e.target.value)}
+                                                    onKeyDown={e => { if (e.key === 'Enter') handleNameSubmit(); }}
+                                                    autoFocus
+                                                    maxLength={32}
+                                                />
+                                                <motion.button
+                                                    className="sv2-name-continue-btn"
+                                                    onClick={handleNameSubmit}
+                                                    disabled={!nameInput.trim()}
+                                                    whileHover={{ scale: nameInput.trim() ? 1.02 : 1 }}
+                                                    whileTap={{ scale: nameInput.trim() ? 0.97 : 1 }}
+                                                >
+                                                    {nameInput.trim()
+                                                        ? <>Let's go, <strong>{nameInput.trim()}</strong>! <ArrowRight size={16} /></>
+                                                        : <>Enter your name to continue <ArrowRight size={16} /></>
+                                                    }
+                                                </motion.button>
+                                                <p className="sv2-name-note">🔒 Only used to personalise your plan — never shared.</p>
+                                            </motion.div>
+
+                                        </div>
+                                    </motion.div>
+
+                                ) : showResult ? (
                                     <motion.div key="result" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="result-screen">
                                         <div className="result-header">
                                             <div className="result-icon-wrap"><Sparkles size={32} color="var(--color-primary)" /></div>
-                                            <h3>Your CEFR Roadmap is Ready</h3>
+                                            <h3>Your CEFR Roadmap is Ready{userName ? `, ${userName}` : ''}!</h3>
                                             <p className="text-muted">Based on your profile, here's what Atlas AI recommends:</p>
                                         </div>
                                         <div className="result-gap">
@@ -1026,7 +1098,7 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                 ) : showPlanBuilding ? (
                                     /* ─── Plan building animation ─── */
                                     <motion.div key="building" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                                        <PlanBuildingScreen />
+                                        <PlanBuildingScreen userName={userName} />
                                     </motion.div>
 
                                 ) : showScanAnimation ? (
@@ -1035,6 +1107,7 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                         <AtlasScanScreen
                                             selections={selections}
                                             onContinue={() => setShowScanAnimation(false)}
+                                            userName={userName}
                                         />
                                     </motion.div>
 
@@ -1056,6 +1129,17 @@ const OnboardingSurvey = ({ lang, toggleLang, theme, toggleTheme }: Props) => {
                                                 transition={{ delay: 0.18 }}
                                             >
                                                 {surveyQuestions[step - 1].hint}
+                                            </motion.div>
+                                        )}
+
+                                        {/* Personalized welcome on Q1 */}
+                                        {step === 1 && userName && (
+                                            <motion.div
+                                                className="sv2-personal-greeting"
+                                                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.1 }}
+                                            >
+                                                Nice to meet you, <strong>{userName}</strong>! Let's map your path to B2 or C1. 👋
                                             </motion.div>
                                         )}
 
